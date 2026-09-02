@@ -3,10 +3,11 @@
   <h1>Stanley Lloyd</h1>
   <p><strong>Apps & Games</strong></p>
   <p>Продуманные приложения. Игры с характером.</p>
+  <p><strong>Язык</strong></p>
   <p>
-    <a href="./README.md"><kbd>EN · English</kbd></a>
-    &nbsp;
-    <a href="./README_RU.md"><kbd>RU · Русский</kbd></a>
+    <a href="./README.md"><img src="./assets/readme/lang-en.svg" width="168" height="44" alt="Переключиться на английский"></a>
+    &nbsp;&nbsp;
+    <a href="./README_RU.md"><img src="./assets/readme/lang-ru-active.svg" width="168" height="44" alt="Русский выбран"></a>
   </p>
   <p>
     <a href="https://stanleyll0yd.github.io/">Сайт</a>
@@ -58,6 +59,7 @@
 ---
 
 <div align="center">
-  <p><a href="./README.md"><kbd>EN · Back to English</kbd></a></p>
+  <p><strong>English version</strong></p>
+  <p><a href="./README.md"><img src="./assets/readme/lang-en.svg" width="168" height="44" alt="Back to English"></a></p>
   <sub>Stanley Lloyd · Apps & Games · EN / RU</sub>
 </div>
