@@ -1,19 +1,247 @@
 (() => {
   "use strict";
-  const root=document.documentElement;
-  if(window.top!==window.self){
+
+  const root = document.documentElement;
+
+  if (window.top !== window.self) {
     root.classList.add("frame-blocked");
-    try{window.top.location.replace(window.self.location.href)}catch{}
+    try {
+      window.top.location.replace(window.self.location.href);
+    } catch {}
     return;
   }
+
   const translations = {
-    en: { skip:"Skip to content",navApps:"Apps",navAbout:"About",eyebrow:"Independent software developer",heroTitle:"Simple software that respects your time and privacy.",heroLead:"I build focused apps with a preference for local processing, clear interfaces and minimal data collection.",viewApps:"View apps",githubProfile:"GitHub profile",appsEyebrow:"Software",appsTitle:"Apps",appsLead:"Projects built for real everyday use.",pgSummary:"A privacy-focused offline password generator with configurable rules and a password-strength indicator.",tagOffline:"100% offline",tagNoAds:"No ads",tagNoTracking:"No tracking",learnMore:"Learn more →",moreApps:"More apps",moreAppsText:"More projects will appear here as their public pages are prepared.",aboutEyebrow:"About",aboutTitle:"Stanley Lloyd",aboutText1:"Independent developer working on Android, desktop and utility software.",aboutText2:"This site is the public home for my apps: product information, downloads, privacy policies and support links — without exposing source code for closed projects.",privacy:"Privacy",home:"Home",backHome:"← All apps",pgHero:"Secure passwords, generated locally on your Android device.",getRustore:"Get it on RuStore ↗",downloadApk:"Download APK ↗",demoLabel:"Password preview",demoNote:"Illustrative preview — passwords are generated only inside the app.",whyTitleSmall:"Privacy by design",whyTitle:"Built to stay offline",featureOfflineTitle:"No Internet permission",featureOfflineText:"The app works fully offline and does not communicate with remote servers.",featureRandomTitle:"Secure generation",featureRandomText:"Passwords are generated locally using Android SecureRandom.",featureTrackingTitle:"No analytics or ads",featureTrackingText:"No analytics, tracking, advertising SDKs or cloud accounts.",featureRulesTitle:"Flexible rules",featureRulesText:"Choose length, character groups, ambiguous-character exclusion and duplicate handling.",featureStrengthTitle:"Strength indicator",featureStrengthText:"The indicator considers length, character variety, repetition, sequences and weak patterns.",featureUiTitle:"Modern Android UI",featureUiText:"Material 3, light and dark themes, Dynamic Color on Android 12+, English and Russian.",detailsEyebrow:"Details",detailsTitle:"What it stores",passwordsLabel:"Passwords",passwordsValue:"Memory only; not saved by the app",settingsLabel:"Settings",settingsValue:"Generator preferences stored locally",networkLabel:"Network",networkValue:"No INTERNET permission",analyticsLabel:"Analytics",analyticsValue:"None",ctaTitle:"Generate passwords without sending anything anywhere.",ctaText:"Available for Android 8.0 and newer.",privacyPolicy:"Privacy policy",backProduct:"← Password Generator",privacyTitle:"Privacy Policy",privacyUpdated:"Last updated: September 1, 2026",privacyIntro:"Password Generator is a privacy-focused offline Android application.",privacyCollectionTitle:"Data collection",privacyCollectionText:"Password Generator does not collect, transmit, sell or otherwise disclose personal data or app-usage data. It does not use analytics, advertising SDKs, tracking, telemetry, crash-reporting services, cloud synchronization or remote accounts.",privacyNetworkTitle:"Network access",privacyNetworkText:"Password Generator does not request the Android INTERNET permission and does not communicate with remote servers.",privacyPasswordsTitle:"Passwords",privacyPasswordsText:"Passwords are generated locally on the device using Android's cryptographically secure random-number generator. Generated passwords exist only in memory and are not saved by the app to persistent storage.",privacyClipboardText:"When copied, a password is placed in the Android system clipboard. On supported Android versions the app marks copied passwords as sensitive and attempts to remove its own value after 60 seconds when Android still allows clipboard access and the same value is still present.",privacySettingsTitle:"Local settings",privacySettingsText:"Only generator preferences are stored locally using Android DataStore. Generated passwords are not stored in these preferences. Android app backup is disabled and transfer rules explicitly exclude generator preferences.",privacyPermissionsTitle:"Permissions",privacyPermissionsText:"The app requests only Android vibration permission for haptic feedback. It does not request contacts, location, camera, microphone, storage, phone, SMS, advertising identifiers or network access.",privacyChildrenTitle:"Children",privacyChildrenText:"Password Generator does not collect data from anyone, including children, because the app does not collect personal or usage data at all.",privacyThirdTitle:"Third-party services",privacyThirdText:"The app does not integrate third-party analytics, advertising, tracking, authentication or cloud services. External links are opened by Android in another app such as a browser and are governed by that service's privacy practices.",privacyChangesTitle:"Changes",privacyChangesText:"If the app's data practices change, this Privacy Policy will be updated before or together with the corresponding app release.",privacyContactTitle:"Contact",privacyContactText:"For privacy questions, bug reports or other questions, use the project's GitHub repository." },
-    ru: { skip:"К содержимому",navApps:"Приложения",navAbout:"О разработчике",eyebrow:"Независимый разработчик",heroTitle:"Простые приложения, которые уважают ваше время и приватность.",heroLead:"Я создаю сфокусированные приложения с локальной обработкой данных, понятным интерфейсом и минимальным сбором информации.",viewApps:"Смотреть приложения",githubProfile:"Профиль GitHub",appsEyebrow:"Программы",appsTitle:"Приложения",appsLead:"Проекты, созданные для повседневного использования.",pgSummary:"Приватный офлайн-генератор паролей с гибкими правилами и индикатором стойкости.",tagOffline:"100% офлайн",tagNoAds:"Без рекламы",tagNoTracking:"Без слежения",learnMore:"Подробнее →",moreApps:"Другие приложения",moreAppsText:"Здесь появятся новые проекты по мере подготовки их публичных страниц.",aboutEyebrow:"О разработчике",aboutTitle:"Stanley Lloyd",aboutText1:"Независимый разработчик Android-приложений, настольных программ и утилит.",aboutText2:"Этот сайт — публичная страница моих приложений: описание, загрузки, политики конфиденциальности и поддержка — без публикации исходного кода закрытых проектов.",privacy:"Конфиденциальность",home:"Главная",backHome:"← Все приложения",pgHero:"Надёжные пароли, которые создаются локально на вашем Android-устройстве.",getRustore:"Скачать в RuStore ↗",downloadApk:"Скачать APK ↗",demoLabel:"Пример пароля",demoNote:"Демонстрационный пример — реальные пароли генерируются только внутри приложения.",whyTitleSmall:"Приватность по умолчанию",whyTitle:"Работает полностью офлайн",featureOfflineTitle:"Без доступа в Интернет",featureOfflineText:"Приложение полностью работает офлайн и не обращается к удалённым серверам.",featureRandomTitle:"Надёжная генерация",featureRandomText:"Пароли создаются локально с помощью Android SecureRandom.",featureTrackingTitle:"Без аналитики и рекламы",featureTrackingText:"Нет аналитики, трекинга, рекламных SDK и облачных аккаунтов.",featureRulesTitle:"Гибкие правила",featureRulesText:"Настраивайте длину, наборы символов, исключение похожих и повторяющихся символов.",featureStrengthTitle:"Оценка стойкости",featureStrengthText:"Индикатор учитывает длину, разнообразие символов, повторы, последовательности и слабые шаблоны.",featureUiTitle:"Современный Android-интерфейс",featureUiText:"Material 3, светлая и тёмная темы, Dynamic Color на Android 12+, русский и английский.",detailsEyebrow:"Данные",detailsTitle:"Что хранит приложение",passwordsLabel:"Пароли",passwordsValue:"Только в памяти; приложение их не сохраняет",settingsLabel:"Настройки",settingsValue:"Параметры генератора хранятся локально",networkLabel:"Сеть",networkValue:"Нет разрешения INTERNET",analyticsLabel:"Аналитика",analyticsValue:"Отсутствует",ctaTitle:"Создавайте пароли, ничего никуда не отправляя.",ctaText:"Для Android 8.0 и новее.",privacyPolicy:"Политика конфиденциальности",backProduct:"← Password Generator",privacyTitle:"Политика конфиденциальности",privacyUpdated:"Последнее обновление: 1 сентября 2026 года",privacyIntro:"Password Generator — приватное офлайн-приложение для Android.",privacyCollectionTitle:"Сбор данных",privacyCollectionText:"Password Generator не собирает, не передаёт, не продаёт и иным образом не раскрывает персональные данные или данные об использовании приложения. Приложение не использует аналитику, рекламные SDK, технологии отслеживания, телеметрию, сервисы отчётов о сбоях, облачную синхронизацию или удалённые учётные записи.",privacyNetworkTitle:"Доступ к сети",privacyNetworkText:"Password Generator не запрашивает Android-разрешение INTERNET и не взаимодействует с удалёнными серверами.",privacyPasswordsTitle:"Пароли",privacyPasswordsText:"Пароли создаются локально на устройстве с использованием криптографически стойкого генератора случайных чисел Android. Сгенерированные пароли находятся только в оперативной памяти и не сохраняются приложением в постоянное хранилище.",privacyClipboardText:"При копировании пароль помещается в системный буфер обмена Android. На поддерживаемых версиях Android приложение помечает скопированные пароли как конфиденциальные и пытается удалить собственное значение через 60 секунд, если Android по-прежнему разрешает доступ к буферу и в нём всё ещё находится это же значение.",privacySettingsTitle:"Локальные настройки",privacySettingsText:"Приложение сохраняет на устройстве только настройки генератора с помощью Android DataStore. Сгенерированные пароли в них не хранятся. Резервное копирование данных приложения отключено, а правила переноса явно исключают настройки генератора.",privacyPermissionsTitle:"Разрешения",privacyPermissionsText:"Приложение запрашивает только разрешение Android на вибрацию для тактильной обратной связи. Оно не запрашивает доступ к контактам, местоположению, камере, микрофону, хранилищу, телефону, SMS, рекламным идентификаторам или сети.",privacyChildrenTitle:"Дети",privacyChildrenText:"Password Generator не собирает данные ни у кого, включая детей, поскольку приложение вообще не собирает персональные данные или сведения об использовании.",privacyThirdTitle:"Сторонние сервисы",privacyThirdText:"Приложение не интегрировано со сторонними сервисами аналитики, рекламы, отслеживания, авторизации или облачными сервисами. Внешние ссылки открываются Android в другом приложении, например браузере, и регулируются политикой соответствующего сервиса.",privacyChangesTitle:"Изменения",privacyChangesText:"Если практика обработки данных в приложении изменится, эта Политика конфиденциальности будет обновлена до выпуска или одновременно с выпуском соответствующей версии приложения.",privacyContactTitle:"Контакты",privacyContactText:"По вопросам конфиденциальности, сообщениям об ошибках и другим вопросам используйте репозиторий проекта GitHub." }
+    en: {
+      skip: "Skip to content",
+      navApps: "Apps",
+      navAbout: "About",
+      eyebrow: "Independent software developer",
+      heroTitle: "Simple software that respects your time and privacy.",
+      heroLead: "I build focused apps with a preference for local processing, clear interfaces and minimal data collection.",
+      viewApps: "View apps",
+      githubProfile: "GitHub profile",
+      appsEyebrow: "Software",
+      appsTitle: "Apps",
+      appsLead: "Projects built for real everyday use.",
+      pgSummary: "A privacy-focused offline password generator with configurable rules and a password-strength indicator.",
+      tagOffline: "100% offline",
+      tagNoAds: "No ads",
+      tagNoTracking: "No tracking",
+      learnMore: "Learn more →",
+      moreApps: "More apps",
+      moreAppsText: "More projects will appear here as their public pages are prepared.",
+      aboutEyebrow: "About",
+      aboutTitle: "Stanley Lloyd",
+      aboutText1: "Independent developer working on Android, desktop and utility software.",
+      aboutText2: "This site is the public home for my apps: product information, downloads, privacy policies and support links — without exposing source code for closed projects.",
+      privacy: "Privacy",
+      home: "Home",
+      backHome: "← All apps",
+      pgHero: "Secure passwords, generated locally on your Android device.",
+      getRustore: "Get it on RuStore ↗",
+      downloadApk: "Download APK ↗",
+      demoLabel: "Password preview",
+      demoNote: "Illustrative preview — passwords are generated only inside the app.",
+      whyTitleSmall: "Privacy by design",
+      whyTitle: "Built to stay offline",
+      featureOfflineTitle: "No Internet permission",
+      featureOfflineText: "The app works fully offline and does not communicate with remote servers.",
+      featureRandomTitle: "Secure generation",
+      featureRandomText: "Passwords are generated locally using Android SecureRandom.",
+      featureTrackingTitle: "No analytics or ads",
+      featureTrackingText: "No analytics, tracking, advertising SDKs or cloud accounts.",
+      featureRulesTitle: "Flexible rules",
+      featureRulesText: "Choose length, character groups, ambiguous-character exclusion and duplicate handling.",
+      featureStrengthTitle: "Strength indicator",
+      featureStrengthText: "The indicator considers length, character variety, repetition, sequences and weak patterns.",
+      featureUiTitle: "Modern Android UI",
+      featureUiText: "Material 3, light and dark themes, Dynamic Color on Android 12+, English and Russian.",
+      detailsEyebrow: "Details",
+      detailsTitle: "What it stores",
+      passwordsLabel: "Passwords",
+      passwordsValue: "Memory only; not saved by the app",
+      settingsLabel: "Settings",
+      settingsValue: "Generator preferences stored locally",
+      networkLabel: "Network",
+      networkValue: "No INTERNET permission",
+      analyticsLabel: "Analytics",
+      analyticsValue: "None",
+      ctaTitle: "Generate passwords without sending anything anywhere.",
+      ctaText: "Available for Android 8.0 and newer.",
+      privacyPolicy: "Privacy policy",
+      backProduct: "← Password Generator",
+      privacyTitle: "Privacy Policy",
+      privacyUpdated: "Last updated: September 1, 2026",
+      privacyIntro: "Password Generator is a privacy-focused offline Android application.",
+      privacyCollectionTitle: "Data collection",
+      privacyCollectionText: "Password Generator does not collect, transmit, sell or otherwise disclose personal data or app-usage data. It does not use analytics, advertising SDKs, tracking, telemetry, crash-reporting services, cloud synchronization or remote accounts.",
+      privacyNetworkTitle: "Network access",
+      privacyNetworkText: "Password Generator does not request the Android INTERNET permission and does not communicate with remote servers.",
+      privacyPasswordsTitle: "Passwords",
+      privacyPasswordsText: "Passwords are generated locally on the device using Android's cryptographically secure random-number generator. Generated passwords exist only in memory and are not saved by the app to persistent storage.",
+      privacyClipboardText: "When copied, a password is placed in the Android system clipboard. On supported Android versions the app marks copied passwords as sensitive and attempts to remove its own value after 60 seconds when Android still allows clipboard access and the same value is still present.",
+      privacySettingsTitle: "Local settings",
+      privacySettingsText: "Only generator preferences are stored locally using Android DataStore. Generated passwords are not stored in these preferences. Android app backup is disabled and transfer rules explicitly exclude generator preferences.",
+      privacyPermissionsTitle: "Permissions",
+      privacyPermissionsText: "The app requests only Android vibration permission for haptic feedback. It does not request contacts, location, camera, microphone, storage, phone, SMS, advertising identifiers or network access.",
+      privacyChildrenTitle: "Children",
+      privacyChildrenText: "Password Generator does not collect data from anyone, including children, because the app does not collect personal or usage data at all.",
+      privacyThirdTitle: "Third-party services",
+      privacyThirdText: "The app does not integrate third-party analytics, advertising, tracking, authentication or cloud services. External links are opened by Android in another app such as a browser and are governed by that service's privacy practices.",
+      privacyChangesTitle: "Changes",
+      privacyChangesText: "If the app's data practices change, this Privacy Policy will be updated before or together with the corresponding app release.",
+      privacyContactTitle: "Contact",
+      privacyContactText: "For privacy questions, bug reports or other questions, use the project's GitHub repository."
+    },
+    ru: {
+      skip: "К содержимому",
+      navApps: "Приложения",
+      navAbout: "О разработчике",
+      eyebrow: "Независимый разработчик",
+      heroTitle: "Простые приложения, которые уважают ваше время и приватность.",
+      heroLead: "Я создаю сфокусированные приложения с локальной обработкой данных, понятным интерфейсом и минимальным сбором информации.",
+      viewApps: "Смотреть приложения",
+      githubProfile: "Профиль GitHub",
+      appsEyebrow: "Программы",
+      appsTitle: "Приложения",
+      appsLead: "Проекты, созданные для повседневного использования.",
+      pgSummary: "Приватный офлайн-генератор паролей с гибкими правилами и индикатором стойкости.",
+      tagOffline: "100% офлайн",
+      tagNoAds: "Без рекламы",
+      tagNoTracking: "Без отслеживания",
+      learnMore: "Подробнее →",
+      moreApps: "Другие приложения",
+      moreAppsText: "Здесь появятся новые проекты по мере подготовки их публичных страниц.",
+      aboutEyebrow: "О разработчике",
+      aboutTitle: "Stanley Lloyd",
+      aboutText1: "Независимый разработчик Android-приложений, настольных программ и утилит.",
+      aboutText2: "Этот сайт — публичная страница моих приложений: описание, загрузки, политики конфиденциальности и поддержка — без публикации исходного кода закрытых проектов.",
+      privacy: "Конфиденциальность",
+      home: "Главная",
+      backHome: "← Все приложения",
+      pgHero: "Надёжные пароли, которые создаются локально на вашем Android-устройстве.",
+      getRustore: "Скачать в RuStore ↗",
+      downloadApk: "Скачать APK ↗",
+      demoLabel: "Пример пароля",
+      demoNote: "Демонстрационный пример — реальные пароли генерируются только внутри приложения.",
+      whyTitleSmall: "Приватность по умолчанию",
+      whyTitle: "Работает полностью офлайн",
+      featureOfflineTitle: "Без доступа в Интернет",
+      featureOfflineText: "Приложение полностью работает офлайн и не обращается к удалённым серверам.",
+      featureRandomTitle: "Надёжная генерация",
+      featureRandomText: "Пароли создаются локально с помощью Android SecureRandom.",
+      featureTrackingTitle: "Без аналитики и рекламы",
+      featureTrackingText: "Нет аналитики, отслеживания, рекламных SDK и облачных аккаунтов.",
+      featureRulesTitle: "Гибкие правила",
+      featureRulesText: "Настраивайте длину, наборы символов, исключение похожих и повторяющихся символов.",
+      featureStrengthTitle: "Оценка стойкости",
+      featureStrengthText: "Индикатор учитывает длину, разнообразие символов, повторы, последовательности и слабые шаблоны.",
+      featureUiTitle: "Современный Android-интерфейс",
+      featureUiText: "Material 3, светлая и тёмная темы, Dynamic Color на Android 12+, русский и английский.",
+      detailsEyebrow: "Данные",
+      detailsTitle: "Что хранит приложение",
+      passwordsLabel: "Пароли",
+      passwordsValue: "Только в памяти; приложение их не сохраняет",
+      settingsLabel: "Настройки",
+      settingsValue: "Параметры генератора хранятся локально",
+      networkLabel: "Сеть",
+      networkValue: "Нет разрешения INTERNET",
+      analyticsLabel: "Аналитика",
+      analyticsValue: "Отсутствует",
+      ctaTitle: "Создавайте пароли, ничего никуда не отправляя.",
+      ctaText: "Для Android 8.0 и новее.",
+      privacyPolicy: "Политика конфиденциальности",
+      backProduct: "← Password Generator",
+      privacyTitle: "Политика конфиденциальности",
+      privacyUpdated: "Последнее обновление: 1 сентября 2026 года",
+      privacyIntro: "Password Generator — приватное офлайн-приложение для Android.",
+      privacyCollectionTitle: "Сбор данных",
+      privacyCollectionText: "Password Generator не собирает, не передаёт, не продаёт и иным образом не раскрывает персональные данные или данные об использовании приложения. Приложение не использует аналитику, рекламные SDK, технологии отслеживания, телеметрию, сервисы отчётов о сбоях, облачную синхронизацию или удалённые учётные записи.",
+      privacyNetworkTitle: "Доступ к сети",
+      privacyNetworkText: "Password Generator не запрашивает Android-разрешение INTERNET и не взаимодействует с удалёнными серверами.",
+      privacyPasswordsTitle: "Пароли",
+      privacyPasswordsText: "Пароли создаются локально на устройстве с использованием криптографически стойкого генератора случайных чисел Android. Сгенерированные пароли находятся только в оперативной памяти и не сохраняются приложением в постоянное хранилище.",
+      privacyClipboardText: "При копировании пароль помещается в системный буфер обмена Android. На поддерживаемых версиях Android приложение помечает скопированные пароли как конфиденциальные и пытается удалить собственное значение через 60 секунд, если Android по-прежнему разрешает доступ к буферу и в нём всё ещё находится это же значение.",
+      privacySettingsTitle: "Локальные настройки",
+      privacySettingsText: "Приложение сохраняет на устройстве только настройки генератора с помощью Android DataStore. Сгенерированные пароли в них не хранятся. Резервное копирование данных приложения отключено, а правила переноса явно исключают настройки генератора.",
+      privacyPermissionsTitle: "Разрешения",
+      privacyPermissionsText: "Приложение запрашивает только разрешение Android на вибрацию для тактильной обратной связи. Оно не запрашивает доступ к контактам, местоположению, камере, микрофону, хранилищу, телефону, SMS, рекламным идентификаторам или сети.",
+      privacyChildrenTitle: "Дети",
+      privacyChildrenText: "Password Generator не собирает данные ни у кого, включая детей, поскольку приложение вообще не собирает персональные данные или сведения об использовании.",
+      privacyThirdTitle: "Сторонние сервисы",
+      privacyThirdText: "Приложение не интегрировано со сторонними сервисами аналитики, рекламы, отслеживания, авторизации или облачными сервисами. Внешние ссылки открываются Android в другом приложении, например браузере, и регулируются политикой соответствующего сервиса.",
+      privacyChangesTitle: "Изменения",
+      privacyChangesText: "Если практика обработки данных в приложении изменится, эта Политика конфиденциальности будет обновлена до выпуска или одновременно с выпуском соответствующей версии приложения.",
+      privacyContactTitle: "Контакты",
+      privacyContactText: "По вопросам конфиденциальности, сообщениям об ошибках и другим вопросам используйте репозиторий проекта GitHub."
+    }
   };
-  const storedLang=localStorage.getItem("site-language"); let lang=storedLang||(navigator.language&&navigator.language.toLowerCase().startsWith("ru")?"ru":"en");
-  const applyLanguage=()=>{root.lang=lang;document.querySelectorAll("[data-i18n]").forEach(el=>{const key=el.dataset.i18n;if(translations[lang][key])el.textContent=translations[lang][key]});const toggle=document.getElementById("lang-toggle");if(toggle){toggle.textContent=lang==="ru"?"EN":"RU";toggle.setAttribute("aria-label",lang==="ru"?"Switch to English":"Переключить на русский")};localStorage.setItem("site-language",lang)};
-  document.getElementById("lang-toggle")?.addEventListener("click",()=>{lang=lang==="ru"?"en":"ru";applyLanguage()});
-  const storedTheme=localStorage.getItem("site-theme")||"auto"; root.dataset.theme=storedTheme; const themeToggle=document.getElementById("theme-toggle"); const themes=["auto","light","dark"];
-  themeToggle?.addEventListener("click",()=>{const current=root.dataset.theme||"auto";const next=themes[(themes.indexOf(current)+1)%themes.length];root.dataset.theme=next;localStorage.setItem("site-theme",next);themeToggle.title=`Theme: ${next}`}); if(themeToggle)themeToggle.title=`Theme: ${storedTheme}`;
-  const year=document.getElementById("year");if(year)year.textContent=new Date().getFullYear();applyLanguage();
+
+  const storedLang = localStorage.getItem("site-language");
+  let lang = storedLang || (navigator.language && navigator.language.toLowerCase().startsWith("ru") ? "ru" : "en");
+
+  const themeNames = {
+    en: { auto: "automatic", light: "light", dark: "dark" },
+    ru: { auto: "автоматически", light: "светлая", dark: "тёмная" }
+  };
+
+  const themeToggle = document.getElementById("theme-toggle");
+
+  const updateThemeLabel = () => {
+    if (!themeToggle) return;
+    const theme = root.dataset.theme || "auto";
+    themeToggle.title = lang === "ru" ? `Тема: ${themeNames.ru[theme]}` : `Theme: ${themeNames.en[theme]}`;
+    themeToggle.setAttribute("aria-label", lang === "ru" ? "Переключить тему" : "Toggle color theme");
+  };
+
+  const setLocalizedAria = (selector, en, ru) => {
+    const element = document.querySelector(selector);
+    if (element) element.setAttribute("aria-label", lang === "ru" ? ru : en);
+  };
+
+  const applyLanguage = () => {
+    root.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach((element) => {
+      const key = element.dataset.i18n;
+      if (translations[lang][key]) element.textContent = translations[lang][key];
+    });
+
+    const toggle = document.getElementById("lang-toggle");
+    if (toggle) {
+      toggle.textContent = lang === "ru" ? "EN" : "RU";
+      toggle.setAttribute("aria-label", lang === "ru" ? "Переключить на английский" : "Switch to Russian");
+    }
+
+    setLocalizedAria(".brand", "Stanley Lloyd home", "Главная Stanley Lloyd");
+    setLocalizedAria(".nav", "Primary navigation", "Основная навигация");
+    setLocalizedAria(".product-system", "Stanley Lloyd product ecosystem", "Экосистема продуктов Stanley Lloyd");
+    setLocalizedAria(".quick-facts", "Portfolio summary", "Кратко о портфолио");
+    setLocalizedAria(".password-demo", "Password Generator interface preview", "Предпросмотр интерфейса Password Generator");
+
+    updateThemeLabel();
+    localStorage.setItem("site-language", lang);
+  };
+
+  document.getElementById("lang-toggle")?.addEventListener("click", () => {
+    lang = lang === "ru" ? "en" : "ru";
+    applyLanguage();
+  });
+
+  const storedTheme = localStorage.getItem("site-theme") || "auto";
+  root.dataset.theme = storedTheme;
+  const themes = ["auto", "light", "dark"];
+
+  themeToggle?.addEventListener("click", () => {
+    const current = root.dataset.theme || "auto";
+    const next = themes[(themes.indexOf(current) + 1) % themes.length];
+    root.dataset.theme = next;
+    localStorage.setItem("site-theme", next);
+    updateThemeLabel();
+  });
+
+  const year = document.getElementById("year");
+  if (year) year.textContent = new Date().getFullYear();
+
+  applyLanguage();
 })();
