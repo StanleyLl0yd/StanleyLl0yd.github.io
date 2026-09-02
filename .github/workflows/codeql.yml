@@ -18,6 +18,8 @@ jobs:
     name: CodeQL (${{ matrix.language }})
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      CODEQL_EXTRACTOR_JAVASCRIPT_ALLOW_MINIFIED_FILES: "true"
     permissions:
       actions: read
       contents: read
