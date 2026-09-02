@@ -9,3 +9,40 @@
   box-shadow:0 34px 86px rgba(17,27,70,.20);
 }
 .system-caption{display:none!important}
+
+/* Games: neutral section label and equal visual weight for every title. */
+#games .collection-head .eyebrow{font-size:0}
+html[lang="en"] #games .collection-head .eyebrow::after{content:"Games"}
+html[lang="ru"] #games .collection-head .eyebrow::after{content:"Игры"}
+#games .collection-head .eyebrow::after{
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.showcase-card.impulse-card,
+.showcase-card.infinite-card,
+.showcase-card.dots-card{
+  grid-column:span 4;
+  min-height:470px;
+}
+.showcase-visual{
+  min-height:220px;
+  height:220px;
+}
+.showcase-icon{
+  width:112px;
+  height:112px;
+  border-radius:26px;
+  object-fit:cover;
+}
+
+@media (max-width:960px){
+  .showcase-card.impulse-card,
+  .showcase-card.infinite-card,
+  .showcase-card.dots-card{
+    grid-column:1/-1;
+    min-height:380px;
+  }
+}
