@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" role="img" aria-labelledby="title">
+  <title id="title">Biorhythms</title>
+  <rect width="108" height="108" rx="22" fill="#080347"/>
+  <path d="M27 74C14 61 19 32 39 22S83 27 87 48 74 89 52 91C39 92 30 84 27 74" fill="none" stroke="#071D79" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M27 74C14 61 19 32 39 22S83 27 87 48 74 89 52 91C39 92 30 84 27 74" fill="none" stroke="#078EDB" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 48C28 30 44 48 55 68 65 84 78 86 94 68" fill="none" stroke="#71350F" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 48C28 30 44 48 55 68 65 84 78 86 94 68" fill="none" stroke="#E7A30A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 58C26 80 40 72 52 48 62 28 76 41 94 57" fill="none" stroke="#351056" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M14 58C26 80 40 72 52 48 62 28 76 41 94 57" fill="none" stroke="#7F258F" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
