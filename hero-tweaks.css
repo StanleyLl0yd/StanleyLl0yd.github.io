@@ -1,0 +1,11 @@
+/* Stable hero system: intentionally independent from product count and current OS list. */
+.system-panel{
+  transform:none;
+  transition:border-color .22s ease,box-shadow .22s ease;
+}
+.system-panel:hover{
+  transform:none;
+  border-color:color-mix(in srgb,var(--accent) 28%,var(--line));
+  box-shadow:0 34px 86px rgba(17,27,70,.20);
+}
+.system-caption{display:none!important}
