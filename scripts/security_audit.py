@@ -233,13 +233,7 @@ def main() -> int:
             findings.append((path, "symbolic links are forbidden in the published site"))
 
     if findings:
-        print("Security audit failed:", file=sys.stderr)
-        for path, message in findings:
-            try:
-                display = path.relative_to(ROOT)
-            except ValueError:
-                display = Path("<outside-root>")
-            print(f"- {display}: {message}", file=sys.stderr)
+        print("Security audit failed: repository policy violation detected.", file=sys.stderr)
         return 1
 
     print("Security audit passed.")
