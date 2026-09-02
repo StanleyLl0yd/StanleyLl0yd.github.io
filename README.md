@@ -2,7 +2,12 @@
   <img src="./assets/favicon.svg" width="92" height="92" alt="SL">
   <h1>Stanley Lloyd</h1>
   <p><strong>Apps & Games</strong></p>
-  <p>Focused software. Games with ideas.<br>Продуманные приложения. Игры с характером.</p>
+  <p>Focused software. Games with ideas.</p>
+  <p>
+    <a href="./README.md"><kbd>EN · English</kbd></a>
+    &nbsp;
+    <a href="./README_RU.md"><kbd>RU · Русский</kbd></a>
+  </p>
   <p>
     <a href="https://stanleyll0yd.github.io/">Website</a>
     ·
@@ -13,8 +18,6 @@
 ---
 
 I build compact products with clear interfaces, deliberate mechanics and as little unnecessary complexity as possible.
-
-Я делаю компактные продукты с понятным интерфейсом, продуманной механикой и минимумом лишней сложности.
 
 ## Released products
 
@@ -48,12 +51,13 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 
 The portfolio is a dependency-light static site built with HTML, CSS and vanilla JavaScript. Product artwork is stored locally in this repository, so the public site does not depend on application source repositories remaining public.
 
-Security is treated as part of the product surface: the site uses a strict browser policy, the `main` branch is PR-only, and every change must pass the required `static-security-audit` check before it can be merged.
+Security is treated as part of the product surface: the `main` branch is protected and PR-only, changes pass a dedicated static security audit and CodeQL analysis, and secret scanning with push protection is enabled for the repository.
 
 For vulnerability reporting and security details, see **[SECURITY.md](./SECURITY.md)**.
 
 ---
 
 <div align="center">
-  <sub>Stanley Lloyd · Apps & Games · RU / EN</sub>
+  <p><a href="./README_RU.md"><kbd>RU · Читать по-русски</kbd></a></p>
+  <sub>Stanley Lloyd · Apps & Games · EN / RU</sub>
 </div>
