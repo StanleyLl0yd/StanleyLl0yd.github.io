@@ -70,6 +70,8 @@ class SiteParser(HTMLParser):
         tag = tag.lower()
 
         for name, value in attrs.items():
+            if name == "style":
+                self.errors.append("inline style attribute")
             if name.startswith("on"):
                 self.errors.append(f"inline event handler {name}")
             if value.strip().lower().startswith("javascript:"):
