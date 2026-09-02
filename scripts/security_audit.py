@@ -18,6 +18,7 @@ REQUIRED_CSP = {
     "style-src-elem 'self'",
     "style-src-attr 'unsafe-inline'",
     "img-src 'self'",
+    "font-src 'self'",
     "connect-src 'none'",
     "child-src 'none'",
     "frame-src 'none'",
@@ -42,6 +43,10 @@ DANGEROUS_JS = {
     "insertAdjacentHTML": re.compile(r"\.insertAdjacentHTML\s*\("),
     "document.write": re.compile(r"\bdocument\.write\s*\("),
 }
+WRITE_PERMISSION = re.compile(
+    r"^\s*(?:actions|attestations|checks|contents|deployments|discussions|id-token|issues|models|packages|pages|pull-requests|repository-projects|security-events|statuses):\s*write\s*$",
+    re.MULTILINE,
+)
 
 
 def is_external(value: str) -> bool:
@@ -149,7 +154,10 @@ def audit_svg(path: Path) -> list[str]:
     for marker in ("<script", "javascript:", "onload=", "onerror=", "<foreignobject"):
         if marker in text:
             errors.append(f"active SVG content: {marker}")
-    if "http://" in text:
+
+    # The canonical SVG XML namespace is an identifier, not a network request.
+    scrubbed = text.replace("http://www.w3.org/2000/svg", "")
+    if "http://" in scrubbed:
         errors.append("insecure external SVG reference")
     return errors
 
@@ -166,6 +174,8 @@ def audit_workflows() -> list[tuple[Path, str]]:
             errors.append((path, "pull_request_target is forbidden"))
         if "write-all" in text:
             errors.append((path, "write-all permissions are forbidden"))
+        if WRITE_PERMISSION.search(text):
+            errors.append((path, "write-capable workflow permissions are forbidden"))
         for line in text.splitlines():
             stripped = line.strip()
             if stripped.startswith("uses:") or stripped.startswith("- uses:"):
