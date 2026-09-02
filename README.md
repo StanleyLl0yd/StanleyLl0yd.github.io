@@ -3,10 +3,11 @@
   <h1>Stanley Lloyd</h1>
   <p><strong>Apps & Games</strong></p>
   <p>Focused software. Games with ideas.</p>
+  <p><strong>Language</strong></p>
   <p>
-    <a href="./README.md"><kbd>EN · English</kbd></a>
-    &nbsp;
-    <a href="./README_RU.md"><kbd>RU · Русский</kbd></a>
+    <a href="./README.md"><img src="./assets/readme/lang-en-active.svg" width="168" height="44" alt="English selected"></a>
+    &nbsp;&nbsp;
+    <a href="./README_RU.md"><img src="./assets/readme/lang-ru.svg" width="168" height="44" alt="Switch to Russian"></a>
   </p>
   <p>
     <a href="https://stanleyll0yd.github.io/">Website</a>
@@ -58,6 +59,7 @@ For vulnerability reporting and security details, see **[SECURITY.md](./SECURITY
 ---
 
 <div align="center">
-  <p><a href="./README_RU.md"><kbd>RU · Читать по-русски</kbd></a></p>
+  <p><strong>Русская версия</strong></p>
+  <p><a href="./README_RU.md"><img src="./assets/readme/lang-ru.svg" width="168" height="44" alt="Read in Russian"></a></p>
   <sub>Stanley Lloyd · Apps & Games · EN / RU</sub>
 </div>
