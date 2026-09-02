@@ -1,0 +1,5 @@
+Contact: https://github.com/StanleyLl0yd/StanleyLl0yd.github.io/security/policy
+Policy: https://github.com/StanleyLl0yd/StanleyLl0yd.github.io/security/policy
+Canonical: https://stanleyll0yd.github.io/.well-known/security.txt
+Expires: 2027-09-02T00:00:00Z
+Preferred-Languages: en, ru
