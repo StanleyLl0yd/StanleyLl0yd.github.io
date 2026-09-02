@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en" data-theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stanley Lloyd — Apps & Software</title>
+  <meta name="description" content="Independent software developer. Privacy-focused Android apps and useful software by Stanley Lloyd.">
+  <meta name="theme-color" content="#0b1020">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Stanley Lloyd — Apps & Software">
+  <meta property="og:description" content="Independent software developer. Privacy-focused apps and useful software.">
+  <meta property="og:url" content="https://stanleyll0yd.github.io/">
+  <link rel="canonical" href="https://stanleyll0yd.github.io/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/script.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="/" aria-label="Stanley Lloyd home"><span class="brand-mark" aria-hidden="true">SL</span><span>Stanley Lloyd</span></a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#apps" data-i18n="navApps">Apps</a>
+        <a href="#about" data-i18n="navAbout">About</a>
+        <a href="https://github.com/StanleyLl0yd" rel="me noopener" target="_blank">GitHub</a>
+      </nav>
+      <div class="controls">
+        <button class="control-btn" id="lang-toggle" type="button" aria-label="Switch language">RU</button>
+        <button class="control-btn icon-btn" id="theme-toggle" type="button" aria-label="Toggle color theme"><span class="theme-icon" aria-hidden="true">◐</span></button>
+      </div>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="eyebrow">Independent software developer</p>
+          <h1 data-i18n="heroTitle">Simple software that respects your time and privacy.</h1>
+          <p class="hero-lead" data-i18n="heroLead">I build focused apps with a preference for local processing, clear interfaces and minimal data collection.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#apps" data-i18n="viewApps">View apps</a>
+            <a class="btn secondary" href="https://github.com/StanleyLl0yd" target="_blank" rel="noopener" data-i18n="githubProfile">GitHub profile</a>
+          </div>
+        </div>
+        <div class="hero-card" aria-label="Development principles">
+          <div class="code-window">
+            <div class="code-dots" aria-hidden="true"><span></span><span></span><span></span></div>
+            <pre><code><span class="code-muted">// software principles</span>
+privacy      = <span class="code-value">local_first</span>
+interface    = <span class="code-value">clear</span>
+dependencies = <span class="code-value">minimal</span>
+quality      = <span class="code-value">tested</span></code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="apps">
+      <div class="container">
+        <div class="section-heading"><div><p class="eyebrow" data-i18n="appsEyebrow">Software</p><h2 data-i18n="appsTitle">Apps</h2></div><p data-i18n="appsLead">Projects built for real everyday use.</p></div>
+        <div class="apps-grid">
+          <article class="app-card featured">
+            <a class="app-card-main" href="/apps/password-generator/">
+              <div class="app-icon-wrap"><img class="app-icon" src="https://raw.githubusercontent.com/StanleyLl0yd/password-generator/main/artwork/app-icon.webp" alt="Password Generator app icon" width="96" height="96" loading="lazy"></div>
+              <div class="app-card-copy">
+                <div class="app-title-row"><h3>Password Generator</h3><span class="pill">Android</span></div>
+                <p data-i18n="pgSummary">A privacy-focused offline password generator with configurable rules and a password-strength indicator.</p>
+                <div class="tags" aria-label="Highlights"><span data-i18n="tagOffline">100% offline</span><span data-i18n="tagNoAds">No ads</span><span data-i18n="tagNoTracking">No tracking</span><span>Android 8+</span></div>
+              </div><span class="arrow" aria-hidden="true">→</span>
+            </a>
+            <div class="app-card-actions"><a class="text-link" href="https://www.rustore.ru/catalog/app/com.sl.passwordgenerator" target="_blank" rel="noopener">RuStore ↗</a><a class="text-link" href="/apps/password-generator/" data-i18n="learnMore">Learn more →</a></div>
+          </article>
+          <article class="app-card placeholder-card"><div><span class="placeholder-icon" aria-hidden="true">+</span><h3 data-i18n="moreApps">More apps</h3><p data-i18n="moreAppsText">More projects will appear here as their public pages are prepared.</p></div></article>
+        </div>
+      </div>
+    </section>
+    <section class="section muted-section" id="about">
+      <div class="container about-grid">
+        <div><p class="eyebrow" data-i18n="aboutEyebrow">About</p><h2 data-i18n="aboutTitle">Stanley Lloyd</h2></div>
+        <div class="about-copy"><p data-i18n="aboutText1">Independent developer working on Android, desktop and utility software.</p><p data-i18n="aboutText2">This site is the public home for my apps: product information, downloads, privacy policies and support links — without exposing source code for closed projects.</p></div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer"><div class="container footer-wrap"><p>© <span id="year">2026</span> Stanley Lloyd</p><div class="footer-links"><a href="https://github.com/StanleyLl0yd" target="_blank" rel="noopener">GitHub</a><a href="/apps/password-generator/privacy/" data-i18n="privacy">Privacy</a></div></div></footer>
+</body>
+</html>
