@@ -8,13 +8,14 @@
   <meta name="theme-color" content="#0b1020">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Stanley Lloyd — Apps & Games">
-  <meta property="og:description" content="Focused apps and original games across mobile, web and desktop.">
+  <meta property="og:description" content="Focused apps and games across mobile, web and desktop.">
   <meta property="og:url" content="https://stanleyll0yd.github.io/">
   <link rel="canonical" href="https://stanleyll0yd.github.io/">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/portfolio.css">
   <link rel="stylesheet" href="/hero-tweaks.css">
+  <link rel="stylesheet" href="/app-cards.css">
   <script src="/script.js" defer></script>
 </head>
 <body>
@@ -80,8 +81,8 @@
     <section class="collection-section" id="games">
       <div class="container">
         <div class="collection-head">
-          <div><p class="eyebrow"><span class="lang-en">Original games</span><span class="lang-ru">Авторские игры</span></p><h2><span class="lang-en">Three different ways to think.</span><span class="lang-ru">Три разных способа думать.</span></h2></div>
-          <p><span class="lang-en">Minimal rules, readable visuals and mechanics that reveal depth through play rather than tutorials.</span><span class="lang-ru">Минимум правил, читаемый визуальный язык и механики, которые раскрываются в самой игре.</span></p>
+          <div><p class="eyebrow"><span class="lang-en">Games</span><span class="lang-ru">Игры</span></p><h2><span class="lang-en">Three games. Three different approaches.</span><span class="lang-ru">Три игры. Три разных подхода.</span></h2></div>
+          <p><span class="lang-en">From an original one-tap chain reaction to digital versions of classic board games.</span><span class="lang-ru">От авторской цепной реакции в одно касание до цифровых версий классических настольных игр.</span></p>
         </div>
         <div class="showcase-grid">
           <a class="showcase-card impulse-card" href="/apps/impulse/">
@@ -102,22 +103,37 @@
 
     <section class="collection-section muted-section" id="apps">
       <div class="container">
-        <div class="collection-head"><div><p class="eyebrow"><span class="lang-en">Apps</span><span class="lang-ru">Приложения</span></p><h2><span class="lang-en">Useful by design.</span><span class="lang-ru">Польза без лишнего.</span></h2></div><p><span class="lang-en">Focused Android tools with local-first storage and clear boundaries around what they can and cannot do.</span><span class="lang-ru">Сфокусированные Android-приложения с локальным хранением данных и понятными границами возможностей.</span></p></div>
-        <div class="utility-feature">
-          <a class="utility-card" href="/apps/password-generator/">
-            <img class="utility-icon" src="/assets/icons/password-generator.webp" alt="Password Generator icon" width="100" height="100">
-            <div><div class="app-title-row"><h3>Password Generator</h3><span class="pill">Android</span></div><p><span class="lang-en">Offline password generation, flexible rules, strength analysis and no analytics or ads.</span><span class="lang-ru">Офлайн-генерация паролей, гибкие правила, оценка стойкости — без аналитики и рекламы.</span></p></div><span class="utility-arrow" aria-hidden="true">→</span>
-          </a>
-          <div class="principles-card"><strong><span class="lang-en">Product principles</span><span class="lang-ru">Принципы продуктов</span></strong><div class="principles-list"><span><span class="lang-en">Clear primary purpose</span><span class="lang-ru">Понятная основная задача</span></span><span><span class="lang-en">Minimal unnecessary dependencies</span><span class="lang-ru">Минимум лишних зависимостей</span></span><span><span class="lang-en">Local-first where it makes sense</span><span class="lang-ru">Локальная работа там, где это возможно</span></span><span><span class="lang-en">Responsive, accessible interfaces</span><span class="lang-ru">Адаптивные и доступные интерфейсы</span></span></div></div>
+        <div class="collection-head">
+          <div><p class="eyebrow"><span class="lang-en">Apps</span><span class="lang-ru">Приложения</span></p><h2><span class="lang-en">Tools for everyday tasks.</span><span class="lang-ru">Инструменты на каждый день.</span></h2></div>
+          <p><span class="lang-en">Focused Android apps with clear purposes, local-first data handling and no unnecessary complexity.</span><span class="lang-ru">Сфокусированные Android-приложения с понятными задачами, локальной работой с данными и без лишней сложности.</span></p>
         </div>
-        <div class="utility-grid">
-          <a class="utility-card" href="/apps/my-cycle/">
-            <img class="utility-icon" src="/assets/icons/my-cycle.svg" alt="My Cycle icon" width="100" height="100">
-            <div><div class="app-title-row"><h3>My Cycle</h3><span class="pill">Android</span></div><p><span class="lang-en">A private period diary with careful date ranges, local history, statistics and CSV export.</span><span class="lang-ru">Приватный дневник цикла с осторожными диапазонами дат, локальной историей, статистикой и экспортом CSV.</span></p></div><span class="utility-arrow" aria-hidden="true">→</span>
+        <div class="app-showcase-grid">
+          <a class="app-showcase-card password-app" href="/apps/password-generator/">
+            <div class="app-showcase-visual"><span class="app-icon-frame"><img src="/assets/icons/password-generator.webp" alt="Password Generator icon" width="90" height="90"></span></div>
+            <div class="app-showcase-body">
+              <div class="app-showcase-head"><h3>Password Generator</h3><span class="app-platform">Android</span></div>
+              <p><span class="lang-en">Offline password generation with flexible rules, strength analysis and no analytics or ads.</span><span class="lang-ru">Офлайн-генерация паролей с гибкими правилами, оценкой стойкости — без аналитики и рекламы.</span></p>
+              <div class="app-showcase-tags"><span>Offline</span><span>SecureRandom</span><span>No ads</span></div>
+              <div class="app-showcase-link"><span class="lang-en">Product page</span><span class="lang-ru">Страница приложения</span><b aria-hidden="true">→</b></div>
+            </div>
           </a>
-          <a class="utility-card" href="/apps/biorhythms/">
-            <img class="utility-icon" src="/assets/icons/biorhythms.webp" alt="Biorhythms icon" width="100" height="100">
-            <div><div class="app-title-row"><h3>Biorhythms</h3><span class="pill">Android</span></div><p><span class="lang-en">Classic physical, emotional and intellectual cycles with an interactive chart and home-screen widget.</span><span class="lang-ru">Классические физический, эмоциональный и интеллектуальный циклы с интерактивным графиком и виджетом.</span></p></div><span class="utility-arrow" aria-hidden="true">→</span>
+          <a class="app-showcase-card cycle-app" href="/apps/my-cycle/">
+            <div class="app-showcase-visual"><span class="app-icon-frame"><img src="/assets/icons/my-cycle.svg" alt="My Cycle icon" width="90" height="90"></span></div>
+            <div class="app-showcase-body">
+              <div class="app-showcase-head"><h3>My Cycle</h3><span class="app-platform">Android</span></div>
+              <p><span class="lang-en">A private period diary with careful date ranges, local history, statistics and CSV export.</span><span class="lang-ru">Приватный дневник цикла с осторожными диапазонами дат, локальной историей, статистикой и экспортом CSV.</span></p>
+              <div class="app-showcase-tags"><span>Local data</span><span>History</span><span>CSV</span></div>
+              <div class="app-showcase-link"><span class="lang-en">Product page</span><span class="lang-ru">Страница приложения</span><b aria-hidden="true">→</b></div>
+            </div>
+          </a>
+          <a class="app-showcase-card biorhythm-app" href="/apps/biorhythms/">
+            <div class="app-showcase-visual"><span class="app-icon-frame"><img src="/assets/icons/biorhythms.webp" alt="Biorhythms icon" width="90" height="90"></span></div>
+            <div class="app-showcase-body">
+              <div class="app-showcase-head"><h3>Biorhythms</h3><span class="app-platform">Android</span></div>
+              <p><span class="lang-en">Classic physical, emotional and intellectual cycles with an interactive chart and home-screen widget.</span><span class="lang-ru">Классические физический, эмоциональный и интеллектуальный циклы с интерактивным графиком и виджетом.</span></p>
+              <div class="app-showcase-tags"><span>Widget</span><span>Interactive chart</span><span>RU · EN</span></div>
+              <div class="app-showcase-link"><span class="lang-en">Product page</span><span class="lang-ru">Страница приложения</span><b aria-hidden="true">→</b></div>
+            </div>
           </a>
         </div>
       </div>
