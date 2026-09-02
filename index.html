@@ -2,6 +2,8 @@
 <html lang="en" data-theme="auto">
 <head>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-elem 'self'; style-src-attr 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'none'; child-src 'none'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none'; upgrade-insecure-requests; trusted-types 'none'; require-trusted-types-for 'script'">
+  <meta name="referrer" content="no-referrer">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Stanley Lloyd — Apps & Games</title>
   <meta name="description" content="Apps, games and software projects by Stanley Lloyd across mobile, web and desktop.">
@@ -28,7 +30,7 @@
         <a href="#apps" data-i18n="navApps">Apps</a>
         <a href="#development"><span class="lang-en">In development</span><span class="lang-ru">В разработке</span></a>
         <a href="#about" data-i18n="navAbout">About</a>
-        <a href="https://github.com/StanleyLl0yd" rel="me noopener" target="_blank">GitHub</a>
+        <a href="https://github.com/StanleyLl0yd" rel="me noopener noreferrer" target="_blank">GitHub</a>
       </nav>
       <div class="controls">
         <button class="control-btn" id="lang-toggle" type="button" aria-label="Switch language">RU</button>
@@ -156,19 +158,19 @@
           <p><span class="lang-en">These projects are already being built and tested, but their scope, compatibility or distribution is not final yet.</span><span class="lang-ru">Эти проекты уже разрабатываются и тестируются, но их возможности, совместимость или формат распространения ещё не финальны.</span></p>
         </div>
         <div class="development-grid">
-          <a class="development-card" href="https://github.com/StanleyLl0yd/autobook" target="_blank" rel="noopener">
+          <a class="development-card" href="https://github.com/StanleyLl0yd/autobook" target="_blank" rel="noopener noreferrer">
             <img src="/assets/icons/autobook.svg" alt="AutoBook project mark" width="76" height="76">
             <div class="development-copy"><div class="development-topline"><h3>AutoBook</h3><span class="development-stage"><span class="lang-en">In development</span><span class="lang-ru">В разработке</span></span></div><p><span class="lang-en">Local-first vehicle service history with mileage, maintenance, costs and upcoming work.</span><span class="lang-ru">Локальная история автомобиля: пробег, обслуживание, расходы и предстоящие работы.</span></p><div class="development-meta">Android · Flutter · v0.1.1</div></div><span class="development-arrow" aria-hidden="true">↗</span>
           </a>
-          <a class="development-card" href="https://github.com/StanleyLl0yd/disk-usage" target="_blank" rel="noopener">
+          <a class="development-card" href="https://github.com/StanleyLl0yd/disk-usage" target="_blank" rel="noopener noreferrer">
             <img src="/assets/icons/disk-usage.svg" alt="DiskUsage project mark" width="76" height="76">
             <div class="development-copy"><div class="development-topline"><h3>DiskUsage</h3><span class="development-stage">Preview</span></div><p><span class="lang-en">Privacy-first macOS disk analyzer with tree and sunburst views for finding space hogs.</span><span class="lang-ru">Локальный анализатор диска для macOS с деревом и sunburst-визуализацией занятого пространства.</span></p><div class="development-meta">macOS · SwiftUI</div></div><span class="development-arrow" aria-hidden="true">↗</span>
           </a>
-          <a class="development-card" href="https://github.com/StanleyLl0yd/what-fits" target="_blank" rel="noopener">
+          <a class="development-card" href="https://github.com/StanleyLl0yd/what-fits" target="_blank" rel="noopener noreferrer">
             <img src="/assets/icons/what-fits.svg" alt="What Fits? project mark" width="76" height="76">
             <div class="development-copy"><div class="development-topline"><h3>What Fits?</h3><span class="development-stage">Prototype</span></div><p><span class="lang-en">Identify a printer or MFP and find compatible consumables with evidence from a verified source.</span><span class="lang-ru">Определение модели принтера или МФУ и поиск совместимых расходников с подтверждающим источником.</span></p><div class="development-meta">Android · Offline OCR · v0.0.10</div></div><span class="development-arrow" aria-hidden="true">↗</span>
           </a>
-          <a class="development-card" href="https://github.com/StanleyLl0yd/watchrelay" target="_blank" rel="noopener">
+          <a class="development-card" href="https://github.com/StanleyLl0yd/watchrelay" target="_blank" rel="noopener noreferrer">
             <img src="/assets/icons/watchrelay.svg" alt="WatchRelay project mark" width="76" height="76">
             <div class="development-copy"><div class="development-topline"><h3>WatchRelay</h3><span class="development-stage">MVP</span></div><p><span class="lang-en">Playback tracking companion for Android and Android TV with conservative watched-state sync to MyShows.</span><span class="lang-ru">Компаньон для Android и Android TV: отслеживание просмотра и аккуратная синхронизация статуса с MyShows.</span></p><div class="development-meta">Android · Android TV · 0.4-dev</div></div><span class="development-arrow" aria-hidden="true">↗</span>
           </a>
@@ -184,6 +186,6 @@
     </section>
   </main>
 
-  <footer class="site-footer"><div class="container footer-wrap"><p>© <span id="year">2026</span> Stanley Lloyd</p><div class="footer-links"><a href="#games"><span class="lang-en">Games</span><span class="lang-ru">Игры</span></a><a href="#apps" data-i18n="navApps">Apps</a><a href="#development"><span class="lang-en">In development</span><span class="lang-ru">В разработке</span></a><a href="https://github.com/StanleyLl0yd" target="_blank" rel="noopener">GitHub</a></div></div></footer>
+  <footer class="site-footer"><div class="container footer-wrap"><p>© <span id="year">2026</span> Stanley Lloyd</p><div class="footer-links"><a href="#games"><span class="lang-en">Games</span><span class="lang-ru">Игры</span></a><a href="#apps" data-i18n="navApps">Apps</a><a href="#development"><span class="lang-en">In development</span><span class="lang-ru">В разработке</span></a><a href="https://github.com/StanleyLl0yd" target="_blank" rel="noopener noreferrer">GitHub</a></div></div></footer>
 </body>
 </html>
