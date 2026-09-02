@@ -16,7 +16,7 @@ REQUIRED_CSP = {
     "script-src-attr 'none'",
     "style-src 'self'",
     "style-src-elem 'self'",
-    "style-src-attr 'unsafe-inline'",
+    "style-src-attr 'none'",
     "img-src 'self'",
     "font-src 'self'",
     "connect-src 'none'",
