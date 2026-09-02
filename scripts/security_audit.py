@@ -44,9 +44,12 @@ DANGEROUS_JS = {
     "document.write": re.compile(r"\bdocument\.write\s*\("),
 }
 WRITE_PERMISSION = re.compile(
-    r"^\s*(?:actions|attestations|checks|contents|deployments|discussions|id-token|issues|models|packages|pages|pull-requests|repository-projects|security-events|statuses):\s*write\s*$",
+    r"^\s*(actions|attestations|checks|contents|deployments|discussions|id-token|issues|models|packages|pages|pull-requests|repository-projects|security-events|statuses):\s*write\s*$",
     re.MULTILINE,
 )
+ALLOWED_WORKFLOW_WRITES = {
+    ".github/workflows/codeql.yml": {"security-events"},
+}
 
 
 def is_external(value: str) -> bool:
@@ -172,12 +175,18 @@ def audit_workflows() -> list[tuple[Path, str]]:
     sha_ref = re.compile(r"^[0-9a-f]{40}(?:\s*#.*)?$")
     for path in sorted(workflow_dir.glob("*.y*ml")):
         text = path.read_text(encoding="utf-8")
+        relative = path.relative_to(ROOT).as_posix()
+        allowed_writes = ALLOWED_WORKFLOW_WRITES.get(relative, set())
+
         if "pull_request_target:" in text:
             errors.append((path, "pull_request_target is forbidden"))
         if "write-all" in text:
             errors.append((path, "write-all permissions are forbidden"))
-        if WRITE_PERMISSION.search(text):
-            errors.append((path, "write-capable workflow permissions are forbidden"))
+        for match in WRITE_PERMISSION.finditer(text):
+            permission = match.group(1)
+            if permission not in allowed_writes:
+                errors.append((path, f"write-capable workflow permission is forbidden: {permission}"))
+
         for line in text.splitlines():
             stripped = line.strip()
             if stripped.startswith("uses:") or stripped.startswith("- uses:"):
