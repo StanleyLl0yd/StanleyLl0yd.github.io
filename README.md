@@ -1,13 +1,14 @@
-# stanleyll0yd.github.io
+# Stanley Lloyd — Apps & Games
 
-Public website for **Stanley Lloyd** and published applications.
+Official public product website for software by Stanley Lloyd.
 
 Live site: https://stanleyll0yd.github.io/
 
-## Structure
+## Products
 
-- `/` — developer homepage and app catalog
-- `/apps/password-generator/` — Password Generator product page
-- `/apps/password-generator/privacy/` — Privacy Policy
+- IMPULSE
+- Infinite Five
+- Dots
+- Password Generator
 
-The site is intentionally static: HTML, CSS and vanilla JavaScript only.
+The website is a dependency-light static site built with HTML, CSS and vanilla JavaScript. Product icons are stored locally in this repository so public pages do not depend on source repositories remaining public.
