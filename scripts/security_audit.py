@@ -76,12 +76,12 @@ class SiteParser(HTMLParser):
             if name == "style":
                 self.errors.append("inline style attribute")
             if name.startswith("on"):
-                self.errors.append(f"inline event handler {name}")
+                self.errors.append("inline event handler")
             if value.strip().lower().startswith("javascript:"):
-                self.errors.append(f"javascript: URL in {tag}[{name}]")
+                self.errors.append("javascript: URL")
 
         if tag in {"form", "iframe", "object", "embed"}:
-            self.errors.append(f"forbidden active/embed element <{tag}>")
+            self.errors.append("forbidden active/embed element")
 
         if tag == "meta":
             if attrs.get("http-equiv", "").lower() == "content-security-policy":
@@ -95,24 +95,23 @@ class SiteParser(HTMLParser):
             src = attrs.get("src", "")
             self._script_has_src = bool(src)
             if src and is_external(src):
-                self.errors.append(f"external script source: {src}")
+                self.errors.append("external script source")
 
         if tag in {"img", "source", "video", "audio"}:
             src = attrs.get("src", "")
             if src and is_external(src):
-                self.errors.append(f"external {tag} source: {src}")
+                self.errors.append("external media source")
 
         if tag == "link":
             rel = set(attrs.get("rel", "").lower().split())
             href = attrs.get("href", "")
             if rel & {"stylesheet", "icon", "manifest", "preload", "modulepreload"} and is_external(href):
-                self.errors.append(f"external subresource link: {href}")
+                self.errors.append("external subresource link")
 
         if tag == "a" and attrs.get("target", "").lower() == "_blank":
             rel = set(attrs.get("rel", "").lower().split())
-            missing = {"noopener", "noreferrer"} - rel
-            if missing:
-                self.errors.append(f"target=_blank missing rel={','.join(sorted(missing))}")
+            if {"noopener", "noreferrer"} - rel:
+                self.errors.append("target=_blank missing required rel protections")
 
     def handle_endtag(self, tag: str) -> None:
         if tag.lower() == "script":
@@ -134,9 +133,8 @@ def audit_html(path: Path) -> list[str]:
     errors = list(parser.errors)
 
     policy = {item.strip() for item in parser.csp.split(";") if item.strip()}
-    missing = REQUIRED_CSP - policy
-    if missing:
-        errors.append("CSP missing: " + ", ".join(sorted(missing)))
+    if REQUIRED_CSP - policy:
+        errors.append("CSP is missing required directives")
     if parser.referrer.lower() != "no-referrer":
         errors.append("referrer policy must be no-referrer")
     if "http://" in text.lower():
@@ -147,9 +145,9 @@ def audit_html(path: Path) -> list[str]:
 def audit_javascript(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
     errors: list[str] = []
-    for name, pattern in DANGEROUS_JS.items():
+    for pattern in DANGEROUS_JS.values():
         if pattern.search(text):
-            errors.append(f"dangerous JS sink: {name}")
+            errors.append("dangerous JavaScript sink")
     return errors
 
 
@@ -158,7 +156,7 @@ def audit_svg(path: Path) -> list[str]:
     errors: list[str] = []
     for marker in ("<script", "javascript:", "onload=", "onerror=", "<foreignobject"):
         if marker in text:
-            errors.append(f"active SVG content: {marker}")
+            errors.append("active SVG content")
 
     # The canonical SVG XML namespace is an identifier, not a network request.
     scrubbed = text.replace("http://www.w3.org/2000/svg", "")
@@ -183,20 +181,19 @@ def audit_workflows() -> list[tuple[Path, str]]:
         if "write-all" in text:
             errors.append((path, "write-all permissions are forbidden"))
         for match in WRITE_PERMISSION.finditer(text):
-            permission = match.group(1)
-            if permission not in allowed_writes:
-                errors.append((path, f"write-capable workflow permission is forbidden: {permission}"))
+            if match.group(1) not in allowed_writes:
+                errors.append((path, "unauthorized write-capable workflow permission"))
 
         for line in text.splitlines():
             stripped = line.strip()
             if stripped.startswith("uses:") or stripped.startswith("- uses:"):
                 value = stripped.split("uses:", 1)[1].strip()
                 if "@" not in value:
-                    errors.append((path, f"unpinned action: {value}"))
+                    errors.append((path, "unpinned action reference"))
                     continue
                 ref = value.rsplit("@", 1)[1]
                 if not sha_ref.match(ref):
-                    errors.append((path, f"action must be pinned to a full commit SHA: {value}"))
+                    errors.append((path, "action must be pinned to a full commit SHA"))
     return errors
 
 
@@ -206,9 +203,9 @@ def audit_secrets() -> list[tuple[Path, str]]:
         if not path.is_file() or ".git" in path.parts or path.suffix.lower() not in TEXT_SUFFIXES:
             continue
         text = path.read_text(encoding="utf-8", errors="ignore")
-        for name, pattern in SECRET_PATTERNS.items():
+        for pattern in SECRET_PATTERNS.values():
             if pattern.search(text):
-                errors.append((path, f"possible {name}"))
+                errors.append((path, "possible secret detected"))
     return errors
 
 
@@ -241,7 +238,7 @@ def main() -> int:
             try:
                 display = path.relative_to(ROOT)
             except ValueError:
-                display = path
+                display = Path("<outside-root>")
             print(f"- {display}: {message}", file=sys.stderr)
         return 1
 
