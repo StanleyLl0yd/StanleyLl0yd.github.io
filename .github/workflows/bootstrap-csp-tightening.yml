@@ -1,0 +1,32 @@
+name: Bootstrap CSP tightening
+
+on:
+  push:
+    branches:
+      - security/full-hardening
+
+permissions:
+  contents: write
+
+jobs:
+  tighten-csp:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+
+      - name: Remove inline style allowance
+        run: python3 scripts/tighten_csp.py
+
+      - name: Commit tightened CSP
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add --all
+          git commit -m "Disallow inline style attributes in CSP"
+          git push
