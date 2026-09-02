@@ -9,9 +9,10 @@
 .password-app .app-showcase-visual{background:radial-gradient(circle at 50% 45%,rgba(72,225,218,.14),transparent 34%),linear-gradient(145deg,#101729,#151a2d)}
 .cycle-app .app-showcase-visual{background:radial-gradient(circle at 50% 45%,rgba(225,122,108,.17),transparent 34%),linear-gradient(145deg,#fff7f5,#f8e9e5)}
 .biorhythm-app .app-showcase-visual{background:radial-gradient(circle at 50% 45%,rgba(95,90,255,.18),transparent 34%),linear-gradient(145deg,#10172b,#171d38)}
-.app-icon-frame{position:relative;z-index:2;display:grid;width:104px;height:104px;place-items:center;border:1px solid rgba(255,255,255,.24);border-radius:26px;background:rgba(255,255,255,.84);box-shadow:0 10px 26px rgba(17,27,70,.13);backdrop-filter:blur(8px)}
-.app-icon-frame img{display:block;width:94px;height:94px;border-radius:21px;object-fit:cover}
-.cycle-app .app-icon-frame{background:rgba(255,255,255,.72);border-color:rgba(225,122,108,.12)}
+.app-icon-frame{position:relative;z-index:2;display:grid;width:104px;height:104px;place-items:center;border:0;border-radius:24px;background:transparent;box-shadow:none;backdrop-filter:none}
+.app-icon-frame img{display:block;width:104px;height:104px;border-radius:24px;object-fit:cover;box-shadow:0 14px 34px rgba(9,16,38,.22);transition:transform .2s ease,box-shadow .2s ease}
+.cycle-app .app-icon-frame{background:transparent;border:0}
+.app-showcase-card:hover .app-icon-frame img{transform:translateY(-2px) scale(1.025);box-shadow:0 18px 38px rgba(9,16,38,.26)}
 .app-showcase-body{display:flex;flex:1;flex-direction:column;padding:25px 26px 26px}
 .app-showcase-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}
 .app-showcase-head h3{margin:0;font-size:25px;line-height:1.08;letter-spacing:-.04em}
@@ -23,5 +24,5 @@
 .app-showcase-link b{font-size:18px;font-weight:500;color:var(--muted);transition:transform .18s ease,color .18s ease}
 .app-showcase-card:hover .app-showcase-link b{transform:translateX(4px);color:var(--accent)}
 @media (max-width:960px){.app-showcase-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.app-showcase-card:last-child{grid-column:1/-1}}
-@media (max-width:680px){.app-showcase-grid{grid-template-columns:1fr}.app-showcase-card:last-child{grid-column:auto}.app-showcase-card{min-height:380px}.app-showcase-visual{height:170px}.app-icon-frame{width:96px;height:96px;border-radius:24px}.app-icon-frame img{width:88px;height:88px;border-radius:20px}}
-@media (prefers-reduced-motion:reduce){.app-showcase-card,.app-showcase-link b{transition:none!important}}
+@media (max-width:680px){.app-showcase-grid{grid-template-columns:1fr}.app-showcase-card:last-child{grid-column:auto}.app-showcase-card{min-height:380px}.app-showcase-visual{height:170px}.app-icon-frame{width:92px;height:92px;border-radius:22px}.app-icon-frame img{width:92px;height:92px;border-radius:22px}}
+@media (prefers-reduced-motion:reduce){.app-showcase-card,.app-showcase-link b,.app-icon-frame img{transition:none!important}}
