@@ -37,7 +37,7 @@
 | | Проект | Платформа | Статус |
 |---|---|---|---|
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Активная разработка |
-| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | Предварительная версия |
+| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | Только исходный код |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Прототип |
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | Разработка MVP |
 
