@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "products": [
+    {
+      "id": "impulse",
+      "name": "IMPULSE",
+      "repo": "StanleyLl0yd/impulse",
+      "page": "apps/impulse/index.html",
+      "version": "1.0.0",
+      "asset_patterns": [
+        "Impulse-{version}.apk",
+        "Impulse-{version}.aab"
+      ],
+      "site_icon": "assets/icons/impulse.svg",
+      "source_icon": {
+        "path": "app/src/main/res/drawable/ic_launcher_foreground.xml",
+        "sha": "978292600ba345364fcbcb599d090d57f760333b"
+      }
+    },
+    {
+      "id": "infinite-five",
+      "name": "Infinite Five",
+      "repo": "StanleyLl0yd/infinite-five",
+      "page": "apps/infinite-five/index.html",
+      "version": "0.6.3",
+      "asset_patterns": [
+        "*Android*.apk",
+        "*Android*.aab",
+        "*macOS*.dmg"
+      ],
+      "site_icon": "assets/icons/infinite-five.webp",
+      "source_icon": {
+        "path": "branding/infinite-five-icon-master.png",
+        "sha": "4dd65acc6b1076e8aa8106cad4964385d572cdfd"
+      }
+    },
+    {
+      "id": "dots",
+      "name": "Dots",
+      "repo": "StanleyLl0yd/dots",
+      "page": "apps/dots/index.html",
+      "version": "0.9.4",
+      "asset_patterns": [
+        "Dots-v{version}-Android.aab",
+        "Dots-v{version}-macOS-universal.dmg",
+        "Dots-v{version}-RuStore-assets.zip"
+      ],
+      "site_icon": "assets/icons/dots.svg",
+      "source_icon": {
+        "path": "src-tauri/icons/icon.png",
+        "sha": "a44754938cc997310bf11f33043d88f1b0b1cde8"
+      }
+    },
+    {
+      "id": "password-generator",
+      "name": "Password Generator",
+      "repo": "StanleyLl0yd/password-generator",
+      "page": "apps/password-generator/index.html",
+      "version": "1.5.5",
+      "asset_patterns": [
+        "password-generator-{version}.apk",
+        "password-generator-{version}.aab"
+      ],
+      "site_icon": "assets/icons/password-generator.webp",
+      "source_icon": {
+        "path": "artwork/app-icon.webp",
+        "sha": "f59eaee35f209a9584937d1404d554dff961ea89"
+      }
+    },
+    {
+      "id": "my-cycle",
+      "name": "My Cycle",
+      "repo": "StanleyLl0yd/my-cycle",
+      "page": "apps/my-cycle/index.html",
+      "version": "1.3.1",
+      "asset_patterns": [
+        "My-Cycle-v{version}.aab"
+      ],
+      "site_icon": "assets/icons/my-cycle.webp",
+      "source_icon": {
+        "path": "app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp",
+        "sha": "c06973a6ecbc2c63d8e05460a8f6264c88c12bd3"
+      }
+    },
+    {
+      "id": "biorhythms",
+      "name": "Biorhythms",
+      "repo": "StanleyLl0yd/biorhythms",
+      "page": "apps/biorhythms/index.html",
+      "version": "1.6.3",
+      "asset_patterns": [
+        "biorhythms-v{version}.apk",
+        "biorhythms-v{version}.aab"
+      ],
+      "site_icon": "assets/icons/biorhythms.svg",
+      "source_icon": {
+        "path": "app/src/main/ic_launcher-playstore.png",
+        "sha": "c365ed51b874d3b538debe68699e91410efab4b1"
+      }
+    },
+    {
+      "id": "everon",
+      "name": "Everon",
+      "repo": "StanleyLl0yd/everon",
+      "page": "apps/everon/index.html",
+      "version": "2.8.2",
+      "asset_patterns": [
+        "Everon.exe",
+        "Everon.exe.sha256"
+      ],
+      "site_icon": "assets/icons/everon.webp",
+      "source_icon": {
+        "path": "src/Everon.ico",
+        "sha": "d27aaeed35cc802e2dede673df88afbcc95f15e2"
+      }
+    }
+  ]
+}
