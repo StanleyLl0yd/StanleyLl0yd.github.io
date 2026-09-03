@@ -1,1 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Everon"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b1220"/><stop offset="1" stop-color="#17263b"/></linearGradient><linearGradient id="a" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#67e8f9"/><stop offset="1" stop-color="#22c55e"/></linearGradient></defs><rect width="512" height="512" rx="112" fill="url(#g)"/><circle cx="256" cy="256" r="142" fill="none" stroke="#26364f" stroke-width="18"/><path d="M256 104v122" stroke="url(#a)" stroke-width="34" stroke-linecap="round"/><path d="M173 153a142 142 0 1 0 166 0" fill="none" stroke="#f8fafc" stroke-width="34" stroke-linecap="round"/><circle cx="392" cy="120" r="18" fill="#22c55e"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Everon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071b68"/>
+      <stop offset="0.52" stop-color="#0d46e8"/>
+      <stop offset="1" stop-color="#06184f"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="42%" cy="38%" r="68%">
+      <stop offset="0" stop-color="#ffe85a"/>
+      <stop offset="1" stop-color="#ffc400"/>
+    </radialGradient>
+  </defs>
+  <rect width="256" height="256" rx="48" fill="url(#bg)"/>
+  <rect x="47" y="54" width="162" height="132" rx="25" fill="none" stroke="#fff" stroke-width="13"/>
+  <path d="M111 186v25H88a7 7 0 0 0 0 14h80a7 7 0 0 0 0-14h-23v-25z" fill="#fff"/>
+  <circle cx="128" cy="124" r="26" fill="url(#sun)"/>
+  <g stroke="#ffd30a" stroke-width="8" stroke-linecap="round">
+    <path d="M128 82V68M128 180v-14M86 124H72M184 124h-14M98 94 88 84M168 164l-10-10M158 94l10-10M88 164l10-10"/>
+  </g>
+</svg>
