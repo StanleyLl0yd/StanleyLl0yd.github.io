@@ -345,6 +345,16 @@ Do not publish user-supplied or externally sourced SVG without reviewing it for 
 
 Keep product artwork faithful to the corresponding product. Do not arbitrarily redraw or materially alter product identity assets while making unrelated site changes.
 
+### Product artwork synchronization
+
+Whenever a released product is synchronized with the portfolio, verify its current canonical icon or launcher artwork from the authoritative product repository or release in the same pass as versions, text, changelog and download links.
+
+A product sync is incomplete until the artwork has been checked. If the authoritative artwork changed, update every affected public use consistently, including the main portfolio card, product page artwork, favicon where applicable, README tables and other product-specific surfaces.
+
+Prefer the exact repository-local raster artwork. Technical resizing or format conversion is allowed only when required by the site and only when the visual content is unchanged. Do not redraw, trace, reinterpret, simplify or otherwise substitute an approximation for authoritative product artwork.
+
+If the artwork did not change, explicitly verify that the published asset still matches the authoritative source rather than assuming it is current.
+
 ## Accessibility and UX
 
 Accessibility is part of the public product quality of the site.
@@ -468,6 +478,7 @@ For site-content changes, also verify as applicable:
 - all changed internal links and local assets resolve;
 - changed external links use HTTPS and point to the intended destination;
 - changed product/download links point to an authoritative official location;
+- released-product icon and artwork match the authoritative project source across all public uses;
 - EN/RU content remains semantically synchronized;
 - Russian copy is maximally and naturally localized according to this file;
 - responsive layout remains usable;
