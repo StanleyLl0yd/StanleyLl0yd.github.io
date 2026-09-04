@@ -24,7 +24,7 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 
 | | Product | Platform | Focus |
 |---|---|---|---|
-| <img src="./assets/icons/impulse.svg" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Original one-tap chain-reaction game |
+| <img src="./assets/icons/impulse.webp" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Original one-tap chain-reaction game |
 | <img src="./assets/icons/infinite-five.webp" width="42" height="42" alt="Infinite Five"> | **[Infinite Five](https://stanleyll0yd.github.io/apps/infinite-five/)** | Web / Native | Five in a row on an effectively infinite board |
 | <img src="./assets/icons/dots.svg" width="42" height="42" alt="Dots"> | **[Dots](https://stanleyll0yd.github.io/apps/dots/)** | Web / Native | Digital version of the classic territory game |
 | <img src="./assets/icons/password-generator.webp" width="42" height="42" alt="Password Generator"> | **[Password Generator](https://stanleyll0yd.github.io/apps/password-generator/)** | Android | Offline password generation and strength analysis |
