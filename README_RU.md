@@ -24,7 +24,7 @@
 
 | | Продукт | Платформа | Назначение |
 |---|---|---|---|
-| <img src="./assets/icons/impulse.webp" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Авторская игра о цепной реакции, управляемая одним касанием |
+| <img src="./assets/icons/impulse.svg" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Авторская игра о цепной реакции, управляемая одним касанием |
 | <img src="./assets/icons/infinite-five.webp" width="42" height="42" alt="Infinite Five"> | **[Infinite Five](https://stanleyll0yd.github.io/apps/infinite-five/)** | Web / Native | Пять в ряд на практически бесконечном поле |
 | <img src="./assets/icons/dots.svg" width="42" height="42" alt="Точки"> | **[Точки](https://stanleyll0yd.github.io/apps/dots/)** | Web / Native | Цифровая версия классической игры на захват территории |
 | <img src="./assets/icons/password-generator.webp" width="42" height="42" alt="Password Generator"> | **[Password Generator](https://stanleyll0yd.github.io/apps/password-generator/)** | Android | Офлайн-генерация паролей и оценка их стойкости |
