@@ -24,19 +24,19 @@
 
 | | Продукт | Платформа | Назначение |
 |---|---|---|---|
-| <img src="./assets/icons/impulse.webp" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Авторская игра о цепной реакции, управляемая одним касанием |
+| <img src="./assets/icons/impulse.png" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Авторская игра о цепной реакции, управляемая одним касанием |
 | <img src="./assets/icons/infinite-five.webp" width="42" height="42" alt="Infinite Five"> | **[Infinite Five](https://stanleyll0yd.github.io/apps/infinite-five/)** | Web / Native | Пять в ряд на практически бесконечном поле |
-| <img src="./assets/icons/dots.svg" width="42" height="42" alt="Точки"> | **[Точки](https://stanleyll0yd.github.io/apps/dots/)** | Web / Native | Цифровая версия классической игры на захват территории |
+| <img src="./assets/icons/dots.png" width="42" height="42" alt="Точки"> | **[Точки](https://stanleyll0yd.github.io/apps/dots/)** | Web / Native | Цифровая версия классической игры на захват территории |
 | <img src="./assets/icons/password-generator.webp" width="42" height="42" alt="Password Generator"> | **[Password Generator](https://stanleyll0yd.github.io/apps/password-generator/)** | Android | Офлайн-генерация паролей и оценка их стойкости |
 | <img src="./assets/icons/my-cycle.svg" width="42" height="42" alt="My Cycle"> | **[My Cycle](https://stanleyll0yd.github.io/apps/my-cycle/)** | Android | Приватный локальный дневник цикла |
-| <img src="./assets/icons/biorhythms.svg" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Классические биоритмы, интерактивный график и виджет |
+| <img src="./assets/icons/biorhythms.png" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Классические биоритмы, интерактивный график и виджет |
 | <img src="./assets/icons/everon.webp" width="42" height="42" alt="Everon"> | **[Everon](https://stanleyll0yd.github.io/apps/everon/)** | Windows x64 | Лёгкая утилита в системном трее для предотвращения автоматического сна |
 
 ## В разработке
 
 | | Проект | Платформа | Статус |
 |---|---|---|---|
-| <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | Пре-альфа / R0 |
+| <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | R1 · пре-альфа |
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Активная разработка |
 | <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | Только исходный код |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Прототип |

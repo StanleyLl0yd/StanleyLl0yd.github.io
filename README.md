@@ -24,19 +24,19 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 
 | | Product | Platform | Focus |
 |---|---|---|---|
-| <img src="./assets/icons/impulse.webp" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Original one-tap chain-reaction game |
+| <img src="./assets/icons/impulse.png" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Original one-tap chain-reaction game |
 | <img src="./assets/icons/infinite-five.webp" width="42" height="42" alt="Infinite Five"> | **[Infinite Five](https://stanleyll0yd.github.io/apps/infinite-five/)** | Web / Native | Five in a row on an effectively infinite board |
-| <img src="./assets/icons/dots.svg" width="42" height="42" alt="Dots"> | **[Dots](https://stanleyll0yd.github.io/apps/dots/)** | Web / Native | Digital version of the classic territory game |
+| <img src="./assets/icons/dots.png" width="42" height="42" alt="Dots"> | **[Dots](https://stanleyll0yd.github.io/apps/dots/)** | Web / Native | Digital version of the classic territory game |
 | <img src="./assets/icons/password-generator.webp" width="42" height="42" alt="Password Generator"> | **[Password Generator](https://stanleyll0yd.github.io/apps/password-generator/)** | Android | Offline password generation and strength analysis |
 | <img src="./assets/icons/my-cycle.svg" width="42" height="42" alt="My Cycle"> | **[My Cycle](https://stanleyll0yd.github.io/apps/my-cycle/)** | Android | Private local-first cycle diary |
-| <img src="./assets/icons/biorhythms.svg" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Classic cycles, interactive chart and widget |
+| <img src="./assets/icons/biorhythms.png" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Classic cycles, interactive chart and widget |
 | <img src="./assets/icons/everon.webp" width="42" height="42" alt="Everon"> | **[Everon](https://stanleyll0yd.github.io/apps/everon/)** | Windows x64 | Lightweight keep-awake tray utility |
 
 ## In development
 
 | | Project | Platform | Status |
 |---|---|---|---|
-| <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | Pre-alpha / R0 |
+| <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | R1 pre-alpha |
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Active development |
 | <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | Source-only distribution |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Prototype |
