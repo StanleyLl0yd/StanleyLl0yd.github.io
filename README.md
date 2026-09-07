@@ -36,6 +36,7 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 
 | | Project | Platform | Status |
 |---|---|---|---|
+| <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | Pre-alpha / R0 |
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Active development |
 | <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | Source-only distribution |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Prototype |
