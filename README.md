@@ -38,9 +38,9 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 |---|---|---|---|
 | <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | R1 pre-alpha |
 | <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M1 forecast core |
-| **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Compose / WebRTC | M1 complete · pre-M2 |
+| **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Compose / WebRTC | M3 E2EE session in progress · M0–M2 complete |
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Active development |
-| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | Source-only distribution |
+| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | R2 · source-only 0.1.0 |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Prototype |
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | MVP development |
 
