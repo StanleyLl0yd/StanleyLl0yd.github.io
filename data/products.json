@@ -88,7 +88,11 @@
       "socialImage": null,
       "privacyPath": "/apps/password-generator/privacy/",
       "status": "released",
-      "plannedScreenshots": ["Generator", "Rules and presets", "Strength analysis", "Clipboard privacy", "Light and dark themes"]
+      "screenshots": [
+      {"src": "/assets/screenshots/password-generator/generator.png", "label": "Generator"},
+      {"src": "/assets/screenshots/password-generator/about.png", "label": "About"},
+      {"src": "/assets/screenshots/password-generator/custom-password.png", "label": "Custom password"}
+    ]
     },
     {
       "id": "my-cycle",
