@@ -200,6 +200,7 @@ def validate_metadata(data: dict, errors: list[str]) -> None:
 
 
 def validate_products(data: dict, errors: list[str]) -> None:
+    origin = data["siteOrigin"].rstrip("/")
     home = (ROOT / "index.html").read_text(encoding="utf-8")
     ids: set[str] = set()
     for product in data["released"]:
@@ -246,11 +247,37 @@ def validate_products(data: dict, errors: list[str]) -> None:
                 fail(errors, f"{product_id}: declared privacy page does not exist: {privacy}")
             if privacy not in hrefs:
                 fail(errors, f"{page.relative_to(ROOT)}: privacy page is not linked")
-        if not product.get("plannedScreenshots") or len(product["plannedScreenshots"]) < 3:
+
+        screenshots = product.get("screenshots")
+        if screenshots:
+            if not isinstance(screenshots, list) or len(screenshots) < 3:
+                fail(errors, f"{product_id}: at least three verified screenshots are required")
+            image_srcs = {image.get("src", "") for image in parser.images}
+            for screenshot in screenshots:
+                if not isinstance(screenshot, dict):
+                    fail(errors, f"{product_id}: screenshot entries must be objects")
+                    continue
+                src = screenshot.get("src", "")
+                if not src:
+                    fail(errors, f"{product_id}: screenshot entry is missing src")
+                    continue
+                if not route_to_file(src).exists():
+                    fail(errors, f"{product_id}: declared screenshot does not exist: {src}")
+                if src not in image_srcs:
+                    fail(errors, f"{page.relative_to(ROOT)}: declared screenshot is not rendered: {src}")
+                if not screenshot.get("label", "").strip():
+                    fail(errors, f"{product_id}: screenshot entry is missing label: {src}")
+        elif not product.get("plannedScreenshots") or len(product["plannedScreenshots"]) < 3:
             fail(errors, f"{product_id}: at least three real-UI screenshot slots must be documented")
+
         social = product.get("socialImage")
-        if social and not route_to_file(social).exists():
-            fail(errors, f"{product_id}: declared social image does not exist: {social}")
+        if social:
+            if not route_to_file(social).exists():
+                fail(errors, f"{product_id}: declared social image does not exist: {social}")
+            expected_social = origin + social
+            actual_social = parser.meta.get(("property", "og:image"))
+            if actual_social != expected_social:
+                fail(errors, f"{page.relative_to(ROOT)}: og:image is {actual_social!r}, expected {expected_social!r}")
 
 
 def validate_internal_links(errors: list[str]) -> None:

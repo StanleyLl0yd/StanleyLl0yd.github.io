@@ -61,10 +61,14 @@
       "releaseUrl": "https://github.com/StanleyLl0yd/dots/releases/tag/v1.0.1",
       "downloads": ["https://github.com/StanleyLl0yd/dots/releases/download/v1.0.1/Dots-v1.0.1-macOS-universal.dmg"],
       "icon": "/assets/icons/dots.png",
-      "socialImage": null,
+      "socialImage": "/assets/social/dots.webp",
       "privacyPath": null,
       "status": "released",
-      "plannedScreenshots": ["Territory gameplay", "Capture example", "AI difficulty selection", "Game result"]
+      "screenshots": [
+        {"src": "/assets/screenshots/dots/game-capture.webp", "label": "Gameplay and capture"},
+        {"src": "/assets/screenshots/dots/vs-computer.webp", "label": "Vs computer"},
+        {"src": "/assets/screenshots/dots/local-play.webp", "label": "Local play"}
+      ]
     },
     {
       "id": "password-generator",
