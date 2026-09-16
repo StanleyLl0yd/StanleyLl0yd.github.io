@@ -38,7 +38,7 @@ jobs:
 
           products = Path('data/products.json')
           text = products.read_text(encoding='utf-8')
-          old = '      "plannedScreenshots": ["Today", "Diary/calendar", "History/statistics", "Widget", "Backup/export", "Privacy/biometric lock"]'
+          old = '      "plannedScreenshots": ["Today", "Diary and calendar", "History and statistics", "Widget", "Backup and export", "Privacy and biometric lock"]'
           new = '''      "screenshots": [
                 {"src": "/assets/screenshots/my-cycle/today.png", "label": "Today"},
                 {"src": "/assets/screenshots/my-cycle/calendar.png", "label": "Calendar"},
