@@ -18,6 +18,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "data" / "products.json"
 SITEMAP_FILE = ROOT / "sitemap.xml"
+ROBOTS_FILE = ROOT / "robots.txt"
 SITEMAP_NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
 
 
@@ -28,6 +29,7 @@ class PageParser(HTMLParser):
         self.in_title = False
         self.meta: dict[tuple[str, str], str] = {}
         self.links: list[tuple[str, str]] = []
+        self.anchors: list[dict[str, str]] = []
         self.canonical: str | None = None
         self.images: list[dict[str, str]] = []
 
@@ -44,6 +46,8 @@ class PageParser(HTMLParser):
             self.canonical = data.get("href")
         if tag in {"a", "link"} and data.get("href"):
             self.links.append((tag, data["href"]))
+        if tag == "a" and data.get("href"):
+            self.anchors.append(data)
         if tag in {"img", "script", "source"} and data.get("src"):
             self.links.append((tag, data["src"]))
         if tag == "img":
@@ -159,6 +163,16 @@ def validate_sitemap(data: dict, errors: list[str]) -> None:
             fail(errors, f"sitemap entry lacks lastmod: {item.findtext(loc_tag, default='(unknown)')}")
 
 
+def validate_robots(data: dict, errors: list[str]) -> None:
+    if not ROBOTS_FILE.exists():
+        fail(errors, "robots.txt is missing")
+        return
+    expected = f"Sitemap: {data['siteOrigin'].rstrip('/')}/sitemap.xml"
+    text = ROBOTS_FILE.read_text(encoding="utf-8")
+    if expected not in text:
+        fail(errors, f"robots.txt does not advertise the canonical sitemap: {expected}")
+
+
 def validate_metadata(data: dict, errors: list[str]) -> None:
     origin = data["siteOrigin"].rstrip("/")
     for route, _ in public_routes(data):
@@ -181,6 +195,8 @@ def validate_metadata(data: dict, errors: list[str]) -> None:
         for key in ("og:title", "og:description", "og:url"):
             if not parser.meta.get(("property", key), "").strip():
                 fail(errors, f"{path.relative_to(ROOT)}: missing {key}")
+        if parser.meta.get(("property", "og:url")) != parser.canonical:
+            fail(errors, f"{path.relative_to(ROOT)}: og:url must match canonical URL")
 
 
 def validate_products(data: dict, errors: list[str]) -> None:
@@ -209,9 +225,20 @@ def validate_products(data: dict, errors: list[str]) -> None:
         for download in product.get("downloads", []):
             if download not in hrefs:
                 fail(errors, f"{page.relative_to(ROOT)}: declared download URL not linked: {download}")
+            matching = [anchor for anchor in parser.anchors if anchor.get("href") == download]
+            if not matching or all(anchor.get("itemprop") != "downloadUrl" for anchor in matching):
+                fail(errors, f"{page.relative_to(ROOT)}: direct binary URL must use Schema.org downloadUrl: {download}")
         rustore = product.get("rustoreUrl")
-        if rustore and rustore not in hrefs:
-            fail(errors, f"{page.relative_to(ROOT)}: official tagged RuStore URL not linked")
+        if rustore:
+            if rustore not in hrefs:
+                fail(errors, f"{page.relative_to(ROOT)}: official RuStore URL not linked")
+            matching = [anchor for anchor in parser.anchors if anchor.get("href") == rustore]
+            if not matching or all(anchor.get("itemprop") != "installUrl" for anchor in matching):
+                fail(errors, f"{page.relative_to(ROOT)}: RuStore listing must use Schema.org installUrl")
+        for href in hrefs:
+            parsed = urlparse(href)
+            if parsed.hostname and parsed.hostname.lower().endswith("rustore.ru") and parsed.query:
+                fail(errors, f"{page.relative_to(ROOT)}: RuStore URL must not contain query parameters: {href}")
         privacy = product.get("privacyPath")
         if privacy:
             privacy_page = route_to_file(privacy)
@@ -252,6 +279,7 @@ def main() -> int:
 
     errors: list[str] = []
     validate_sitemap(data, errors)
+    validate_robots(data, errors)
     validate_metadata(data, errors)
     validate_products(data, errors)
     validate_internal_links(errors)
