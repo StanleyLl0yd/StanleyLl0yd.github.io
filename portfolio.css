@@ -21,3 +21,17 @@ repeating-linear-gradient(90deg,transparent 0 31px,rgba(78,142,230,.20) 31px 32p
 linear-gradient(rgba(7,17,42,.04),rgba(7,17,42,.16)),
 url("/assets/backgrounds/dots-underlay.webp") center/cover no-repeat;border-color:rgba(255,255,255,.09)}
 .dots-art::before{content:none}
+
+/* Real-screenshot gallery foundation. Empty slots are intentionally explicit rather than fake UI. */
+.screenshot-gallery{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(210px,280px);gap:1rem;overflow-x:auto;overscroll-behavior-inline:contain;scroll-snap-type:inline proximity;padding:.25rem .1rem 1rem}
+.screenshot-card,.screenshot-slot{scroll-snap-align:start;border:1px solid var(--line);border-radius:22px;background:var(--surface);box-shadow:var(--shadow);overflow:hidden}
+.screenshot-card img{display:block;width:100%;height:auto;background:var(--surface-2)}
+.screenshot-card figcaption,.screenshot-slot{padding:1rem}
+.screenshot-slot{min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(145deg,var(--surface),var(--surface-2));color:var(--muted)}
+.screenshot-slot strong{display:block;color:var(--text);margin-bottom:.4rem}
+.screenshot-note{max-width:760px;color:var(--muted)}
+.related-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem}
+a.related-card{display:block;color:inherit;text-decoration:none}
+a.related-card:hover{transform:translateY(-2px)}
+a.related-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){a.related-card:hover{transform:none}}
