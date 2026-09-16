@@ -1,0 +1,73 @@
+name: Import My Cycle screenshots
+
+on:
+  push:
+    branches:
+      - portfolio/my-cycle-real-gallery-2026-09-16
+
+permissions:
+  contents: write
+
+jobs:
+  import-screenshots:
+    name: import-screenshots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out import branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: true
+
+      - name: Download and verify authoritative screenshot artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          url='https://sdmntprnorthcentralus.oaiusercontent.com/files/00000000-cf3c-822f-bdb4-c40acfd461a1/raw?se=2026-09-16T14%3A41%3A56Z&sp=r&sv=2026-02-06&sr=b&scid=0708b253-664c-5d55-b5e1-b482479855c4&skoid=9b41a688-1b44-4731-856e-b0efcf3660ed&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-16T09%3A31%3A23Z&ske=2026-09-17T09%3A31%3A23Z&sks=b&skv=2026-02-06&sig=mLqqjH76vKwU153uz%2BV2TWbWMY93F4Oz5INKmtP6bDQ%3D'
+          curl --fail --silent --show-error --location "$url" -o /tmp/my-cycle-screenshots.zip
+          printf '%s  %s\n' 'bdce2c450701d4c2e7d9f62bda3e13011e34c8ec34694f403ec7c3f1c6c5888d' '/tmp/my-cycle-screenshots.zip' | sha256sum --check --strict
+
+          mkdir -p /tmp/my-cycle-unpack assets/screenshots/my-cycle
+          unzip -q /tmp/my-cycle-screenshots.zip -d /tmp/my-cycle-unpack
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+
+          root = Path('/tmp/my-cycle-unpack')
+          expected = [
+              '01-today.png',
+              '02-calendar.png',
+              '03-statistics.png',
+              '04-insights.png',
+              '05-privacy-report.png',
+          ]
+          actual = sorted(str(p.relative_to(root)) for p in root.rglob('*') if p.is_file())
+          if actual != expected:
+              raise SystemExit(f'unexpected artifact contents: {actual!r}')
+
+          for name in expected:
+              data = (root / name).read_bytes()
+              if data[:8] != b'\x89PNG\r\n\x1a\n':
+                  raise SystemExit(f'{name}: not PNG')
+              width, height = struct.unpack('>II', data[16:24])
+              if (width, height) != (1080, 1920):
+                  raise SystemExit(f'{name}: unexpected size {(width, height)}')
+          PY
+
+          cp /tmp/my-cycle-unpack/01-today.png assets/screenshots/my-cycle/today.png
+          cp /tmp/my-cycle-unpack/02-calendar.png assets/screenshots/my-cycle/calendar.png
+          cp /tmp/my-cycle-unpack/03-statistics.png assets/screenshots/my-cycle/statistics.png
+          cp /tmp/my-cycle-unpack/04-insights.png assets/screenshots/my-cycle/insights.png
+          cp /tmp/my-cycle-unpack/05-privacy-report.png assets/screenshots/my-cycle/privacy-report.png
+
+      - name: Commit verified assets and remove importer
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/import-my-cycle-assets.yml
+          git add assets/screenshots/my-cycle
+          git commit -m 'Add verified My Cycle screenshots'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
