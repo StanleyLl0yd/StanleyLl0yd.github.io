@@ -138,7 +138,13 @@
       "socialImage": null,
       "privacyPath": "/apps/biorhythms/privacy/",
       "status": "released",
-      "plannedScreenshots": ["Today", "Interactive chart", "7 days", "Critical points and extrema", "Notifications", "Widget"]
+      "screenshots": [
+        {"src": "/assets/screenshots/biorhythms/01_today.png", "label": "Today"},
+        {"src": "/assets/screenshots/biorhythms/02_7_days.png", "label": "7 days"},
+        {"src": "/assets/screenshots/biorhythms/03_notifications.png", "label": "Notifications"},
+        {"src": "/assets/screenshots/biorhythms/04_about.png", "label": "About"},
+        {"src": "/assets/screenshots/biorhythms/05_widget.png", "label": "Widget"}
+      ]
     },
     {
       "id": "everon",
