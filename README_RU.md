@@ -37,7 +37,7 @@
 | | Проект | Платформа | Статус |
 |---|---|---|---|
 | <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | R1 · пре-альфа |
-| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M3 · продуктовый интерфейс в работе · M1–M2 завершены · Models comparison реализован |
+| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M3 · продуктовый интерфейс в работе · M1–M2 завершены · сравнение моделей реализовано |
 | **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Compose | M4.5 · закрытый релиз 0.0.1 в работе · M0–M4 завершены |
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Активная разработка |
 | <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | R6 · устойчивость и оптимизация в работе · R6.1–R6.3 завершены · далее R6.4 · опубликована неподписанная пре-альфа 0.1.0-alpha.1 |
