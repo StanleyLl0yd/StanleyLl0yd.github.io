@@ -172,7 +172,11 @@
       "socialImage": null,
       "privacyPath": null,
       "status": "released",
-      "plannedScreenshots": ["Tray menu", "Quick timer selection", "Power behavior settings", "Language selection"]
+      "screenshots": [
+        {"src": "/assets/screenshots/everon/01-settings.png", "label": "Settings"},
+        {"src": "/assets/screenshots/everon/02-tray-menu.png", "label": "Tray menu"},
+        {"src": "/assets/screenshots/everon/03-about.png", "label": "About"}
+      ]
     }
   ]
 }
