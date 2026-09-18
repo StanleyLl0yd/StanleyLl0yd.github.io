@@ -52,7 +52,12 @@
       "socialImage": null,
       "privacyPath": null,
       "status": "released",
-      "plannedScreenshots": ["Infinite board gameplay", "AI difficulty selection", "Local two-player game", "History and replay"]
+      "screenshots": [
+        {"src": "/assets/screenshots/infinite-five/01-ai-gameplay.png", "label": "AI gameplay"},
+        {"src": "/assets/screenshots/infinite-five/02-settings.png", "label": "Settings"},
+        {"src": "/assets/screenshots/infinite-five/03-local-play.png", "label": "Local play"},
+        {"src": "/assets/screenshots/infinite-five/04-about.png", "label": "About"}
+      ]
     },
     {
       "id": "dots",
