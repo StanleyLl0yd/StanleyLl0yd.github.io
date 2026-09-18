@@ -37,10 +37,10 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | | Project | Platform | Status |
 |---|---|---|---|
 | <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | R1 pre-alpha |
-| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M2 offline-first data layer in progress · M1 complete |
-| **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Compose | M4 minimal messaging in progress · protocol and mailbox complete · WSS routing active |
+| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M3 product UI in progress · M1–M2 complete · Models comparison implemented |
+| **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Compose | M4.5 closed 0.0.1 release gate active · M0–M4 complete |
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Active development |
-| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | R5 core productivity workflow in progress · R5.1–R5.4 complete · unsigned 0.1.0-alpha.1 prerelease |
+| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | R6 resilience/optimization in progress · R6.1–R6.3 complete · R6.4 next · unsigned 0.1.0-alpha.1 prerelease |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Prototype |
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | MVP development |
 
