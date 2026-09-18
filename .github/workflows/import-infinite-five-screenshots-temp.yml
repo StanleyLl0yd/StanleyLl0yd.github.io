@@ -1,0 +1,60 @@
+name: Import Infinite Five screenshots (temporary)
+
+on:
+  push:
+    branches:
+      - portfolio/infinite-five-real-gallery-2026-09-18
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true
+
+      - name: Download and verify Infinite Five v0.6.3 screenshots
+        env:
+          ARTIFACT_URL: 'https://sdmntprcentralus.oaiusercontent.com/files/00000000-01d8-81f5-9703-61ac5f1a8198/raw?se=2026-09-18T08%3A43%3A13Z&sp=r&sv=2026-02-06&sr=b&scid=cb26fa0e-969c-50f4-8665-6b8156743632&skoid=1d6acb5b-b3f4-43ec-a5ec-b05c4a7708c8&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-18T05%3A45%3A29Z&ske=2026-09-19T05%3A45%3A29Z&sks=b&skv=2026-02-06&sig=RlgnmDJLQkkeli2N5uCSaYlmMySFmxkwsja37FeaTlE%3D'
+          EXPECTED_ZIP_SHA256: '0eee41cd08703810c2763e437346205a08236321a3f563f2d1185ad8b213c9d9'
+        run: |
+          set -euo pipefail
+          tmp="$RUNNER_TEMP/infinite-five-import"
+          mkdir -p "$tmp/raw" assets/screenshots/infinite-five
+          curl --fail --location --retry 2 "$ARTIFACT_URL" --output "$tmp/screenshots.zip"
+          echo "$EXPECTED_ZIP_SHA256  $tmp/screenshots.zip" | sha256sum --check -
+          unzip -q "$tmp/screenshots.zip" -d "$tmp/raw"
+          python3 - "$tmp/raw" <<'PY'
+          import pathlib, struct, sys
+          root = pathlib.Path(sys.argv[1])
+          expected = {
+              "01-ai-gameplay.png",
+              "02-settings.png",
+              "03-local-play.png",
+              "04-about.png",
+              "SCREENSHOTS-SHA256.txt",
+          }
+          actual = {p.name for p in root.iterdir() if p.is_file()}
+          assert actual == expected, (actual, expected)
+          for name in sorted(expected - {"SCREENSHOTS-SHA256.txt"}):
+              data = (root / name).read_bytes()
+              assert data[:8] == b'\x89PNG\r\n\x1a\n', name
+              width, height = struct.unpack('>II', data[16:24])
+              assert (width, height) == (1080, 1920), (name, width, height)
+          PY
+          cp "$tmp/raw/"0*.png assets/screenshots/infinite-five/
+
+      - name: Commit verified assets and remove importer
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/screenshots/infinite-five
+          git rm .github/workflows/import-infinite-five-screenshots-temp.yml
+          git commit -m "Add verified Infinite Five v0.6.3 screenshots"
+          git push origin HEAD:portfolio/infinite-five-real-gallery-2026-09-18
