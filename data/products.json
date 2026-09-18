@@ -6,10 +6,7 @@
     {
       "id": "impulse",
       "name": "IMPULSE",
-      "localizedName": {
-        "en": "IMPULSE",
-        "ru": "IMPULSE"
-      },
+      "localizedName": {"en": "IMPULSE", "ru": "IMPULSE"},
       "type": "game",
       "currentVersion": "1.1.0",
       "platform": "Android",
@@ -19,51 +16,25 @@
       "rustoreUrl": "https://www.rustore.ru/catalog/app/com.sl.impulse",
       "repoUrl": "https://github.com/StanleyLl0yd/impulse",
       "releaseUrl": "https://github.com/StanleyLl0yd/impulse/releases/tag/v1.1.0",
-      "downloads": [
-        "https://github.com/StanleyLl0yd/impulse/releases/download/v1.1.0/Impulse-1.1.0.apk"
-      ],
+      "downloads": ["https://github.com/StanleyLl0yd/impulse/releases/download/v1.1.0/Impulse-1.1.0.apk"],
       "icon": "/assets/icons/impulse.png",
       "socialImage": null,
       "privacyPath": null,
       "status": "released",
       "screenshots": [
-        {
-          "src": "/assets/screenshots/impulse/00_menu.png",
-          "label": "Main menu"
-        },
-        {
-          "src": "/assets/screenshots/impulse/01_gameplay.png",
-          "label": "Gameplay"
-        },
-        {
-          "src": "/assets/screenshots/impulse/02_campaign.png",
-          "label": "Campaign"
-        },
-        {
-          "src": "/assets/screenshots/impulse/03_endless.png",
-          "label": "Endless"
-        },
-        {
-          "src": "/assets/screenshots/impulse/04_daily.png",
-          "label": "Daily Impulse"
-        },
-        {
-          "src": "/assets/screenshots/impulse/05_achievements.png",
-          "label": "Achievements"
-        },
-        {
-          "src": "/assets/screenshots/impulse/06_settings.png",
-          "label": "Settings"
-        }
+        {"src": "/assets/screenshots/impulse/00_menu.png", "label": "Main menu"},
+        {"src": "/assets/screenshots/impulse/01_gameplay.png", "label": "Gameplay"},
+        {"src": "/assets/screenshots/impulse/02_campaign.png", "label": "Campaign"},
+        {"src": "/assets/screenshots/impulse/03_endless.png", "label": "Endless"},
+        {"src": "/assets/screenshots/impulse/04_daily.png", "label": "Daily Impulse"},
+        {"src": "/assets/screenshots/impulse/05_achievements.png", "label": "Achievements"},
+        {"src": "/assets/screenshots/impulse/06_settings.png", "label": "Settings"}
       ]
     },
     {
       "id": "infinite-five",
       "name": "Infinite Five",
-      "localizedName": {
-        "en": "Infinite Five",
-        "ru": "Infinite Five"
-      },
+      "localizedName": {"en": "Infinite Five", "ru": "Infinite Five"},
       "type": "game",
       "currentVersion": "0.6.3",
       "platform": "Web / Android / macOS",
@@ -81,20 +52,12 @@
       "socialImage": null,
       "privacyPath": null,
       "status": "released",
-      "plannedScreenshots": [
-        "Infinite board gameplay",
-        "AI difficulty selection",
-        "Local two-player game",
-        "History and replay"
-      ]
+      "plannedScreenshots": ["Infinite board gameplay", "AI difficulty selection", "Local two-player game", "History and replay"]
     },
     {
       "id": "dots",
       "name": "Dots",
-      "localizedName": {
-        "en": "Dots",
-        "ru": "Точки"
-      },
+      "localizedName": {"en": "Dots", "ru": "Точки"},
       "type": "game",
       "currentVersion": "1.0.1",
       "platform": "Web / Android / macOS",
@@ -104,35 +67,21 @@
       "rustoreUrl": "https://www.rustore.ru/catalog/app/com.sl.dots",
       "repoUrl": "https://github.com/StanleyLl0yd/dots",
       "releaseUrl": "https://github.com/StanleyLl0yd/dots/releases/tag/v1.0.1",
-      "downloads": [
-        "https://github.com/StanleyLl0yd/dots/releases/download/v1.0.1/Dots-v1.0.1-macOS-universal.dmg"
-      ],
+      "downloads": ["https://github.com/StanleyLl0yd/dots/releases/download/v1.0.1/Dots-v1.0.1-macOS-universal.dmg"],
       "icon": "/assets/icons/dots.png",
       "socialImage": "/assets/social/dots.webp",
       "privacyPath": null,
       "status": "released",
       "screenshots": [
-        {
-          "src": "/assets/screenshots/dots/game-capture.webp",
-          "label": "Gameplay and capture"
-        },
-        {
-          "src": "/assets/screenshots/dots/vs-computer.webp",
-          "label": "Vs computer"
-        },
-        {
-          "src": "/assets/screenshots/dots/local-play.webp",
-          "label": "Local play"
-        }
+        {"src": "/assets/screenshots/dots/game-capture.webp", "label": "Gameplay and capture"},
+        {"src": "/assets/screenshots/dots/vs-computer.webp", "label": "Vs computer"},
+        {"src": "/assets/screenshots/dots/local-play.webp", "label": "Local play"}
       ]
     },
     {
       "id": "password-generator",
       "name": "Password Generator",
-      "localizedName": {
-        "en": "Password Generator",
-        "ru": "Генератор паролей"
-      },
+      "localizedName": {"en": "Password Generator", "ru": "Генератор паролей"},
       "type": "app",
       "currentVersion": "1.5.6",
       "platform": "Android",
@@ -142,35 +91,21 @@
       "rustoreUrl": "https://www.rustore.ru/catalog/app/com.sl.passwordgenerator",
       "repoUrl": "https://github.com/StanleyLl0yd/password-generator",
       "releaseUrl": "https://github.com/StanleyLl0yd/password-generator/releases/tag/v1.5.6",
-      "downloads": [
-        "https://github.com/StanleyLl0yd/password-generator/releases/download/v1.5.6/password-generator-1.5.6.apk"
-      ],
+      "downloads": ["https://github.com/StanleyLl0yd/password-generator/releases/download/v1.5.6/password-generator-1.5.6.apk"],
       "icon": "/assets/icons/password-generator.webp",
       "socialImage": null,
       "privacyPath": "/apps/password-generator/privacy/",
       "status": "released",
       "screenshots": [
-        {
-          "src": "/assets/screenshots/password-generator/generator.png",
-          "label": "Generator"
-        },
-        {
-          "src": "/assets/screenshots/password-generator/about.png",
-          "label": "About"
-        },
-        {
-          "src": "/assets/screenshots/password-generator/custom-password.png",
-          "label": "Custom password"
-        }
-      ]
+      {"src": "/assets/screenshots/password-generator/generator.png", "label": "Generator"},
+      {"src": "/assets/screenshots/password-generator/about.png", "label": "About"},
+      {"src": "/assets/screenshots/password-generator/custom-password.png", "label": "Custom password"}
+    ]
     },
     {
       "id": "my-cycle",
       "name": "My Cycle",
-      "localizedName": {
-        "en": "My Cycle",
-        "ru": "My Cycle"
-      },
+      "localizedName": {"en": "My Cycle", "ru": "My Cycle"},
       "type": "app",
       "currentVersion": "1.4.0",
       "platform": "Android",
@@ -180,43 +115,23 @@
       "rustoreUrl": "https://www.rustore.ru/catalog/app/com.sl.mycycle",
       "repoUrl": "https://github.com/StanleyLl0yd/my-cycle",
       "releaseUrl": "https://github.com/StanleyLl0yd/my-cycle/releases/tag/v1.4.0",
-      "downloads": [
-        "https://github.com/StanleyLl0yd/my-cycle/releases/download/v1.4.0/My-Cycle-v1.4.0.apk"
-      ],
+      "downloads": ["https://github.com/StanleyLl0yd/my-cycle/releases/download/v1.4.0/My-Cycle-v1.4.0.apk"],
       "icon": "/assets/icons/my-cycle.svg",
       "socialImage": null,
       "privacyPath": "/apps/my-cycle/privacy/",
       "status": "released",
       "screenshots": [
-        {
-          "src": "/assets/screenshots/my-cycle/today.png",
-          "label": "Today"
-        },
-        {
-          "src": "/assets/screenshots/my-cycle/calendar.png",
-          "label": "Calendar"
-        },
-        {
-          "src": "/assets/screenshots/my-cycle/statistics.png",
-          "label": "Statistics"
-        },
-        {
-          "src": "/assets/screenshots/my-cycle/insights.png",
-          "label": "Insights"
-        },
-        {
-          "src": "/assets/screenshots/my-cycle/privacy-report.png",
-          "label": "Privacy and local report"
-        }
-      ]
+      {"src": "/assets/screenshots/my-cycle/today.png", "label": "Today"},
+      {"src": "/assets/screenshots/my-cycle/calendar.png", "label": "Calendar"},
+      {"src": "/assets/screenshots/my-cycle/statistics.png", "label": "Statistics"},
+      {"src": "/assets/screenshots/my-cycle/insights.png", "label": "Insights"},
+      {"src": "/assets/screenshots/my-cycle/privacy-report.png", "label": "Privacy and local report"}
+    ]
     },
     {
       "id": "biorhythms",
       "name": "Biorhythms",
-      "localizedName": {
-        "en": "Biorhythms",
-        "ru": "Биоритмы"
-      },
+      "localizedName": {"en": "Biorhythms", "ru": "Биоритмы"},
       "type": "app",
       "currentVersion": "1.7.0",
       "platform": "Android",
@@ -226,43 +141,23 @@
       "rustoreUrl": "https://www.rustore.ru/catalog/app/com.sl.biorhythms",
       "repoUrl": "https://github.com/StanleyLl0yd/biorhythms",
       "releaseUrl": "https://github.com/StanleyLl0yd/biorhythms/releases/tag/v1.7.0",
-      "downloads": [
-        "https://github.com/StanleyLl0yd/biorhythms/releases/download/v1.7.0/biorhythms-v1.7.0.apk"
-      ],
+      "downloads": ["https://github.com/StanleyLl0yd/biorhythms/releases/download/v1.7.0/biorhythms-v1.7.0.apk"],
       "icon": "/assets/icons/biorhythms.png",
       "socialImage": null,
       "privacyPath": "/apps/biorhythms/privacy/",
       "status": "released",
       "screenshots": [
-        {
-          "src": "/assets/screenshots/biorhythms/01_today.png",
-          "label": "Today"
-        },
-        {
-          "src": "/assets/screenshots/biorhythms/02_7_days.png",
-          "label": "7 days"
-        },
-        {
-          "src": "/assets/screenshots/biorhythms/03_notifications.png",
-          "label": "Notifications"
-        },
-        {
-          "src": "/assets/screenshots/biorhythms/04_about.png",
-          "label": "About"
-        },
-        {
-          "src": "/assets/screenshots/biorhythms/05_widget.png",
-          "label": "Widget"
-        }
+        {"src": "/assets/screenshots/biorhythms/01_today.png", "label": "Today"},
+        {"src": "/assets/screenshots/biorhythms/02_7_days.png", "label": "7 days"},
+        {"src": "/assets/screenshots/biorhythms/03_notifications.png", "label": "Notifications"},
+        {"src": "/assets/screenshots/biorhythms/04_about.png", "label": "About"},
+        {"src": "/assets/screenshots/biorhythms/05_widget.png", "label": "Widget"}
       ]
     },
     {
       "id": "everon",
       "name": "Everon",
-      "localizedName": {
-        "en": "Everon",
-        "ru": "Everon"
-      },
+      "localizedName": {"en": "Everon", "ru": "Everon"},
       "type": "app",
       "currentVersion": "2.8.2",
       "platform": "Windows x64",
@@ -272,19 +167,12 @@
       "rustoreUrl": null,
       "repoUrl": "https://github.com/StanleyLl0yd/everon",
       "releaseUrl": "https://github.com/StanleyLl0yd/everon/releases/tag/v2.8.2",
-      "downloads": [
-        "https://github.com/StanleyLl0yd/everon/releases/download/v2.8.2/Everon.exe"
-      ],
+      "downloads": ["https://github.com/StanleyLl0yd/everon/releases/download/v2.8.2/Everon.exe"],
       "icon": "/assets/icons/everon.webp",
       "socialImage": null,
       "privacyPath": null,
       "status": "released",
-      "plannedScreenshots": [
-        "Tray menu",
-        "Quick timer selection",
-        "Power behavior settings",
-        "Language selection"
-      ]
+      "plannedScreenshots": ["Tray menu", "Quick timer selection", "Power behavior settings", "Language selection"]
     }
   ]
 }
