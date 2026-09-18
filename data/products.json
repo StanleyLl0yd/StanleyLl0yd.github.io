@@ -21,7 +21,15 @@
       "socialImage": null,
       "privacyPath": null,
       "status": "released",
-      "plannedScreenshots": ["Campaign gameplay", "Chain reaction in progress", "Endless mode", "Daily challenge"]
+      "screenshots": [
+        {"src": "/assets/screenshots/impulse/00_menu.png", "label": "Main menu"},
+        {"src": "/assets/screenshots/impulse/01_gameplay.png", "label": "Gameplay"},
+        {"src": "/assets/screenshots/impulse/02_campaign.png", "label": "Campaign"},
+        {"src": "/assets/screenshots/impulse/03_endless.png", "label": "Endless"},
+        {"src": "/assets/screenshots/impulse/04_daily.png", "label": "Daily Impulse"},
+        {"src": "/assets/screenshots/impulse/05_achievements.png", "label": "Achievements"},
+        {"src": "/assets/screenshots/impulse/06_settings.png", "label": "Settings"}
+      ]
     },
     {
       "id": "infinite-five",
