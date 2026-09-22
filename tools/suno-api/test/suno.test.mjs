@@ -122,9 +122,11 @@ test('resolveTrackId accepts canonical song URLs from a bounded HTML fallback', 
     if (options.method === 'HEAD') {
       return new Response(null, { status: 200 });
     }
-    return new Response('<a href="/song/' + CLIP_ID + '">play</a>', {
+    const html =
+      '<link rel="canonical" href="https://suno.com/song/' + CLIP_ID + '?sh=abc123">';
+    return new Response(html, {
       status: 200,
-      headers: { 'content-length': '80' },
+      headers: { 'content-length': String(Buffer.byteLength(html)) },
     });
   };
 
@@ -135,6 +137,31 @@ test('resolveTrackId accepts canonical song URLs from a bounded HTML fallback', 
       CLIP_ID,
     );
     assert.deepEqual(calls, ['HEAD', 'GET']);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+
+test('resolveTrackId ignores arbitrary song links in fallback HTML', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (_url, options = {}) => {
+    if (options.method === 'HEAD') {
+      return new Response(null, { status: 200 });
+    }
+    const html = '<a href="/song/' + CLIP_ID + '">unrelated recommendation</a>';
+    return new Response(html, {
+      status: 200,
+      headers: { 'content-length': String(Buffer.byteLength(html)) },
+    });
+  };
+
+  try {
+    const { resolveTrackId } = await import('../lib/suno.mjs');
+    await assert.rejects(
+      () => resolveTrackId('https://suno.com/s/noCanonical123'),
+      /track_id_not_found/,
+    );
   } finally {
     globalThis.fetch = originalFetch;
   }
