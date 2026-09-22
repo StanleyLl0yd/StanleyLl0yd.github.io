@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
-  <meta name="color-scheme" content="dark light">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-elem 'self'; style-src-attr 'none'; img-src 'self' data: https://cdn1.suno.ai https://cdn2.suno.ai https://*.cloudfront.net https://*.suno.com https://*.suno.ai; font-src 'self'; connect-src 'self' https://suno.com https://www.suno.com https://studio-api-prod.suno.com https://studio-api.prod.suno.com https://cdn1.suno.ai https://cdn2.suno.ai https://*.cloudfront.net https://*.suno.com https://*.suno.ai https://opensuno.vercel.app; child-src 'none'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none'; upgrade-insecure-requests; trusted-types 'none'; require-trusted-types-for 'script'">
+  <meta name="color-scheme" content="dark light">\n  <meta name="suno-saver-api" content="https://stanleyll0yd-suno-saver-api-20260922.vercel.app">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-elem 'self'; style-src-attr 'none'; img-src 'self' data: https://cdn1.suno.ai https://cdn2.suno.ai https://*.cloudfront.net https://*.suno.com https://*.suno.ai; font-src 'self'; connect-src 'self' https://stanleyll0yd-suno-saver-api-20260922.vercel.app; child-src 'none'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none'; upgrade-insecure-requests; trusted-types 'none'; require-trusted-types-for 'script'">
   <title>Suno Saver — download your public Suno track</title>
   <meta name="description" content="Paste a public Suno song link, inspect the available audio and save it as original audio, MP3 or WAV in your browser.">
   <link rel="stylesheet" href="./styles.css">
   <script src="./vendor/lame.min.js" defer></script>
-  <script src="./app.js?v=20260922-4" defer></script>
+  <script src="./app.js?v=20260923-1" defer></script>
 </head>
 <body>
   <main class="shell">
@@ -71,11 +71,11 @@
     <section class="notes">
       <article>
         <h2>Что делает сайт</h2>
-        <p>Он использует данные, доступные по введённой Suno-ссылке. Пароли, cookies и токены аккаунта не запрашиваются. Если Suno блокирует короткую ссылку или публичный metadata API через CORS, публичная Suno-ссылка отправляется резервному open-source resolver. Он возвращает UUID/метаданные, а аудио забирается через его CORS-разрешённый прокси.</p>
+        <p>Страница отправляет только введённую публичную Suno-ссылку нашему serverless backend. Backend получает публичные metadata и текущий поток Suno, расшифровывает его во время передачи и ничего не сохраняет. Пароли, cookies и токены аккаунта не запрашиваются.</p>
       </article>
       <article>
         <h2>Ограничения</h2>
-        <p>Если Suno для конкретного трека отдаёт только защищённый или неподдерживаемый поток, инструмент остановится и не будет сохранять испорченный файл. Для такого трека нужен разрешённый Suno media-export.</p>
+        <p>Suno может менять формат публичного API и Mango-потока. Если текущая схема изменится, сайт остановится с ошибкой вместо сохранения повреждённого файла.</p>
       </article>
       <article>
         <h2>Права</h2>
