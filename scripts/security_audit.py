@@ -29,6 +29,16 @@ REQUIRED_CSP = {
     "trusted-types 'none'",
     "require-trusted-types-for 'script'",
 }
+
+SUNO_SAVER_PATH = "tools/suno/index.html"
+SUNO_SAVER_CSP = (
+    REQUIRED_CSP
+    - {"img-src 'self'", "connect-src 'none'"}
+    | {
+        "img-src 'self' data: https://cdn1.suno.ai https://cdn2.suno.ai https://*.cloudfront.net https://*.suno.com https://*.suno.ai",
+        "connect-src 'self' https://suno.com https://www.suno.com https://studio-api-prod.suno.com https://studio-api.prod.suno.com https://cdn1.suno.ai https://cdn2.suno.ai https://*.cloudfront.net https://*.suno.com https://*.suno.ai",
+    }
+)
 TEXT_SUFFIXES = {".html", ".css", ".js", ".md", ".txt", ".xml", ".svg", ".yml", ".yaml", ".py"}
 SECRET_PATTERNS = {
     "private key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
@@ -58,9 +68,10 @@ def is_external(value: str) -> bool:
 
 
 class SiteParser(HTMLParser):
-    def __init__(self, path: Path) -> None:
+    def __init__(self, path: Path, *, allow_form: bool = False) -> None:
         super().__init__(convert_charrefs=True)
         self.path = path
+        self.allow_form = allow_form
         self.errors: list[str] = []
         self.csp = ""
         self.referrer = ""
@@ -81,7 +92,8 @@ class SiteParser(HTMLParser):
                 self.errors.append("javascript: URL")
 
         if tag in {"form", "iframe", "object", "embed"}:
-            self.errors.append("forbidden active/embed element")
+            if tag != "form" or not self.allow_form:
+                self.errors.append("forbidden active/embed element")
 
         if tag == "meta":
             if attrs.get("http-equiv", "").lower() == "content-security-policy":
@@ -128,12 +140,15 @@ class SiteParser(HTMLParser):
 
 def audit_html(path: Path) -> list[str]:
     text = path.read_text(encoding="utf-8")
-    parser = SiteParser(path)
+    relative = path.relative_to(ROOT).as_posix()
+    is_suno_saver = relative == SUNO_SAVER_PATH
+    parser = SiteParser(path, allow_form=is_suno_saver)
     parser.feed(text)
     errors = list(parser.errors)
 
     policy = {item.strip() for item in parser.csp.split(";") if item.strip()}
-    if REQUIRED_CSP - policy:
+    required_csp = SUNO_SAVER_CSP if is_suno_saver else REQUIRED_CSP
+    if required_csp - policy:
         errors.append("CSP is missing required directives")
     if parser.referrer.lower() != "no-referrer":
         errors.append("referrer policy must be no-referrer")
