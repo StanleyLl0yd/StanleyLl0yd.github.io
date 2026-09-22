@@ -36,7 +36,7 @@ SUNO_SAVER_CSP = (
     - {"img-src 'self'", "connect-src 'none'"}
     | {
         "img-src 'self' data: https://cdn1.suno.ai https://cdn2.suno.ai https://*.cloudfront.net https://*.suno.com https://*.suno.ai",
-        "connect-src 'self' https://suno.com https://www.suno.com https://studio-api-prod.suno.com https://studio-api.prod.suno.com https://cdn1.suno.ai https://cdn2.suno.ai https://*.cloudfront.net https://*.suno.com https://*.suno.ai",
+        "connect-src 'self' https://suno.com https://www.suno.com https://studio-api-prod.suno.com https://studio-api.prod.suno.com https://cdn1.suno.ai https://cdn2.suno.ai https://*.cloudfront.net https://*.suno.com https://*.suno.ai https://opensuno.vercel.app",
     }
 )
 TEXT_SUFFIXES = {".html", ".css", ".js", ".md", ".txt", ".xml", ".svg", ".yml", ".yaml", ".py"}
