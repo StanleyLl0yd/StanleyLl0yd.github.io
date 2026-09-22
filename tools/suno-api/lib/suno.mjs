@@ -331,7 +331,15 @@ export async function resolveTrackId(raw) {
       throw new Error('share_http_' + response.status);
     }
 
-    const html = await readTextLimited(response, MAX_SHARE_HTML_BYTES, 'share_page_too_large');
+    let html;
+    try {
+      html = await readTextLimited(response, MAX_SHARE_HTML_BYTES, 'share_page_too_large');
+    } catch (error) {
+      if (error instanceof Error && error.message === 'share_page_too_large') throw error;
+      if (isTimeoutError(error)) throw new Error('share_timeout');
+      throw new Error('share_network');
+    }
+
     const discovered = extractSongIdFromHtml(html);
     if (!discovered) throw new Error('track_id_not_found');
     return discovered;
@@ -358,7 +366,15 @@ export async function fetchClip(id) {
     throw new Error('clip_http_' + response.status);
   }
 
-  const clip = await readJsonLimited(response, 'clip_invalid');
+  let clip;
+  try {
+    clip = await readJsonLimited(response, 'clip_invalid');
+  } catch (error) {
+    if (error instanceof Error && error.message === 'clip_invalid') throw error;
+    if (isTimeoutError(error)) throw new Error('clip_timeout');
+    throw new Error('clip_network');
+  }
+
   if (!clip || typeof clip !== 'object' || String(clip.id || '').toLowerCase() !== id.toLowerCase()) {
     throw new Error('clip_invalid');
   }
@@ -486,7 +502,15 @@ export async function fetchRights(id) {
     throw new Error('rights_http_' + response.status);
   }
 
-  const data = await readJsonLimited(response, 'rights_invalid');
+  let data;
+  try {
+    data = await readJsonLimited(response, 'rights_invalid');
+  } catch (error) {
+    if (error instanceof Error && error.message === 'rights_invalid') throw error;
+    if (isTimeoutError(error)) throw new Error('rights_timeout');
+    throw new Error('rights_network');
+  }
+
   if (!data?.key || !data?.iv || !data?.glt) {
     throw new Error('rights_invalid');
   }
@@ -555,7 +579,13 @@ export async function fetchEncryptedAudio(media, id) {
       await response.body?.cancel().catch(() => {});
       if (!location) throw new Error('media_redirect_invalid');
 
-      const nextUrl = new URL(location, currentUrl);
+      let nextUrl;
+      try {
+        nextUrl = new URL(location, currentUrl);
+      } catch {
+        throw new Error('media_redirect_invalid');
+      }
+
       if (!isTrustedMediaUrl(nextUrl.href)) {
         throw new Error('media_redirect_untrusted');
       }
