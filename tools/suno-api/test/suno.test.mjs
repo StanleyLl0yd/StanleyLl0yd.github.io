@@ -9,7 +9,7 @@ import {
   contentDisposition,
   deriveContentCipher,
   extractSongIdFromLocation,
-  fetchEncryptedAudio,
+  fetchMediaStream,
   isTrustedMediaUrl,
   mediaDescriptor,
   parsePublicSunoUrl,
@@ -153,7 +153,7 @@ test('media redirects are revalidated before the backend follows them', async ()
 
   try {
     await assert.rejects(
-      () => fetchEncryptedAudio(
+      () => fetchMediaStream(
         {
           url: 'https://media.cloudfront.net/1/clip/example.m4a',
           content_type: 'm4a-opus',
