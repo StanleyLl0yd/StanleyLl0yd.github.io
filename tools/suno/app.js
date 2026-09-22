@@ -196,16 +196,52 @@
       throw new Error(apiErrorMessage(data?.error, response.status));
     }
 
-    if (
-      !data ||
-      typeof data !== 'object' ||
-      !UUID_RE.test(String(data.id || '')) ||
-      typeof data.title !== 'string'
-    ) {
+    if (!isResolvedTrack(data)) {
       throw new Error('Backend вернул некорректные данные трека.');
     }
 
     return data;
+  }
+
+  function isResolvedTrack(data) {
+    if (!data || typeof data !== 'object') return false;
+    if (!UUID_RE.test(String(data.id || ''))) return false;
+    if (typeof data.title !== 'string' || data.title.length > 200) return false;
+    if (typeof data.artist !== 'string' || data.artist.length > 200) return false;
+    if (data.tags != null && (typeof data.tags !== 'string' || data.tags.length > 2000)) return false;
+    if (data.model != null && (typeof data.model !== 'string' || data.model.length > 100)) return false;
+    if (
+      data.duration != null &&
+      (!Number.isFinite(data.duration) || data.duration <= 0 || data.duration > 24 * 60 * 60)
+    ) {
+      return false;
+    }
+    if (data.image && !isTrustedImageUrl(data.image)) return false;
+
+    const media = data.media;
+    if (!media || typeof media !== 'object') return false;
+    if (
+      typeof media.contentType !== 'string' ||
+      media.contentType.length < 1 ||
+      media.contentType.length > 100
+    ) {
+      return false;
+    }
+    if (
+      typeof media.delivery !== 'string' ||
+      media.delivery.length < 1 ||
+      media.delivery.length > 50
+    ) {
+      return false;
+    }
+    if (
+      typeof media.originalExtension !== 'string' ||
+      !/^(?:m4a|mp3|aac|ogg|webm)$/i.test(media.originalExtension)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   function apiErrorMessage(code, status) {
@@ -539,8 +575,7 @@
         host.endsWith('.suno.ai') ||
         host === 'suno.com' ||
         host.endsWith('.suno.com') ||
-        host === 'cloudfront.net' ||
-        host.endsWith('.cloudfront.net')
+        host === 'media.cloudfront.net'
       );
     } catch {
       return false;
@@ -557,6 +592,9 @@
     downloadButton.disabled = value;
     lookupButton.disabled = value;
     urlInput.disabled = value;
+    for (const input of document.querySelectorAll('input[name="format"]')) {
+      input.disabled = value;
+    }
   }
 
   function setStatus(message, error = false) {
