@@ -84,36 +84,80 @@ function findUuid(value) {
   return match?.[0]?.toLowerCase() || null;
 }
 
+export function extractSongIdFromLocation(location, base = 'https://suno.com') {
+  if (!location) return null;
+
+  let target;
+  try {
+    target = new URL(String(location), base);
+  } catch {
+    return null;
+  }
+
+  if (target.protocol !== 'https:' || !SUNO_HOSTS.has(target.hostname.toLowerCase())) {
+    return null;
+  }
+
+  const match = target.pathname.match(
+    /^\/(?:song|hook)\/([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})(?:\/|$)/i,
+  );
+  const id = match?.[1]?.toLowerCase() || null;
+  return id && UUID_RE.test(id) ? id : null;
+}
+
+function extractSongIdFromHtml(html) {
+  const match = String(html || '').match(
+    /(?:https:\/\/(?:www\.)?suno\.com)?\/(?:song|hook)\/([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})(?=[/?\"'\\s<]|$)/i,
+  );
+  const id = match?.[1]?.toLowerCase() || null;
+  return id && UUID_RE.test(id) ? id : null;
+}
+
 export async function resolveTrackId(raw) {
   const url = parsePublicSunoUrl(raw);
-  const direct = findUuid(url.href);
+  const direct = extractSongIdFromLocation(url.href);
   if (direct) return direct;
 
-  const response = await fetch(url.href, {
-    method: 'GET',
-    redirect: 'follow',
-    headers: requestHeaders(null, {
-      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-    }),
-  });
+  const accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8';
 
-  if (!response.ok) {
-    throw new Error(`share_http_${response.status}`);
+  for (const method of ['HEAD', 'GET']) {
+    const response = await fetch(url.href, {
+      method,
+      redirect: 'manual',
+      headers: requestHeaders(null, { Accept: accept }),
+    });
+
+    if (response.status >= 300 && response.status < 400) {
+      const redirected = extractSongIdFromLocation(response.headers.get('location'), url.href);
+      await response.body?.cancel().catch(() => {});
+      if (redirected) return redirected;
+
+      // HEAD behavior occasionally differs from GET on Suno's share endpoint,
+      // so give GET one chance before rejecting an unusable redirect such as "/".
+      if (method === 'HEAD') continue;
+      throw new Error('track_id_not_found');
+    }
+
+    if (method === 'HEAD' && (response.ok || response.status === 405)) {
+      await response.body?.cancel().catch(() => {});
+      continue;
+    }
+
+    if (!response.ok) {
+      await response.body?.cancel().catch(() => {});
+      if (method === 'HEAD') continue;
+      throw new Error(`share_http_${response.status}`);
+    }
+
+    const html = await response.text();
+    if (html.length > 3 * 1024 * 1024) throw new Error('share_page_too_large');
+
+    const discovered = extractSongIdFromHtml(html);
+    if (!discovered) throw new Error('track_id_not_found');
+    return discovered;
   }
 
-  const redirected = findUuid(response.url);
-  if (redirected) {
-    await response.body?.cancel().catch(() => {});
-    return redirected;
-  }
-
-  const html = await response.text();
-  if (html.length > 3 * 1024 * 1024) throw new Error('share_page_too_large');
-
-  const songMatch = html.match(/suno\.com\/song\/([0-9a-f-]{36})/i);
-  const discovered = findUuid(songMatch?.[1] || html);
-  if (!discovered) throw new Error('track_id_not_found');
-  return discovered;
+  throw new Error('track_id_not_found');
 }
 
 export async function fetchClip(id) {
