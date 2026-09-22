@@ -4,6 +4,7 @@ import test from 'node:test';
 
 import {
   deriveContentCipher,
+  extractSongIdFromLocation,
   parsePublicSunoUrl,
   pickProgressiveAudio,
   unwrapRightsValue,
@@ -25,6 +26,60 @@ test('parsePublicSunoUrl accepts public Suno routes only', () => {
   assert.throws(() => parsePublicSunoUrl('https://example.com/s/abc'), /unsupported_url/);
   assert.throws(() => parsePublicSunoUrl('http://suno.com/s/abc'), /unsupported_url/);
   assert.throws(() => parsePublicSunoUrl('https://suno.com/account'), /unsupported_url/);
+});
+
+
+test('extractSongIdFromLocation accepts only canonical Suno song redirects', () => {
+  assert.equal(
+    extractSongIdFromLocation(`/song/${CLIP_ID}?sh=abc123`),
+    CLIP_ID,
+  );
+  assert.equal(extractSongIdFromLocation('/'), null);
+  assert.equal(extractSongIdFromLocation('https://example.com/song/' + CLIP_ID), null);
+});
+
+test('resolveTrackId rejects unusable share redirects instead of scraping unrelated UUIDs', async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (_url, options = {}) => {
+    calls.push(options.method);
+    return new Response(null, {
+      status: 307,
+      headers: { location: '/' },
+    });
+  };
+
+  try {
+    const { resolveTrackId } = await import('../lib/suno.mjs');
+    await assert.rejects(
+      () => resolveTrackId('https://suno.com/s/invalidShare1234'),
+      /track_id_not_found/,
+    );
+    assert.deepEqual(calls, ['HEAD', 'GET']);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('resolveTrackId accepts UUID from a canonical share redirect', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (_url, options = {}) => {
+    assert.equal(options.method, 'HEAD');
+    return new Response(null, {
+      status: 307,
+      headers: { location: `/song/${CLIP_ID}?sh=abc123` },
+    });
+  };
+
+  try {
+    const { resolveTrackId } = await import('../lib/suno.mjs');
+    assert.equal(
+      await resolveTrackId('https://suno.com/s/validShare123456'),
+      CLIP_ID,
+    );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test('pickProgressiveAudio prefers current m4a-opus progressive media', () => {
