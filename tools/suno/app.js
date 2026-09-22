@@ -1,10 +1,10 @@
 (() => {
   'use strict';
 
-  const UUID_RE = /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/i;
   const SUNO_HOSTS = new Set(['suno.com', 'www.suno.com']);
-  const API_BASES = ['https://studio-api-prod.suno.com', 'https://studio-api.prod.suno.com'];
   const MAX_AUDIO_BYTES = 80 * 1024 * 1024;
+  const apiMeta = document.querySelector('meta[name="suno-saver-api"]');
+  const API_BASE = String(apiMeta?.content || '').replace(/\/$/, '');
 
   const form = document.querySelector('#lookup-form');
   const urlInput = document.querySelector('#suno-url');
@@ -23,31 +23,20 @@
   const progressValue = document.querySelector('#progress-value');
 
   let currentClip = null;
-  let resolverClip = null;
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     setBusy(true);
     trackCard.hidden = true;
+    progressWrap.hidden = true;
     setStatus('Проверяю ссылку…');
 
     try {
+      ensureApiConfigured();
       const normalized = normalizeSunoUrl(urlInput.value);
       urlInput.value = normalized.href;
-      const clipId = await resolveClipId(normalized);
-      setStatus('Получаю публичные данные трека…');
-
-      if (resolverClip?.id === clipId) {
-        currentClip = resolverClip;
-      } else {
-        try {
-          currentClip = await fetchClip(clipId);
-        } catch {
-          setStatus('Suno не разрешает браузеру читать публичный API. Использую резервный resolver…');
-          currentClip = await fetchClipWithFallback(clipId);
-        }
-      }
-
+      setStatus('Получаю данные трека…');
+      currentClip = await resolveTrack(normalized.href);
       renderClip(currentClip);
       setStatus('Готово. Выберите формат и скачайте файл.');
     } catch (error) {
@@ -63,21 +52,21 @@
     const format = document.querySelector('input[name="format"]:checked')?.value || 'original';
     downloadButton.disabled = true;
     progressWrap.hidden = false;
-    setProgress('Получаю аудио…', 0);
+    setProgress('Получаю оригинальный поток…', 0);
 
     try {
-      const source = chooseSource(currentClip);
-      if (!source) throw new Error('Для этого трека Suno не публикует доступный audio URL.');
-
-      const audio = await fetchAudio(source.url);
+      ensureApiConfigured();
+      const audio = await fetchAudio(
+        `${API_BASE}/api/audio?id=${encodeURIComponent(currentClip.id)}`
+      );
       const kind = detectAudioKind(audio.bytes);
       if (!kind.playable) {
-        throw new Error('Suno вернул защищённый или неизвестный поток. Сохранять его как аудиофайл нельзя.');
+        throw new Error('Backend вернул неподдерживаемый аудиопоток.');
       }
 
       const baseName = safeFilename(currentClip.title || `suno-${currentClip.id}`);
       if (format === 'original') {
-        setProgress('Сохраняю исходный файл…', 92);
+        setProgress('Сохраняю оригинал…', 92);
         saveBlob(new Blob([audio.bytes], { type: kind.mime }), `${baseName}.${kind.ext}`);
       } else {
         if (format === 'mp3' && kind.ext === 'mp3') {
@@ -86,16 +75,19 @@
           setProgress('Готово', 100);
           return;
         }
+
         const decoded = await decodeAudio(audio.bytes);
         if (format === 'wav') {
           setProgress('Создаю WAV…', 75);
-          const wav = encodeWav(decoded);
-          saveBlob(wav, `${baseName}.wav`);
+          saveBlob(encodeWav(decoded), `${baseName}.wav`);
         } else if (format === 'mp3') {
           if (!globalThis.lamejs?.Mp3Encoder) {
             throw new Error('MP3-кодек не загрузился. Обновите страницу и повторите попытку.');
           }
-          const mp3 = encodeMp3(decoded, (pct) => setProgress('Создаю MP3…', 55 + Math.round(pct * .4)));
+          const mp3 = encodeMp3(
+            decoded,
+            (pct) => setProgress('Создаю MP3…', 55 + Math.round(pct * 0.4))
+          );
           saveBlob(mp3, `${baseName}.mp3`);
         }
       }
@@ -108,189 +100,103 @@
     }
   });
 
+  function ensureApiConfigured() {
+    if (!/^https:\/\/[-a-z0-9.]+$/i.test(API_BASE)) {
+      throw new Error('Backend Suno Saver ещё не настроен.');
+    }
+  }
+
   function normalizeSunoUrl(raw) {
     let value = String(raw || '').trim();
     if (!value) throw new Error('Вставьте ссылку Suno.');
     if (!/^https?:\/\//i.test(value)) value = `https://${value}`;
+
     let url;
-    try { url = new URL(value); } catch { throw new Error('Некорректная ссылка.'); }
+    try {
+      url = new URL(value);
+    } catch {
+      throw new Error('Некорректная ссылка.');
+    }
+
     if (url.protocol !== 'https:' || !SUNO_HOSTS.has(url.hostname.toLowerCase())) {
       throw new Error('Нужна HTTPS-ссылка именно с suno.com.');
     }
-    const supported = /^\/(?:s|song|hook)\//i.test(url.pathname);
-    if (!supported) throw new Error('Поддерживаются ссылки /s/…, /song/… и /hook/….');
+    if (!/^\/(?:s|song|hook)\//i.test(url.pathname)) {
+      throw new Error('Поддерживаются ссылки /s/…, /song/… и /hook/….');
+    }
+
     url.hash = '';
     return url;
   }
 
-  async function resolveClipId(url) {
-    const direct = url.href.match(UUID_RE)?.[0];
-    if (direct) return direct.toLowerCase();
-
-    const shareMatch = url.pathname.match(/^\/s\/([A-Za-z0-9_-]{6,32})\/?$/);
-    if (!shareMatch) {
-      throw new Error('Для этой ссылки не найден UUID трека. Используйте /s/<code> или /song/<uuid>.');
-    }
-
-    const shareCode = shareMatch[1];
-    const shareUrl = `https://suno.com/s/${encodeURIComponent(shareCode)}`;
-
-    for (const mode of ['cors', 'no-cors']) {
-      try {
-        const response = await fetch(shareUrl, {
+  async function resolveTrack(sunoUrl) {
+    let response;
+    try {
+      response = await fetch(
+        `${API_BASE}/api/resolve?url=${encodeURIComponent(sunoUrl)}`,
+        {
           method: 'GET',
-          redirect: 'follow',
-          mode,
-          credentials: 'omit',
-          cache: 'no-store',
-          referrerPolicy: 'no-referrer'
-        });
-        const resolved = response.url?.match(UUID_RE)?.[0];
-        if (resolved) return resolved.toLowerCase();
-      } catch {
-        // GitHub Pages cannot normally read Suno's cross-origin redirect.
-      }
-    }
-
-    setStatus('Suno блокирует чтение редиректа из браузера. Использую резервный resolver для короткой ссылки…');
-    return resolveShortLinkWithFallback(shareCode);
-  }
-
-  async function resolveShortLinkWithFallback(shareCode) {
-    if (!/^[A-Za-z0-9_-]{6,32}$/.test(shareCode)) {
-      throw new Error('Некорректный код короткой ссылки Suno.');
-    }
-
-    const canonicalShort = `https://suno.com/s/${encodeURIComponent(shareCode)}`;
-    const resolverUrl = 'https://opensuno.vercel.app/track?url=' + encodeURIComponent(canonicalShort);
-
-    let response;
-    try {
-      response = await fetch(resolverUrl, {
-        method: 'GET',
-        credentials: 'omit',
-        cache: 'no-store',
-        headers: { Accept: 'application/json' },
-        referrerPolicy: 'no-referrer'
-      });
-    } catch {
-      throw new Error('Не удалось обратиться к резервному resolver для короткой ссылки.');
-    }
-
-    if (!response.ok) {
-      throw new Error(`Resolver короткой ссылки вернул HTTP ${response.status}.`);
-    }
-
-    let payload;
-    try {
-      payload = await response.json();
-    } catch {
-      throw new Error('Resolver короткой ссылки вернул некорректный ответ.');
-    }
-
-    const resolved = String(payload?.data?.id || '').match(UUID_RE)?.[0];
-    if (payload?.status !== 'ok' || !resolved) {
-      throw new Error('Не удалось определить UUID по короткой ссылке Suno.');
-    }
-
-    const id = resolved.toLowerCase();
-    resolverClip = normalizeResolverClip(payload.data, id);
-    return id;
-  }
-
-  async function fetchClipWithFallback(id) {
-    if (!UUID_RE.test(id)) throw new Error('Некорректный UUID трека Suno.');
-
-    const canonicalSong = `https://suno.com/song/${encodeURIComponent(id)}`;
-    const resolverUrl = 'https://opensuno.vercel.app/track?url=' + encodeURIComponent(canonicalSong);
-
-    let response;
-    try {
-      response = await fetch(resolverUrl, {
-        method: 'GET',
-        credentials: 'omit',
-        cache: 'no-store',
-        headers: { Accept: 'application/json' },
-        referrerPolicy: 'no-referrer'
-      });
-    } catch {
-      throw new Error('Не удалось получить данные трека через резервный resolver.');
-    }
-
-    if (!response.ok) {
-      throw new Error(`Resolver данных трека вернул HTTP ${response.status}.`);
-    }
-
-    let payload;
-    try {
-      payload = await response.json();
-    } catch {
-      throw new Error('Resolver данных трека вернул некорректный ответ.');
-    }
-
-    const resolved = String(payload?.data?.id || '').match(UUID_RE)?.[0]?.toLowerCase();
-    if (payload?.status !== 'ok' || resolved !== id.toLowerCase()) {
-      throw new Error('Resolver вернул данные другого или неизвестного трека.');
-    }
-
-    resolverClip = normalizeResolverClip(payload.data, resolved);
-    return resolverClip;
-  }
-
-  function normalizeResolverClip(data, id) {
-    const cover = isTrustedSunoMediaUrl(data?.cover_url) ? data.cover_url : '';
-    const duration = Number(data?.duration);
-
-    return {
-      id,
-      title: typeof data?.title === 'string' && data.title.trim() ? data.title.trim() : `Suno ${id.slice(0, 8)}`,
-      display_name: typeof data?.artist === 'string' && data.artist.trim() ? data.artist.trim() : 'Suno',
-      image_url: cover,
-      metadata: {
-        duration: Number.isFinite(duration) && duration > 0 ? duration : null,
-        tags: ''
-      },
-      media_urls: [{
-        url: `https://opensuno.vercel.app/download/${encodeURIComponent(id)}`,
-        content_type: 'mp3',
-        delivery: 'resolver-proxy'
-      }],
-      resolver_fallback: true
-    };
-  }
-
-  async function fetchClip(id) {
-    let lastError = null;
-    for (const base of API_BASES) {
-      try {
-        const response = await fetch(`${base}/api/clip/${encodeURIComponent(id)}`, {
           credentials: 'omit',
           cache: 'no-store',
           headers: { Accept: 'application/json' },
           referrerPolicy: 'no-referrer'
-        });
-        if (!response.ok) throw new Error(`Suno API: HTTP ${response.status}`);
-        const data = await response.json();
-        if (!data || typeof data !== 'object' || !data.id) throw new Error('Suno API вернул некорректные данные.');
-        if (data.is_public === false) throw new Error('Трек не опубликован публично.');
-        return data;
-      } catch (error) {
-        lastError = error;
-      }
+        }
+      );
+    } catch {
+      throw new Error('Не удалось связаться с backend Suno Saver.');
     }
-    throw new Error(`Не удалось прочитать публичные данные Suno${lastError?.message ? `: ${lastError.message}` : '.'}`);
+
+    let data = null;
+    try {
+      data = await response.json();
+    } catch {
+      if (!response.ok) throw new Error(`Backend вернул HTTP ${response.status}.`);
+      throw new Error('Backend вернул некорректный ответ.');
+    }
+
+    if (!response.ok) {
+      throw new Error(apiErrorMessage(data?.error, response.status));
+    }
+
+    if (
+      !data ||
+      typeof data !== 'object' ||
+      !/^[0-9a-f-]{36}$/i.test(String(data.id || '')) ||
+      typeof data.title !== 'string'
+    ) {
+      throw new Error('Backend вернул некорректные данные трека.');
+    }
+
+    return data;
+  }
+
+  function apiErrorMessage(code, status) {
+    const value = String(code || '');
+    if (value === 'track_id_not_found') return 'Не удалось определить трек по этой ссылке.';
+    if (value === 'unsupported_url' || value === 'invalid_url' || value === 'missing_url') {
+      return 'Некорректная или неподдерживаемая ссылка Suno.';
+    }
+    if (value === 'audio_unavailable') return 'Для этого трека нет доступного аудиопотока.';
+    if (value.startsWith('share_http_')) return 'Suno не разрешил открыть короткую ссылку.';
+    if (value.startsWith('clip_http_')) return 'Suno не вернул публичные данные трека.';
+    if (value.startsWith('rights_http_')) return 'Suno не выдал права на воспроизведение этого трека.';
+    if (value.startsWith('media_http_')) return 'Suno не отдал аудиопоток.';
+    return `Ошибка backend${status ? ` (HTTP ${status})` : ''}.`;
   }
 
   function renderClip(clip) {
-    const duration = Number(clip.metadata?.duration);
-    const author = clip.display_name || clip.handle || 'Suno';
+    const duration = Number(clip.duration);
+    const author = clip.artist || 'Suno';
     titleEl.textContent = clip.title || 'Untitled';
-    metaEl.textContent = [author, Number.isFinite(duration) ? formatDuration(duration) : null, clip.major_model_version || null].filter(Boolean).join(' · ');
-    tagsEl.textContent = clip.metadata?.tags || '';
+    metaEl.textContent = [
+      author,
+      Number.isFinite(duration) && duration > 0 ? formatDuration(duration) : null,
+      clip.model || null
+    ].filter(Boolean).join(' · ');
+    tagsEl.textContent = clip.tags || '';
 
-    const cover = clip.image_large_url || clip.image_url;
-    if (cover && isHttpsUrl(cover)) {
-      coverEl.src = cover;
+    if (clip.image && isHttpsUrl(clip.image)) {
+      coverEl.src = clip.image;
       coverEl.alt = `Обложка: ${clip.title || 'Suno track'}`;
       coverEl.hidden = false;
     } else {
@@ -298,49 +204,41 @@
       coverEl.hidden = true;
     }
 
-    const source = chooseSource(clip);
-    mediaNote.textContent = source
-      ? `Источник: ${source.contentType || source.content_type || 'audio'}${source.delivery ? ` · ${source.delivery}` : ''}. Файл проверяется перед сохранением.`
-      : 'Suno не опубликовал audio URL для этого трека.';
+    const sourceType = clip.media?.contentType || 'm4a-opus';
+    mediaNote.textContent =
+      `Источник: ${sourceType} · Suno Mango · расшифровка потока выполняется backend без сохранения файла.`;
     trackCard.hidden = false;
-  }
-
-  function chooseSource(clip) {
-    const candidates = [];
-    for (const item of Array.isArray(clip.media_urls) ? clip.media_urls : []) {
-      if (item?.url && isHttpsUrl(item.url)) candidates.push({ ...item, score: sourceScore(item) });
-    }
-    if (clip.audio_url && isHttpsUrl(clip.audio_url) && !/\/api\/forbidden(?:$|\?)/.test(clip.audio_url)) {
-      candidates.push({ url: clip.audio_url, contentType: 'mp3', delivery: 'progressive', score: 90 });
-    }
-    candidates.sort((a, b) => b.score - a.score);
-    return candidates[0] || null;
-  }
-
-  function sourceScore(item) {
-    const type = String(item.content_type || '').toLowerCase();
-    const delivery = String(item.delivery || '').toLowerCase();
-    let score = delivery === 'progressive' ? 30 : 0;
-    if (type.includes('mp3')) score += 70;
-    else if (type.includes('m4a') || type.includes('aac') || type.includes('opus')) score += 60;
-    else score += 10;
-    return score;
   }
 
   async function fetchAudio(url) {
     const response = await fetch(url, {
+      method: 'GET',
       credentials: 'omit',
       cache: 'no-store',
       referrerPolicy: 'no-referrer'
     });
-    if (!response.ok) throw new Error(`Не удалось получить аудио: HTTP ${response.status}.`);
+
+    if (!response.ok) {
+      let detail = null;
+      try {
+        detail = await response.json();
+      } catch {
+        // Binary/error responses do not need JSON.
+      }
+      throw new Error(apiErrorMessage(detail?.error, response.status));
+    }
+
     const declared = Number(response.headers.get('content-length'));
-    if (Number.isFinite(declared) && declared > MAX_AUDIO_BYTES) throw new Error('Аудиофайл слишком большой для обработки в браузере.');
+    if (Number.isFinite(declared) && declared > MAX_AUDIO_BYTES) {
+      throw new Error('Аудиофайл слишком большой для обработки в браузере.');
+    }
 
     const reader = response.body?.getReader();
     if (!reader) {
       const bytes = await response.arrayBuffer();
-      if (bytes.byteLength > MAX_AUDIO_BYTES) throw new Error('Аудиофайл слишком большой для обработки в браузере.');
+      if (bytes.byteLength > MAX_AUDIO_BYTES) {
+        throw new Error('Аудиофайл слишком большой для обработки в браузере.');
+      }
       return { bytes };
     }
 
@@ -350,17 +248,25 @@
       const { done, value } = await reader.read();
       if (done) break;
       received += value.byteLength;
+
       if (received > MAX_AUDIO_BYTES) {
         reader.cancel();
         throw new Error('Аудиофайл слишком большой для обработки в браузере.');
       }
+
       chunks.push(value);
-      const pct = declared > 0 ? Math.min(50, Math.round((received / declared) * 50)) : Math.min(45, Math.round(received / 300000));
-      setProgress('Получаю аудио…', pct);
+      const pct = declared > 0
+        ? Math.min(50, Math.round((received / declared) * 50))
+        : Math.min(45, Math.round(received / 300000));
+      setProgress('Получаю оригинальный поток…', pct);
     }
+
     const merged = new Uint8Array(received);
     let offset = 0;
-    for (const chunk of chunks) { merged.set(chunk, offset); offset += chunk.byteLength; }
+    for (const chunk of chunks) {
+      merged.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
     return { bytes: merged.buffer };
   }
 
@@ -368,13 +274,22 @@
     const b = new Uint8Array(buffer, 0, Math.min(buffer.byteLength, 64));
     const ascii = (from, len) => String.fromCharCode(...b.slice(from, from + len));
     if (ascii(0, 3) === 'ID3') return { playable: true, ext: 'mp3', mime: 'audio/mpeg' };
-    if (b[0] === 0xff && (b[1] & 0xe0) === 0xe0 && (b[1] & 0x06) !== 0) return { playable: true, ext: 'mp3', mime: 'audio/mpeg' };
-    if (b[0] === 0xff && (b[1] & 0xf6) === 0xf0) return { playable: true, ext: 'aac', mime: 'audio/aac' };
-    if (b.length >= 12 && ascii(4, 4) === 'ftyp') return { playable: true, ext: 'm4a', mime: 'audio/mp4' };
+    if (b[0] === 0xff && (b[1] & 0xe0) === 0xe0 && (b[1] & 0x06) !== 0) {
+      return { playable: true, ext: 'mp3', mime: 'audio/mpeg' };
+    }
+    if (b[0] === 0xff && (b[1] & 0xf6) === 0xf0) {
+      return { playable: true, ext: 'aac', mime: 'audio/aac' };
+    }
+    if (b.length >= 12 && ascii(4, 4) === 'ftyp') {
+      return { playable: true, ext: 'm4a', mime: 'audio/mp4' };
+    }
     if (ascii(0, 4) === 'OggS') return { playable: true, ext: 'ogg', mime: 'audio/ogg' };
-    if (b[0] === 0x1a && b[1] === 0x45 && b[2] === 0xdf && b[3] === 0xa3) return { playable: true, ext: 'webm', mime: 'audio/webm' };
-    if (ascii(0, 4) === 'RIFF' && ascii(8, 4) === 'WAVE') return { playable: true, ext: 'wav', mime: 'audio/wav' };
-
+    if (b[0] === 0x1a && b[1] === 0x45 && b[2] === 0xdf && b[3] === 0xa3) {
+      return { playable: true, ext: 'webm', mime: 'audio/webm' };
+    }
+    if (ascii(0, 4) === 'RIFF' && ascii(8, 4) === 'WAVE') {
+      return { playable: true, ext: 'wav', mime: 'audio/wav' };
+    }
     return { playable: false, ext: 'bin', mime: 'application/octet-stream' };
   }
 
@@ -382,6 +297,7 @@
     setProgress('Декодирую аудио…', 55);
     const AudioCtx = globalThis.AudioContext || globalThis.webkitAudioContext;
     if (!AudioCtx) throw new Error('Этот браузер не поддерживает декодирование аудио.');
+
     const ctx = new AudioCtx();
     try {
       return await ctx.decodeAudioData(arrayBuffer.slice(0));
@@ -400,6 +316,7 @@
     const dataSize = frames * channels * bytesPerSample;
     const out = new ArrayBuffer(44 + dataSize);
     const view = new DataView(out);
+
     writeAscii(view, 0, 'RIFF');
     view.setUint32(4, 36 + dataSize, true);
     writeAscii(view, 8, 'WAVE');
@@ -414,15 +331,23 @@
     writeAscii(view, 36, 'data');
     view.setUint32(40, dataSize, true);
 
-    const data = Array.from({ length: channels }, (_, i) => audioBuffer.getChannelData(i));
+    const data = Array.from(
+      { length: channels },
+      (_, i) => audioBuffer.getChannelData(i)
+    );
     let offset = 44;
     for (let i = 0; i < frames; i++) {
       for (let ch = 0; ch < channels; ch++) {
         const sample = Math.max(-1, Math.min(1, data[ch][i]));
-        view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7fff, true);
+        view.setInt16(
+          offset,
+          sample < 0 ? sample * 0x8000 : sample * 0x7fff,
+          true
+        );
         offset += 2;
       }
     }
+
     return new Blob([out], { type: 'audio/wav' });
   }
 
@@ -434,12 +359,16 @@
     const right = channels > 1 ? floatTo16(audioBuffer.getChannelData(1)) : null;
     const blockSize = 1152;
     const chunks = [];
+
     for (let i = 0; i < left.length; i += blockSize) {
       const l = left.subarray(i, i + blockSize);
-      const encoded = channels > 1 ? encoder.encodeBuffer(l, right.subarray(i, i + blockSize)) : encoder.encodeBuffer(l);
+      const encoded = channels > 1
+        ? encoder.encodeBuffer(l, right.subarray(i, i + blockSize))
+        : encoder.encodeBuffer(l);
       if (encoded.length) chunks.push(new Int8Array(encoded));
-      if ((i / blockSize) % 64 === 0) onProgress?.(i / left.length * 100);
+      if ((i / blockSize) % 64 === 0) onProgress?.((i / left.length) * 100);
     }
+
     const end = encoder.flush();
     if (end.length) chunks.push(new Int8Array(end));
     onProgress?.(100);
@@ -456,7 +385,9 @@
   }
 
   function writeAscii(view, offset, text) {
-    for (let i = 0; i < text.length; i++) view.setUint8(offset + i, text.charCodeAt(i));
+    for (let i = 0; i < text.length; i++) {
+      view.setUint8(offset + i, text.charCodeAt(i));
+    }
   }
 
   function saveBlob(blob, filename) {
@@ -472,7 +403,13 @@
   }
 
   function safeFilename(value) {
-    return String(value || 'suno-track').replace(/[<>:"/\\|?*\u0000-\u001f]/g, '_').replace(/[. ]+$/g, '').trim().slice(0, 120) || 'suno-track';
+    return (
+      String(value || 'suno-track')
+        .replace(/[<>:"/\\|?*\u0000-\u001f]/g, '_')
+        .replace(/[. ]+$/g, '')
+        .trim()
+        .slice(0, 120) || 'suno-track'
+    );
   }
 
   function formatDuration(seconds) {
@@ -483,19 +420,8 @@
   }
 
   function isHttpsUrl(value) {
-    try { return new URL(value).protocol === 'https:'; } catch { return false; }
-  }
-
-  function isTrustedSunoMediaUrl(value) {
     try {
-      const url = new URL(value);
-      return url.protocol === 'https:' && (
-        url.hostname === 'cdn1.suno.ai' ||
-        url.hostname === 'cdn2.suno.ai' ||
-        url.hostname.endsWith('.suno.ai') ||
-        url.hostname.endsWith('.suno.com') ||
-        url.hostname.endsWith('.cloudfront.net')
-      );
+      return new URL(value).protocol === 'https:';
     } catch {
       return false;
     }
