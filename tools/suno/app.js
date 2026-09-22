@@ -115,9 +115,19 @@
     const direct = url.href.match(UUID_RE)?.[0];
     if (direct) return direct.toLowerCase();
 
+    const shareMatch = url.pathname.match(/^\/s\/([A-Za-z0-9_-]{6,32})\/?$/);
+    if (!shareMatch) {
+      throw new Error('Для этой ссылки не найден UUID трека. Используйте /s/<code> или /song/<uuid>.');
+    }
+
+    // Build the request from a fixed trusted origin plus a tightly validated
+    // short code. User input can never select the request host.
+    const shareCode = shareMatch[1];
+    const shareUrl = `https://suno.com/s/${encodeURIComponent(shareCode)}`;
+
     for (const mode of ['cors', 'no-cors']) {
       try {
-        const response = await fetch(url.href, {
+        const response = await fetch(shareUrl, {
           method: 'GET',
           redirect: 'follow',
           mode,
