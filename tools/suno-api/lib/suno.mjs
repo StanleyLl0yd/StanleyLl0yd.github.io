@@ -277,12 +277,34 @@ export function extractSongIdFromLocation(location, base = 'https://suno.com') {
   return id && UUID_RE.test(id) ? id : null;
 }
 
-function extractSongIdFromHtml(html) {
-  const match = String(html || '').match(
-    /(?:https:\/\/(?:www\.)?suno\.com)?\/(?:song|hook)\/([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})(?=[/?"'\s<]|$)/i,
+function htmlAttribute(tag, name) {
+  const pattern = new RegExp(
+    '\\b' + name + '\\s*=\\s*(?:"([^"]*)"|\\'([^\\']*)\\'|([^\\s>]+))',
+    'i',
   );
-  const id = match?.[1]?.toLowerCase() || null;
-  return id && UUID_RE.test(id) ? id : null;
+  const match = pattern.exec(tag);
+  return match?.[1] ?? match?.[2] ?? match?.[3] ?? '';
+}
+
+function extractSongIdFromHtml(html) {
+  for (const match of String(html || '').matchAll(/<(?:link|meta)\b[^>]{0,2048}>/gi)) {
+    const tag = match[0];
+    const rel = htmlAttribute(tag, 'rel').toLowerCase();
+    const property = htmlAttribute(tag, 'property').toLowerCase();
+    const name = htmlAttribute(tag, 'name').toLowerCase();
+
+    let target = '';
+    if (rel.split(/\s+/).includes('canonical')) {
+      target = htmlAttribute(tag, 'href');
+    } else if (property === 'og:url' || name === 'twitter:url') {
+      target = htmlAttribute(tag, 'content');
+    }
+
+    const id = extractSongIdFromLocation(target);
+    if (id) return id;
+  }
+
+  return null;
 }
 
 export async function resolveTrackId(raw) {
