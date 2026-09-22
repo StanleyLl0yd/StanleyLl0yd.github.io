@@ -1,23 +1,28 @@
 # Suno Saver (GitHub Pages)
 
-Static browser tool for public Suno song links.
+Static frontend for the Suno Saver serverless API.
 
-## Current behavior
+## Behavior
 
-- accepts `suno.com/s/...`, `/song/<uuid>` and `/hook/...` links;
-- resolves public clip metadata without account credentials, with resolver fallback when Suno blocks browser CORS;\n- resolves short `/s/...` links directly when possible and falls back to the open-source OpenSuno resolver when browser CORS hides Suno's redirect;
-- chooses the best published progressive audio candidate;
-- validates the downloaded bytes before saving;
-- saves the original playable audio container;
-- converts playable source audio to 16-bit PCM WAV locally;
-- converts playable source audio to 192 kbps MP3 locally with a vendored `lamejs` 1.2.1 encoder;
-- refuses to save payloads that do not identify as a supported audio container.
+- accepts public `suno.com/s/...`, `/song/<uuid>` and `/hook/...` links;
+- sends only the public Suno URL to the configured Suno Saver API;
+- displays canonical title, artist, duration, tags/model and cover returned by the backend;
+- downloads the backend's decrypted current Suno audio stream;
+- saves Original without re-encoding;
+- converts the playable source to 16-bit PCM WAV locally;
+- converts the playable source to 192 kbps MP3 locally with vendored `lamejs` 1.2.1;
+- validates audio bytes before saving;
+- does not ask for Suno passwords, cookies, session tokens or API tokens.
 
-## Important limitation
+## Backend
 
-GitHub Pages has no server-side runtime. Suno can block cross-origin requests or expose only a protected/unrecognized media payload. In those cases the page intentionally stops instead of creating a broken file. A future resolver service can be added without changing the UI contract.
+The backend source lives in `../suno-api/` and is deployed separately because GitHub Pages is static-only.
 
-No Suno passwords, session cookies or API tokens are requested.
+The production backend origin is configured in:
+
+`<meta name="suno-saver-api" ...>`
+
+in `index.html`.
 
 ## Third-party code
 
