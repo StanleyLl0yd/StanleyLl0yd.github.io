@@ -279,7 +279,7 @@ export function extractSongIdFromLocation(location, base = 'https://suno.com') {
 
 function htmlAttribute(tag, name) {
   const pattern = new RegExp(
-    '\\b' + name + '\\s*=\\s*(?:"([^"]*)"|\\'([^\\']*)\\'|([^\\s>]+))',
+    `\\b${name}\\s*=\\s*(?:\"([^\"]*)\"|'([^']*)'|([^\\s>]+))`,
     'i',
   );
   const match = pattern.exec(tag);
