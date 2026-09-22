@@ -58,6 +58,7 @@
     const format = document.querySelector('input[name="format"]:checked')?.value || 'original';
     setDownloadBusy(true);
     progressWrap.hidden = false;
+    setStatus('Получаю аудио…');
     setProgress('Получаю оригинальный поток…', 0);
 
     try {
@@ -79,6 +80,7 @@
           setProgress('Сохраняю MP3 без перекодирования…', 92);
           saveBlob(new Blob([audio.bytes], { type: 'audio/mpeg' }), `${baseName}.mp3`);
           setProgress('Готово', 100);
+          setStatus('Готово. Файл передан браузеру.');
           return;
         }
 
@@ -98,6 +100,7 @@
         }
       }
       setProgress('Готово', 100);
+      setStatus('Готово. Файл передан браузеру.');
     } catch (error) {
       setStatus(humanError(error), true);
       progressWrap.hidden = true;
@@ -173,7 +176,8 @@
           credentials: 'omit',
           cache: 'no-store',
           headers: { Accept: 'application/json' },
-          referrerPolicy: 'no-referrer'
+          referrerPolicy: 'no-referrer',
+          signal: requestSignal(25_000)
         }
       );
     } catch {
@@ -267,12 +271,18 @@
   }
 
   async function fetchAudio(url) {
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'omit',
-      cache: 'no-store',
-      referrerPolicy: 'no-referrer'
-    });
+    let response;
+    try {
+      response = await fetch(url, {
+        method: 'GET',
+        credentials: 'omit',
+        cache: 'no-store',
+        referrerPolicy: 'no-referrer',
+        signal: requestSignal(70_000)
+      });
+    } catch {
+      throw new Error('Не удалось получить аудио от backend Suno Saver.');
+    }
 
     if (!response.ok) {
       let detail = null;
@@ -298,23 +308,50 @@
       return { bytes };
     }
 
-    const chunks = [];
+    const knownLength =
+      Number.isInteger(declared) &&
+      declared > 0 &&
+      declared <= MAX_AUDIO_BYTES
+        ? declared
+        : 0;
+    const preallocated = knownLength ? new Uint8Array(knownLength) : null;
+    const chunks = preallocated ? null : [];
     let received = 0;
+
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      received += value.byteLength;
 
-      if (received > MAX_AUDIO_BYTES) {
+      const nextReceived = received + value.byteLength;
+      if (nextReceived > MAX_AUDIO_BYTES) {
         reader.cancel();
         throw new Error('Аудиофайл слишком большой для обработки в браузере.');
       }
+      if (preallocated && nextReceived > preallocated.length) {
+        reader.cancel();
+        throw new Error('Backend вернул некорректную длину аудиопотока.');
+      }
 
-      chunks.push(value);
-      const pct = declared > 0
-        ? Math.min(50, Math.round((received / declared) * 50))
+      if (preallocated) {
+        preallocated.set(value, received);
+      } else {
+        chunks.push(value);
+      }
+      received = nextReceived;
+
+      const pct = knownLength > 0
+        ? Math.min(50, Math.round((received / knownLength) * 50))
         : Math.min(45, Math.round(received / 300000));
       setProgress('Получаю оригинальный поток…', pct);
+    }
+
+    if (preallocated) {
+      return {
+        bytes:
+          received === preallocated.length
+            ? preallocated.buffer
+            : preallocated.slice(0, received).buffer
+      };
     }
 
     const merged = new Uint8Array(received);
@@ -370,6 +407,9 @@
     const frames = audioBuffer.length;
     const bytesPerSample = 2;
     const dataSize = frames * channels * bytesPerSample;
+    if (dataSize > 0xffffffff - 44) {
+      throw new Error('Трек слишком длинный для WAV 16-bit PCM.');
+    }
     const out = new ArrayBuffer(44 + dataSize);
     const view = new DataView(out);
 
@@ -473,6 +513,12 @@
     const min = Math.floor(total / 60);
     const sec = String(total % 60).padStart(2, '0');
     return `${min}:${sec}`;
+  }
+
+  function requestSignal(timeoutMs) {
+    return typeof globalThis.AbortSignal?.timeout === 'function'
+      ? globalThis.AbortSignal.timeout(timeoutMs)
+      : undefined;
   }
 
   function isTrustedImageUrl(value) {
