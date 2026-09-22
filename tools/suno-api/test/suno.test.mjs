@@ -296,7 +296,12 @@ test('API handlers reject foreign origins before any upstream request', async ()
 test('resolve handler returns bounded canonical metadata to the frontend origin', async () => {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (url) => {
-    assert.match(String(url), /studio-api\.prod\.suno\.com\/api\/clip\//);
+    const upstream = new URL(String(url));
+    assert.equal(upstream.origin, 'https://studio-api.prod.suno.com');
+    assert.match(
+      upstream.pathname,
+      /^\/api\/clip\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
+    );
     const body = JSON.stringify({
       id: CLIP_ID,
       title: 'Example',
