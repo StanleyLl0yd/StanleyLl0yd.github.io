@@ -5,7 +5,7 @@ Static browser tool for public Suno song links.
 ## Current behavior
 
 - accepts `suno.com/s/...`, `/song/<uuid>` and `/hook/...` links;
-- resolves public clip metadata without account credentials;
+- resolves public clip metadata without account credentials;\n- resolves short `/s/...` links directly when possible and falls back to the open-source OpenSuno resolver when browser CORS hides Suno's redirect;
 - chooses the best published progressive audio candidate;
 - validates the downloaded bytes before saving;
 - saves the original playable audio container;
