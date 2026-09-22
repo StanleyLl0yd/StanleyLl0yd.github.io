@@ -171,6 +171,7 @@ test('media redirects are revalidated before the backend follows them', async ()
 test('trusted media URL allowlist rejects foreign hosts and credential tricks', () => {
   assert.equal(isTrustedMediaUrl('https://media.cloudfront.net/1/clip/a.m4a'), true);
   assert.equal(isTrustedMediaUrl('https://cdn2.suno.ai/image.jpeg'), true);
+  assert.equal(isTrustedMediaUrl('https://d123.cloudfront.net/audio.m4a'), false);
   assert.equal(isTrustedMediaUrl('https://studio-api.prod.suno.com/media/a'), false);
 
   assert.equal(isTrustedMediaUrl('https://evil.example/audio.m4a'), false);
