@@ -2,6 +2,13 @@ name: Suno Live Smoke
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "tools/suno/**"
+      - "tools/suno-api/**"
+      - ".github/workflows/suno-live-smoke.yml"
   schedule:
     - cron: "17 5 * * 1"
 
@@ -22,11 +29,20 @@ jobs:
       TRACK: https://suno.com/s/QSz9P1EylWOF7vnz
 
     steps:
-      - name: Check health
+      - name: Wait for production backend
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error "$BASE/api/health" | tee /tmp/health.json
-          jq -e '.ok == true and .service == "suno-saver-api"' /tmp/health.json
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error "$BASE/api/health" -o /tmp/health.json &&
+               jq -e '.ok == true and .service == "suno-saver-api" and .version >= 2' /tmp/health.json >/dev/null; then
+              cat /tmp/health.json
+              exit 0
+            fi
+            echo "waiting for production deployment ($attempt/30)"
+            sleep 5
+          done
+          echo "production backend did not become ready" >&2
+          exit 1
 
       - name: Verify direct API hotlink is rejected
         run: |
