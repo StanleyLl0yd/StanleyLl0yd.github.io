@@ -548,14 +548,33 @@ export async function fetchRights(id) {
     throw new Error('rights_network');
   }
 
-  if (!data?.key || !data?.iv || !data?.glt) {
+  if (
+    typeof data?.key !== 'string' ||
+    typeof data?.iv !== 'string' ||
+    typeof data?.glt !== 'string' ||
+    data.key.length < 16 ||
+    data.iv.length < 16 ||
+    data.key.length > 512 ||
+    data.iv.length > 512 ||
+    data.glt.length < 1 ||
+    data.glt.length > 8192
+  ) {
     throw new Error('rights_invalid');
   }
   return data;
 }
 
 function decodeBase64(value) {
-  let normalized = String(value || '').replace(/-/g, '+').replace(/_/g, '/');
+  const raw = String(value || '');
+  if (
+    raw.length < 16 ||
+    raw.length > 512 ||
+    !/^[A-Za-z0-9+/_=-]+$/.test(raw)
+  ) {
+    throw new Error('wrapped_value_invalid');
+  }
+
+  let normalized = raw.replace(/-/g, '+').replace(/_/g, '/');
   while (normalized.length % 4) normalized += '=';
   return Buffer.from(normalized, 'base64');
 }
