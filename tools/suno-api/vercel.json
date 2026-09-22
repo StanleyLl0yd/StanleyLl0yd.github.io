@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/audio.mjs": {
+      "maxDuration": 60
+    },
+    "api/resolve.mjs": {
+      "maxDuration": 20
+    }
+  }
+}
