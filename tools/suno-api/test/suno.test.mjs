@@ -381,6 +381,18 @@ test('unwrapRightsValue authenticates clip-bound AES-GCM wrapper', () => {
   assert.throws(() => unwrapRightsValue(wrapped, CLIP_ID.replace('841e', '941e'), userKey));
 });
 
+test('rights unwrap rejects malformed or oversized base64 material', () => {
+  const userKey = crypto.randomBytes(32);
+  assert.throws(
+    () => unwrapRightsValue('not base64 !!!', CLIP_ID, userKey),
+    /wrapped_value_invalid/,
+  );
+  assert.throws(
+    () => unwrapRightsValue('A'.repeat(600), CLIP_ID, userKey),
+    /wrapped_value_invalid/,
+  );
+});
+
 test('deriveContentCipher decrypts Suno-style AES-CTR payload', () => {
   const glt = 'guest-listener-token';
   const userKey = crypto.createHash('sha256').update(glt, 'utf8').digest();
