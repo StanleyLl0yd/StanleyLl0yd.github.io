@@ -88,14 +88,16 @@ export default async function handler(req, res) {
   } catch (error) {
     if (isExpectedClientDisconnect(error)) return;
 
-    console.error('audio_handler_error', error);
     if (res.headersSent) {
+      console.error('audio_stream_error', error);
       res.destroy(error instanceof Error ? error : undefined);
       return;
     }
 
     const code = publicErrorCode(error);
-    res.statusCode = statusForError(code);
+    const status = statusForError(code);
+    if (status >= 500) console.error('audio_handler_error', error);
+    res.statusCode = status;
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.end(JSON.stringify({ error: code }));
   }
