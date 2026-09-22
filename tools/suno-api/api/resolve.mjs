@@ -25,9 +25,10 @@ export default async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.end(JSON.stringify(result));
   } catch (error) {
-    console.error('resolve_handler_error', error);
     const code = publicErrorCode(error);
-    res.statusCode = statusForError(code);
+    const status = statusForError(code);
+    if (status >= 500) console.error('resolve_handler_error', error);
+    res.statusCode = status;
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.end(JSON.stringify({ error: code }));
   }
