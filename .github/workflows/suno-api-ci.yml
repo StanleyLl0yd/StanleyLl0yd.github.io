@@ -3,14 +3,20 @@ name: Suno API CI
 on:
   pull_request:
     paths:
+      - "tools/suno/**"
       - "tools/suno-api/**"
       - ".github/workflows/suno-api-ci.yml"
   push:
     branches:
       - main
     paths:
+      - "tools/suno/**"
       - "tools/suno-api/**"
       - ".github/workflows/suno-api-ci.yml"
+
+concurrency:
+  group: suno-api-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -30,8 +36,10 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Show Node version
-        run: node --version
+      - name: Set up Node 22
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
 
       - name: Syntax check
         run: npm run check
