@@ -36,7 +36,7 @@ SUNO_SAVER_CSP = (
     - {"img-src 'self'", "connect-src 'none'"}
     | {
         "img-src 'self' data: https://cdn1.suno.ai https://cdn2.suno.ai https://*.cloudfront.net https://*.suno.com https://*.suno.ai",
-        "connect-src 'self' https://stanleyll0yd-suno-saver-api-20260922.vercel.app",
+        "connect-src 'self' https://stanleyll0yd-suno-saver-api-2026092.vercel.app",
     }
 )
 TEXT_SUFFIXES = {".html", ".css", ".js", ".md", ".txt", ".xml", ".svg", ".yml", ".yaml", ".py"}
