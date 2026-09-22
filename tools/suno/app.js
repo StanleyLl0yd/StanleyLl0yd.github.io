@@ -120,8 +120,6 @@
       throw new Error('Для этой ссылки не найден UUID трека. Используйте /s/<code> или /song/<uuid>.');
     }
 
-    // Build the request from a fixed trusted origin plus a tightly validated
-    // short code. User input can never select the request host.
     const shareCode = shareMatch[1];
     const shareUrl = `https://suno.com/s/${encodeURIComponent(shareCode)}`;
 
@@ -138,11 +136,52 @@
         const resolved = response.url?.match(UUID_RE)?.[0];
         if (resolved) return resolved.toLowerCase();
       } catch {
-        // Try next strategy.
+        // GitHub Pages cannot normally read Suno's cross-origin redirect.
       }
     }
 
-    throw new Error('Браузер не смог раскрыть короткую /s/ ссылку из-за CORS. Откройте её в Suno и вставьте конечный URL вида /song/<uuid>.');
+    setStatus('Suno блокирует чтение редиректа из браузера. Использую резервный resolver для короткой ссылки…');
+    return resolveShortLinkWithFallback(shareCode);
+  }
+
+  async function resolveShortLinkWithFallback(shareCode) {
+    if (!/^[A-Za-z0-9_-]{6,32}$/.test(shareCode)) {
+      throw new Error('Некорректный код короткой ссылки Suno.');
+    }
+
+    const canonicalShort = `https://suno.com/s/${encodeURIComponent(shareCode)}`;
+    const resolverUrl = 'https://opensuno.vercel.app/track?url=' + encodeURIComponent(canonicalShort);
+
+    let response;
+    try {
+      response = await fetch(resolverUrl, {
+        method: 'GET',
+        credentials: 'omit',
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+        referrerPolicy: 'no-referrer'
+      });
+    } catch {
+      throw new Error('Не удалось обратиться к резервному resolver для короткой ссылки.');
+    }
+
+    if (!response.ok) {
+      throw new Error(`Resolver короткой ссылки вернул HTTP ${response.status}.`);
+    }
+
+    let payload;
+    try {
+      payload = await response.json();
+    } catch {
+      throw new Error('Resolver короткой ссылки вернул некорректный ответ.');
+    }
+
+    const resolved = String(payload?.data?.id || '').match(UUID_RE)?.[0];
+    if (payload?.status !== 'ok' || !resolved) {
+      throw new Error('Не удалось определить UUID по короткой ссылке Suno.');
+    }
+
+    return resolved.toLowerCase();
   }
 
   async function fetchClip(id) {
