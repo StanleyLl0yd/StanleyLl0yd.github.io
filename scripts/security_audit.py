@@ -39,7 +39,7 @@ SUNO_SAVER_CSP = (
         "connect-src 'self' https://stanleyll0yd-suno-saver-api-2026092.vercel.app",
     }
 )
-TEXT_SUFFIXES = {".html", ".css", ".js", ".md", ".txt", ".xml", ".svg", ".yml", ".yaml", ".py"}
+TEXT_SUFFIXES = {".html", ".css", ".js", ".mjs", ".md", ".txt", ".xml", ".svg", ".yml", ".yaml", ".py"}
 SECRET_PATTERNS = {
     "private key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     "GitHub token": re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b"),
@@ -233,9 +233,10 @@ def main() -> int:
     for path in sorted(ROOT.rglob("*.html")):
         if ".git" not in path.parts:
             findings.extend((path, error) for error in audit_html(path))
-    for path in sorted(ROOT.rglob("*.js")):
-        if ".git" not in path.parts:
-            findings.extend((path, error) for error in audit_javascript(path))
+    for pattern in ("*.js", "*.mjs"):
+        for path in sorted(ROOT.rglob(pattern)):
+            if ".git" not in path.parts:
+                findings.extend((path, error) for error in audit_javascript(path))
     for path in sorted(ROOT.rglob("*.svg")):
         if ".git" not in path.parts:
             findings.extend((path, error) for error in audit_svg(path))
