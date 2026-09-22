@@ -26,7 +26,7 @@ jobs:
     env:
       BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
       ORIGIN: https://stanleyll0yd.github.io
-      TRACK: https://suno.com/s/QSz9P1EylWOF7vnz
+      TRACK: https://suno.com/s/UUyrtzrieCxYXMXl
 
     steps:
       - name: Wait for production backend
