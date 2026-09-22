@@ -25,6 +25,7 @@ body {
 }
 button, input { font: inherit; }
 button { cursor: pointer; }
+input:disabled { cursor: wait; opacity: .72; }
 code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .92em; }
 .shell { width: min(920px, calc(100% - 32px)); margin: 0 auto; padding: 54px 0 72px; }
 .hero { padding: 10px 2px 30px; }
