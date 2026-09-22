@@ -9,7 +9,7 @@ import {
   contentDisposition,
   deriveContentCipher,
   fetchClip,
-  fetchEncryptedAudio,
+  fetchMediaStream,
   fetchRights,
   mediaDescriptor,
   pickProgressiveAudio,
@@ -62,7 +62,7 @@ export default async function handler(req, res) {
     const decryptor = descriptor.encrypted
       ? deriveContentCipher(id, await fetchRights(id))
       : null;
-    const upstream = await fetchEncryptedAudio(media, id);
+    const upstream = await fetchMediaStream(media, id);
     const transforms = [Readable.fromWeb(upstream.body), createByteLimiter(MAX_AUDIO_BYTES)];
 
     if (decryptor) {
