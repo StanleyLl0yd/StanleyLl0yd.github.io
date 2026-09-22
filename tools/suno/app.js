@@ -36,12 +36,18 @@
       urlInput.value = normalized.href;
       const clipId = await resolveClipId(normalized);
       setStatus('Получаю публичные данные трека…');
-      try {
-        currentClip = await fetchClip(clipId);
-      } catch {
-        setStatus('Suno не разрешает браузеру читать публичный API. Использую резервный resolver…');
-        currentClip = resolverClip?.id === clipId ? resolverClip : await fetchClipWithFallback(clipId);
+
+      if (resolverClip?.id === clipId) {
+        currentClip = resolverClip;
+      } else {
+        try {
+          currentClip = await fetchClip(clipId);
+        } catch {
+          setStatus('Suno не разрешает браузеру читать публичный API. Использую резервный resolver…');
+          currentClip = await fetchClipWithFallback(clipId);
+        }
       }
+
       renderClip(currentClip);
       setStatus('Готово. Выберите формат и скачайте файл.');
     } catch (error) {
