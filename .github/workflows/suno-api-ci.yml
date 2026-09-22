@@ -1,0 +1,40 @@
+name: Suno API CI
+
+on:
+  pull_request:
+    paths:
+      - "tools/suno-api/**"
+      - ".github/workflows/suno-api-ci.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "tools/suno-api/**"
+      - ".github/workflows/suno-api-ci.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: suno-api-node
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: tools/suno-api
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Show Node version
+        run: node --version
+
+      - name: Syntax check
+        run: npm run check
+
+      - name: Unit tests
+        run: npm test
