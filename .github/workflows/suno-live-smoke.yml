@@ -13,44 +13,31 @@ jobs:
   smoke:
     runs-on: ubuntu-24.04
     timeout-minutes: 5
+    env:
+      BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
+
     steps:
       - name: Check backend health
-        env:
-          BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
         run: |
           set -euo pipefail
           curl --fail --silent --show-error "$BASE/api/health" | tee /tmp/health.json
           jq -e '.ok == true and .service == "suno-saver-api"' /tmp/health.json
 
-      - name: Inspect Suno short-link redirect
+      - name: Resolve known public Suno track
         env:
-          TRACK: https://suno.com/s/3UIfuObVsQiFk7xH
+          TRACK: https://suno.com/s/QSz9P1EylWOF7vnz
         run: |
           set -euo pipefail
-          curl --silent --show-error --head --max-redirs 0 "$TRACK" | sed -n '1,12p'
-
-      - name: Resolve public Suno track
-        env:
-          BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
-          TRACK: https://suno.com/s/3UIfuObVsQiFk7xH
-        run: |
-          set -euo pipefail
-          STATUS="$(curl --silent --show-error --get --output /tmp/track.json --write-out \'%{http_code}\' --data-urlencode "url=$TRACK" "$BASE/api/resolve")"
-          cat /tmp/track.json
-          echo
-          echo "HTTP $STATUS"
-          test "$STATUS" = "200"
+          curl --fail --silent --show-error --get             --data-urlencode "url=$TRACK"             "$BASE/api/resolve" | tee /tmp/track.json
           jq -e '
             (.id | type == "string" and length == 36) and
-            (.title | type == "string" and length > 0) and
+            (.title == "Wenche") and
             (.artist | type == "string" and length > 0) and
             (.duration | type == "number" and . > 0) and
             (.media.contentType | type == "string" and length > 0)
           ' /tmp/track.json
 
       - name: Download and validate decrypted audio
-        env:
-          BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
         run: |
           set -euo pipefail
           ID="$(jq -r '.id' /tmp/track.json)"
@@ -72,3 +59,13 @@ jobs:
               raise SystemExit(f"unknown audio signature: {b[:16].hex()}")
           print("audio signature ok:", b[:16].hex(), "bytes=", p.stat().st_size)
           PY
+
+      - name: Reject unusable Suno share link cleanly
+        env:
+          TRACK: https://suno.com/s/3UIfuObVsQiFk7xH
+        run: |
+          set -euo pipefail
+          STATUS="$(curl --silent --show-error --get             --output /tmp/rejected.json             --write-out '%{http_code}'             --data-urlencode "url=$TRACK"             "$BASE/api/resolve")"
+          cat /tmp/rejected.json
+          test "$STATUS" = "400"
+          jq -e '.error == "track_id_not_found"' /tmp/rejected.json
