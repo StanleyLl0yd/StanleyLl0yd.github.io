@@ -39,7 +39,7 @@ SUNO_SAVER_CSP = (
         "connect-src 'self' https://stanleyll0yd-suno-saver-api-2026092.vercel.app",
     }
 )
-TEXT_SUFFIXES = {".html", ".css", ".js", ".mjs", ".md", ".txt", ".xml", ".svg", ".yml", ".yaml", ".py"}
+TEXT_SUFFIXES = {".html", ".css", ".js", ".mjs", ".json", ".md", ".txt", ".xml", ".svg", ".yml", ".yaml", ".py"}
 SECRET_PATTERNS = {
     "private key": re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
     "GitHub token": re.compile(r"\b(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})\b"),
