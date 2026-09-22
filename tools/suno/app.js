@@ -23,6 +23,7 @@
   const progressValue = document.querySelector('#progress-value');
 
   let currentClip = null;
+  let resolverClip = null;
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -35,7 +36,12 @@
       urlInput.value = normalized.href;
       const clipId = await resolveClipId(normalized);
       setStatus('Получаю публичные данные трека…');
-      currentClip = await fetchClip(clipId);
+      try {
+        currentClip = await fetchClip(clipId);
+      } catch {
+        setStatus('Suno не разрешает браузеру читать публичный API. Использую резервный resolver…');
+        currentClip = resolverClip?.id === clipId ? resolverClip : await fetchClipWithFallback(clipId);
+      }
       renderClip(currentClip);
       setStatus('Готово. Выберите формат и скачайте файл.');
     } catch (error) {
@@ -181,7 +187,70 @@
       throw new Error('Не удалось определить UUID по короткой ссылке Suno.');
     }
 
-    return resolved.toLowerCase();
+    const id = resolved.toLowerCase();
+    resolverClip = normalizeResolverClip(payload.data, id);
+    return id;
+  }
+
+  async function fetchClipWithFallback(id) {
+    if (!UUID_RE.test(id)) throw new Error('Некорректный UUID трека Suno.');
+
+    const canonicalSong = `https://suno.com/song/${encodeURIComponent(id)}`;
+    const resolverUrl = 'https://opensuno.vercel.app/track?url=' + encodeURIComponent(canonicalSong);
+
+    let response;
+    try {
+      response = await fetch(resolverUrl, {
+        method: 'GET',
+        credentials: 'omit',
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+        referrerPolicy: 'no-referrer'
+      });
+    } catch {
+      throw new Error('Не удалось получить данные трека через резервный resolver.');
+    }
+
+    if (!response.ok) {
+      throw new Error(`Resolver данных трека вернул HTTP ${response.status}.`);
+    }
+
+    let payload;
+    try {
+      payload = await response.json();
+    } catch {
+      throw new Error('Resolver данных трека вернул некорректный ответ.');
+    }
+
+    const resolved = String(payload?.data?.id || '').match(UUID_RE)?.[0]?.toLowerCase();
+    if (payload?.status !== 'ok' || resolved !== id.toLowerCase()) {
+      throw new Error('Resolver вернул данные другого или неизвестного трека.');
+    }
+
+    resolverClip = normalizeResolverClip(payload.data, resolved);
+    return resolverClip;
+  }
+
+  function normalizeResolverClip(data, id) {
+    const cover = isTrustedSunoMediaUrl(data?.cover_url) ? data.cover_url : '';
+    const duration = Number(data?.duration);
+
+    return {
+      id,
+      title: typeof data?.title === 'string' && data.title.trim() ? data.title.trim() : `Suno ${id.slice(0, 8)}`,
+      display_name: typeof data?.artist === 'string' && data.artist.trim() ? data.artist.trim() : 'Suno',
+      image_url: cover,
+      metadata: {
+        duration: Number.isFinite(duration) && duration > 0 ? duration : null,
+        tags: ''
+      },
+      media_urls: [{
+        url: `https://opensuno.vercel.app/download/${encodeURIComponent(id)}`,
+        content_type: 'mp3',
+        delivery: 'resolver-proxy'
+      }],
+      resolver_fallback: true
+    };
   }
 
   async function fetchClip(id) {
@@ -409,6 +478,21 @@
 
   function isHttpsUrl(value) {
     try { return new URL(value).protocol === 'https:'; } catch { return false; }
+  }
+
+  function isTrustedSunoMediaUrl(value) {
+    try {
+      const url = new URL(value);
+      return url.protocol === 'https:' && (
+        url.hostname === 'cdn1.suno.ai' ||
+        url.hostname === 'cdn2.suno.ai' ||
+        url.hostname.endsWith('.suno.ai') ||
+        url.hostname.endsWith('.suno.com') ||
+        url.hostname.endsWith('.cloudfront.net')
+      );
+    } catch {
+      return false;
+    }
   }
 
   function setBusy(value) {
