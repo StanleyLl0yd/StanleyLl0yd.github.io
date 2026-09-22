@@ -565,7 +565,7 @@ export function deriveContentCipher(id, rights) {
   return crypto.createDecipheriv('aes-' + key.length * 8 + '-ctr', key, counter);
 }
 
-export async function fetchEncryptedAudio(media, id) {
+export async function fetchMediaStream(media, id) {
   if (!isTrustedMediaUrl(media?.url)) {
     throw new Error('media_untrusted');
   }
