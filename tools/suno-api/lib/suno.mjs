@@ -158,7 +158,6 @@ export function isTrustedMediaUrl(value) {
   const host = url.hostname.toLowerCase();
   return (
     hostMatches(host, 'suno.ai') ||
-    hostMatches(host, 'suno.com') ||
     hostMatches(host, 'cloudfront.net')
   );
 }
@@ -455,6 +454,22 @@ export function publicClipMetadata(clip) {
   const media = pickProgressiveAudio(clip);
   const descriptor = mediaDescriptor(media);
   const rawImage = String(clip.image_large_url || clip.image_url || '');
+  const trustedImage = (() => {
+    if (isTrustedMediaUrl(rawImage)) return rawImage;
+    try {
+      const url = new URL(rawImage);
+      const host = url.hostname.toLowerCase();
+      return (
+        url.protocol === 'https:' &&
+        !url.username &&
+        !url.password &&
+        !url.port &&
+        hostMatches(host, 'suno.com')
+      ) ? rawImage : '';
+    } catch {
+      return '';
+    }
+  })();
 
   return {
     id: String(clip.id).toLowerCase(),
@@ -466,7 +481,7 @@ export function publicClipMetadata(clip) {
         : null,
     tags: cleanText(clip?.metadata?.tags, 2000),
     model: cleanText(clip.major_model_version, 100),
-    image: isTrustedMediaUrl(rawImage) ? rawImage : '',
+    image: trustedImage,
     media: {
       contentType: cleanText(media.content_type || 'audio', 100).toLowerCase(),
       delivery: cleanText(media.delivery || 'progressive', 50).toLowerCase(),
