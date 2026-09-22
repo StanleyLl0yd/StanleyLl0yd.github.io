@@ -9,6 +9,7 @@ import {
   contentDisposition,
   deriveContentCipher,
   extractSongIdFromLocation,
+  fetchEncryptedAudio,
   isTrustedMediaUrl,
   mediaDescriptor,
   parsePublicSunoUrl,
@@ -107,6 +108,61 @@ test('resolveTrackId accepts UUID from a canonical share redirect', async () => 
       await resolveTrackId('https://suno.com/s/validShare123456'),
       CLIP_ID,
     );
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+
+test('resolveTrackId accepts canonical song URLs from a bounded HTML fallback', async () => {
+  const originalFetch = globalThis.fetch;
+  const calls = [];
+  globalThis.fetch = async (_url, options = {}) => {
+    calls.push(options.method);
+    if (options.method === 'HEAD') {
+      return new Response(null, { status: 200 });
+    }
+    return new Response('<a href="/song/' + CLIP_ID + '">play</a>', {
+      status: 200,
+      headers: { 'content-length': '80' },
+    });
+  };
+
+  try {
+    const { resolveTrackId } = await import('../lib/suno.mjs');
+    assert.equal(
+      await resolveTrackId('https://suno.com/s/htmlFallback123'),
+      CLIP_ID,
+    );
+    assert.deepEqual(calls, ['HEAD', 'GET']);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('media redirects are revalidated before the backend follows them', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => {
+    calls += 1;
+    return new Response(null, {
+      status: 302,
+      headers: { location: 'https://evil.example/private' },
+    });
+  };
+
+  try {
+    await assert.rejects(
+      () => fetchEncryptedAudio(
+        {
+          url: 'https://media.cloudfront.net/1/clip/example.m4a',
+          content_type: 'm4a-opus',
+        },
+        CLIP_ID,
+      ),
+      /media_redirect_untrusted/,
+    );
+    assert.equal(calls, 1);
   } finally {
     globalThis.fetch = originalFetch;
   }
