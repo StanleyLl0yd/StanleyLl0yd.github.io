@@ -2,6 +2,9 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import test from 'node:test';
 
+import resolveHandler from '../api/resolve.mjs';
+import audioHandler from '../api/audio.mjs';
+
 import {
   contentDisposition,
   deriveContentCipher,
@@ -199,6 +202,85 @@ test('frontend origin guard rejects direct hotlink requests', () => {
     requireFrontendOrigin({ headers: { origin: 'https://stanleyll0yd.github.io' } }, allowed),
     true,
   );
+});
+
+
+test('API handlers reject foreign origins before any upstream request', async () => {
+  const originalFetch = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => {
+    calls += 1;
+    throw new Error('upstream should not be reached');
+  };
+
+  try {
+    for (const [handler, query] of [
+      [resolveHandler, { url: 'https://suno.com/song/' + CLIP_ID }],
+      [audioHandler, { id: CLIP_ID }],
+    ]) {
+      const res = fakeResponse();
+      await handler(
+        {
+          method: 'GET',
+          headers: { origin: 'https://evil.example' },
+          query,
+        },
+        res,
+      );
+      assert.equal(res.statusCode, 403);
+      assert.equal(JSON.parse(res.body).error, 'untrusted_origin');
+    }
+    assert.equal(calls, 0);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
+});
+
+test('resolve handler returns bounded canonical metadata to the frontend origin', async () => {
+  const originalFetch = globalThis.fetch;
+  globalThis.fetch = async (url) => {
+    assert.match(String(url), /studio-api\.prod\.suno\.com\/api\/clip\//);
+    const body = JSON.stringify({
+      id: CLIP_ID,
+      title: 'Example',
+      display_name: 'Artist',
+      image_large_url: 'https://cdn2.suno.ai/cover.jpeg',
+      major_model_version: 'v5.5',
+      metadata: { duration: 178.8, tags: 'ambient' },
+      media_urls: [{
+        url: 'https://media.cloudfront.net/1/clip/example.m4a',
+        content_type: 'm4a-opus',
+        delivery: 'progressive',
+        encoding: '1.0.0',
+      }],
+    });
+    return new Response(body, {
+      status: 200,
+      headers: { 'content-length': String(Buffer.byteLength(body)) },
+    });
+  };
+
+  try {
+    const res = fakeResponse();
+    await resolveHandler(
+      {
+        method: 'GET',
+        headers: { origin: 'https://stanleyll0yd.github.io' },
+        query: { url: 'https://suno.com/song/' + CLIP_ID },
+      },
+      res,
+    );
+
+    assert.equal(res.statusCode, 200);
+    assert.equal(res.headers.get('access-control-allow-origin'), 'https://stanleyll0yd.github.io');
+    const data = JSON.parse(res.body);
+    assert.equal(data.id, CLIP_ID);
+    assert.equal(data.title, 'Example');
+    assert.equal(data.duration, 178.8);
+    assert.equal(data.media.encrypted, true);
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
 
 test('unwrapRightsValue authenticates clip-bound AES-GCM wrapper', () => {
