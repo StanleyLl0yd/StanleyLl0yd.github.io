@@ -25,7 +25,7 @@ jobs:
       - name: Resolve public Suno track
         env:
           BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
-          TRACK: https://suno.com/s/QSz9P1EylWOF7vnz
+          TRACK: https://suno.com/s/3UIfuObVsQiFk7xH
         run: |
           set -euo pipefail
           curl --fail --silent --show-error --get             --data-urlencode "url=$TRACK"             "$BASE/api/resolve" | tee /tmp/track.json
