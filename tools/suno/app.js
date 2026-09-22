@@ -172,7 +172,7 @@
 
   function apiErrorMessage(code, status) {
     const value = String(code || '');
-    if (value === 'track_id_not_found') return 'Не удалось определить трек по этой ссылке.';
+    if (value === 'track_id_not_found') return 'Не удалось определить трек по этой ссылке. Убедитесь, что она открывается без входа в Suno, или вставьте ссылку вида /song/<uuid>.';
     if (value === 'unsupported_url' || value === 'invalid_url' || value === 'missing_url') {
       return 'Некорректная или неподдерживаемая ссылка Suno.';
     }
