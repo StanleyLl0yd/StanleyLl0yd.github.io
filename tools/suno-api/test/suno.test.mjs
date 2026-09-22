@@ -3,10 +3,17 @@ import crypto from 'node:crypto';
 import test from 'node:test';
 
 import {
+  contentDisposition,
   deriveContentCipher,
   extractSongIdFromLocation,
+  isTrustedMediaUrl,
+  mediaDescriptor,
   parsePublicSunoUrl,
   pickProgressiveAudio,
+  publicClipMetadata,
+  publicErrorCode,
+  requireFrontendOrigin,
+  statusForError,
   unwrapRightsValue,
 } from '../lib/suno.mjs';
 
@@ -20,22 +27,42 @@ function wrap(value, clipId, userKey) {
   return Buffer.concat([nonce, ciphertext, cipher.getAuthTag()]).toString('base64');
 }
 
-test('parsePublicSunoUrl accepts public Suno routes only', () => {
+function fakeResponse() {
+  return {
+    statusCode: 200,
+    headers: new Map(),
+    body: '',
+    setHeader(name, value) {
+      this.headers.set(String(name).toLowerCase(), value);
+    },
+    end(value = '') {
+      this.body = value;
+    },
+  };
+}
+
+test('parsePublicSunoUrl accepts only canonical public Suno routes', () => {
   assert.equal(parsePublicSunoUrl('https://suno.com/s/abcDEF123').hostname, 'suno.com');
   assert.equal(parsePublicSunoUrl('suno.com/song/' + CLIP_ID).pathname, '/song/' + CLIP_ID);
-  assert.throws(() => parsePublicSunoUrl('https://example.com/s/abc'), /unsupported_url/);
-  assert.throws(() => parsePublicSunoUrl('http://suno.com/s/abc'), /unsupported_url/);
-  assert.throws(() => parsePublicSunoUrl('https://suno.com/account'), /unsupported_url/);
-});
+  assert.equal(parsePublicSunoUrl('https://www.suno.com/hook/' + CLIP_ID).hostname, 'www.suno.com');
 
+  assert.throws(() => parsePublicSunoUrl('https://example.com/s/abcDEF123'), /unsupported_url/);
+  assert.throws(() => parsePublicSunoUrl('http://suno.com/s/abcDEF123'), /unsupported_url/);
+  assert.throws(() => parsePublicSunoUrl('https://user@suno.com/s/abcDEF123'), /unsupported_url/);
+  assert.throws(() => parsePublicSunoUrl('https://suno.com:444/s/abcDEF123'), /unsupported_url/);
+  assert.throws(() => parsePublicSunoUrl('https://suno.com/account'), /unsupported_url/);
+  assert.throws(() => parsePublicSunoUrl('https://suno.com/s/abcDEF123/extra'), /unsupported_url/);
+  assert.throws(() => parsePublicSunoUrl('https://suno.com/song/not-a-uuid'), /unsupported_url/);
+});
 
 test('extractSongIdFromLocation accepts only canonical Suno song redirects', () => {
   assert.equal(
-    extractSongIdFromLocation(`/song/${CLIP_ID}?sh=abc123`),
+    extractSongIdFromLocation('/song/' + CLIP_ID + '?sh=abc123'),
     CLIP_ID,
   );
   assert.equal(extractSongIdFromLocation('/'), null);
   assert.equal(extractSongIdFromLocation('https://example.com/song/' + CLIP_ID), null);
+  assert.equal(extractSongIdFromLocation('https://suno.com:444/song/' + CLIP_ID), null);
 });
 
 test('resolveTrackId rejects unusable share redirects instead of scraping unrelated UUIDs', async () => {
@@ -67,7 +94,7 @@ test('resolveTrackId accepts UUID from a canonical share redirect', async () => 
     assert.equal(options.method, 'HEAD');
     return new Response(null, {
       status: 307,
-      headers: { location: `/song/${CLIP_ID}?sh=abc123` },
+      headers: { location: '/song/' + CLIP_ID + '?sh=abc123' },
     });
   };
 
@@ -82,17 +109,96 @@ test('resolveTrackId accepts UUID from a canonical share redirect', async () => 
   }
 });
 
-test('pickProgressiveAudio prefers current m4a-opus progressive media', () => {
+test('trusted media URL allowlist rejects foreign hosts and credential tricks', () => {
+  assert.equal(isTrustedMediaUrl('https://media.cloudfront.net/1/clip/a.m4a'), true);
+  assert.equal(isTrustedMediaUrl('https://cdn2.suno.ai/image.jpeg'), true);
+  assert.equal(isTrustedMediaUrl('https://studio-api.prod.suno.com/media/a'), true);
+
+  assert.equal(isTrustedMediaUrl('https://evil.example/audio.m4a'), false);
+  assert.equal(isTrustedMediaUrl('https://suno.ai.evil.example/audio.m4a'), false);
+  assert.equal(isTrustedMediaUrl('https://127.0.0.1/audio.m4a'), false);
+  assert.equal(isTrustedMediaUrl('https://user@suno.ai/audio.m4a'), false);
+  assert.equal(isTrustedMediaUrl('https://suno.ai:444/audio.m4a'), false);
+});
+
+test('pickProgressiveAudio prefers supported trusted current media', () => {
   const media = pickProgressiveAudio({
     audio_url: 'https://cdn1.suno.ai/legacy.mp3',
     media_urls: [
-      { url: 'https://example.test/video.mp4', content_type: 'video/mp4', delivery: 'progressive' },
-      { url: 'https://example.test/audio.aac', content_type: 'aac', delivery: 'progressive' },
-      { url: 'https://example.test/audio.m4a', content_type: 'm4a-opus', delivery: 'progressive' },
+      {
+        url: 'https://evil.example/audio.m4a',
+        content_type: 'm4a-opus',
+        delivery: 'progressive',
+        encoding: '1.0.0',
+      },
+      {
+        url: 'https://media.cloudfront.net/1/clip/audio.m4a',
+        content_type: 'm4a-opus',
+        delivery: 'progressive',
+        encoding: '1.0.0',
+      },
+      {
+        url: 'https://cdn1.suno.ai/audio.mp3',
+        content_type: 'mp3',
+        delivery: 'progressive',
+      },
     ],
   });
 
-  assert.equal(media.url, 'https://example.test/audio.m4a');
+  assert.equal(media.url, 'https://media.cloudfront.net/1/clip/audio.m4a');
+});
+
+test('mediaDescriptor only decrypts the protected current container', () => {
+  assert.deepEqual(
+    mediaDescriptor({ content_type: 'm4a-opus', encoding: '1.0.0' }),
+    { extension: 'm4a', mime: 'audio/mp4', encrypted: true },
+  );
+  assert.deepEqual(
+    mediaDescriptor({ content_type: 'mp3' }),
+    { extension: 'mp3', mime: 'audio/mpeg', encrypted: false },
+  );
+});
+
+test('publicClipMetadata bounds text and rejects foreign cover hosts', () => {
+  const result = publicClipMetadata({
+    id: CLIP_ID,
+    title: '  Example  ',
+    display_name: 'Artist',
+    image_large_url: 'https://evil.example/cover.jpeg',
+    major_model_version: 'v5.5',
+    metadata: {
+      duration: 178.8,
+      tags: 'x'.repeat(2500),
+    },
+    media_urls: [{
+      url: 'https://media.cloudfront.net/1/clip/audio.m4a',
+      content_type: 'm4a-opus',
+      delivery: 'progressive',
+      encoding: '1.0.0',
+    }],
+  });
+
+  assert.equal(result.title, 'Example');
+  assert.equal(result.duration, 178.8);
+  assert.equal(result.image, '');
+  assert.equal(result.tags.length, 2000);
+  assert.equal(result.media.encrypted, true);
+});
+
+test('frontend origin guard rejects direct hotlink requests', () => {
+  const blocked = fakeResponse();
+  assert.equal(
+    requireFrontendOrigin({ headers: { origin: 'https://evil.example' } }, blocked),
+    false,
+  );
+  assert.equal(blocked.statusCode, 403);
+  assert.equal(JSON.parse(blocked.body).error, 'untrusted_origin');
+
+  const allowed = fakeResponse();
+  assert.equal(
+    requireFrontendOrigin({ headers: { origin: 'https://stanleyll0yd.github.io' } }, allowed),
+    true,
+  );
 });
 
 test('unwrapRightsValue authenticates clip-bound AES-GCM wrapper', () => {
@@ -123,4 +229,20 @@ test('deriveContentCipher decrypts Suno-style AES-CTR payload', () => {
   const decryptor = deriveContentCipher(CLIP_ID, rights);
   const decrypted = Buffer.concat([decryptor.update(encrypted), decryptor.final()]);
   assert.deepEqual(decrypted, plaintext);
+});
+
+test('Content-Disposition is ASCII-safe and retains UTF-8 filename', () => {
+  const header = contentDisposition('Чёрная вода', 'm4a');
+  assert.equal(/[^\x00-\x7f]/.test(header), false);
+  assert.match(header, /filename\*=/);
+  assert.match(header, /%D0%A7/);
+  assert.match(header, /\.m4a/);
+});
+
+test('public errors do not leak unexpected implementation messages', () => {
+  assert.equal(publicErrorCode(new Error('secret implementation detail')), 'internal_error');
+  assert.equal(publicErrorCode(new Error('clip_http_404')), 'clip_http_404');
+  assert.equal(statusForError('clip_http_404'), 502);
+  assert.equal(statusForError('media_timeout'), 504);
+  assert.equal(statusForError('media_too_large'), 413);
 });
