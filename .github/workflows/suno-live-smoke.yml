@@ -1,0 +1,63 @@
+name: Suno Live Smoke
+
+on:
+  pull_request:
+    paths:
+      - "tools/suno/**"
+      - ".github/workflows/suno-live-smoke.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check backend health
+        env:
+          BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error "$BASE/api/health" | tee /tmp/health.json
+          jq -e '.ok == true and .service == "suno-saver-api"' /tmp/health.json
+
+      - name: Resolve public Suno track
+        env:
+          BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
+          TRACK: https://suno.com/s/QSz9P1EylWOF7vnz
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --get             --data-urlencode "url=$TRACK"             "$BASE/api/resolve" | tee /tmp/track.json
+          jq -e '
+            (.id | type == "string" and length == 36) and
+            (.title | type == "string" and length > 0) and
+            (.artist | type == "string" and length > 0) and
+            (.duration | type == "number" and . > 0) and
+            (.media.contentType | type == "string" and length > 0)
+          ' /tmp/track.json
+
+      - name: Download and validate decrypted audio
+        env:
+          BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
+        run: |
+          set -euo pipefail
+          ID="$(jq -r '.id' /tmp/track.json)"
+          curl --fail --silent --show-error             --max-time 90             -o /tmp/audio.bin             "$BASE/api/audio?id=$ID"
+          test "$(stat -c %s /tmp/audio.bin)" -gt 100000
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("/tmp/audio.bin")
+          b = p.read_bytes()[:64]
+          ok = (
+              b[:3] == b"ID3"
+              or (len(b) >= 12 and b[4:8] == b"ftyp")
+              or b[:4] == b"OggS"
+              or (len(b) >= 12 and b[:4] == b"RIFF" and b[8:12] == b"WAVE")
+              or (len(b) >= 4 and b[:4] == bytes([0x1A, 0x45, 0xDF, 0xA3]))
+              or (len(b) >= 2 and b[0] == 0xFF and (b[1] & 0xE0) == 0xE0)
+          )
+          if not ok:
+              raise SystemExit(f"unknown audio signature: {b[:16].hex()}")
+          print("audio signature ok:", b[:16].hex(), "bytes=", p.stat().st_size)
+          PY
