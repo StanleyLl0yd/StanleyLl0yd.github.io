@@ -28,7 +28,11 @@ jobs:
           TRACK: https://suno.com/s/3UIfuObVsQiFk7xH
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --get             --data-urlencode "url=$TRACK"             "$BASE/api/resolve" | tee /tmp/track.json
+          STATUS="$(curl --silent --show-error --get --output /tmp/track.json --write-out \'%{http_code}\' --data-urlencode "url=$TRACK" "$BASE/api/resolve")"
+          cat /tmp/track.json
+          echo
+          echo "HTTP $STATUS"
+          test "$STATUS" = "200"
           jq -e '
             (.id | type == "string" and length == 36) and
             (.title | type == "string" and length > 0) and
