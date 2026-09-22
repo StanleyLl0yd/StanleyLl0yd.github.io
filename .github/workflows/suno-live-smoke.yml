@@ -22,6 +22,13 @@ jobs:
           curl --fail --silent --show-error "$BASE/api/health" | tee /tmp/health.json
           jq -e '.ok == true and .service == "suno-saver-api"' /tmp/health.json
 
+      - name: Inspect Suno short-link redirect
+        env:
+          TRACK: https://suno.com/s/3UIfuObVsQiFk7xH
+        run: |
+          set -euo pipefail
+          curl --silent --show-error --head --max-redirs 0 "$TRACK" | sed -n '1,12p'
+
       - name: Resolve public Suno track
         env:
           BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
