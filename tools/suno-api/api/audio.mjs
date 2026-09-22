@@ -59,12 +59,14 @@ export default async function handler(req, res) {
     const clip = await fetchClip(id);
     const media = pickProgressiveAudio(clip);
     const descriptor = mediaDescriptor(media);
+    const decryptor = descriptor.encrypted
+      ? deriveContentCipher(id, await fetchRights(id))
+      : null;
     const upstream = await fetchEncryptedAudio(media, id);
     const transforms = [Readable.fromWeb(upstream.body), createByteLimiter(MAX_AUDIO_BYTES)];
 
-    if (descriptor.encrypted) {
-      const rights = await fetchRights(id);
-      transforms.push(deriveContentCipher(id, rights));
+    if (decryptor) {
+      transforms.push(decryptor);
     }
 
     res.statusCode = 200;
@@ -75,7 +77,8 @@ export default async function handler(req, res) {
     if (
       contentLength &&
       /^\d+$/.test(contentLength) &&
-      Number(contentLength) <= MAX_AUDIO_BYTES
+      Number(contentLength) <= MAX_AUDIO_BYTES &&
+      !upstream.headers.get('content-encoding')
     ) {
       res.setHeader('Content-Length', contentLength);
     }
