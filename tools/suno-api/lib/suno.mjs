@@ -158,7 +158,7 @@ export function isTrustedMediaUrl(value) {
   const host = url.hostname.toLowerCase();
   return (
     hostMatches(host, 'suno.ai') ||
-    hostMatches(host, 'cloudfront.net')
+    host === 'media.cloudfront.net'
   );
 }
 
