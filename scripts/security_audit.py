@@ -35,7 +35,7 @@ SUNO_SAVER_CSP = (
     REQUIRED_CSP
     - {"img-src 'self'", "connect-src 'none'"}
     | {
-        "img-src 'self' https://suno.ai https://*.suno.ai https://suno.com https://*.suno.com https://media.cloudfront.net",
+        "img-src 'self' https://suno.ai https://*.suno.ai https://suno.com https://*.suno.com",
         "connect-src 'self' https://stanleyll0yd-suno-saver-api-2026092.vercel.app",
     }
 )
