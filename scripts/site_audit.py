@@ -87,20 +87,26 @@ def route_to_file(route: str) -> Path:
     return ROOT / clean.lstrip("/")
 
 
-def public_routes(data: dict) -> list[tuple[str, str]]:
-    routes: list[tuple[str, str]] = [("/", "1.0")]
+def public_routes(data: dict) -> list[tuple[str, str, str]]:
+    default_lastmod = data["lastReviewed"]
+    routes: list[tuple[str, str, str]] = [("/", "1.0", default_lastmod)]
     for product in data["released"]:
-        routes.append((product["productPath"], "0.9"))
+        routes.append((product["productPath"], "0.9", default_lastmod))
         if product.get("privacyPath"):
-            routes.append((product["privacyPath"], "0.6"))
+            routes.append((product["privacyPath"], "0.6", default_lastmod))
+    for indexed in data.get("indexedRoutes", []):
+        routes.append((
+            indexed["path"],
+            indexed.get("priority", "0.7"),
+            indexed.get("lastmod", default_lastmod),
+        ))
     return routes
 
 
 def expected_sitemap(data: dict) -> str:
     origin = data["siteOrigin"].rstrip("/")
-    lastmod = data["lastReviewed"]
     lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for route, priority in public_routes(data):
+    for route, priority, lastmod in public_routes(data):
         url = origin + ("/" if route == "/" else route)
         lines.extend([
             "  <url>",
@@ -154,7 +160,7 @@ def validate_sitemap(data: dict, errors: list[str]) -> None:
     loc_tag = f"{{{SITEMAP_NS}}}loc"
     lastmod_tag = f"{{{SITEMAP_NS}}}lastmod"
     urls = root.findall(f"{{{SITEMAP_NS}}}url")
-    expected_urls = {data["siteOrigin"].rstrip("/") + ("/" if route == "/" else route) for route, _ in public_routes(data)}
+    expected_urls = {data["siteOrigin"].rstrip("/") + ("/" if route == "/" else route) for route, _, _ in public_routes(data)}
     actual_urls = {item.findtext(loc_tag, default="") for item in urls}
     if actual_urls != expected_urls:
         fail(errors, "sitemap.xml URL set does not match canonical public routes")
@@ -175,7 +181,7 @@ def validate_robots(data: dict, errors: list[str]) -> None:
 
 def validate_metadata(data: dict, errors: list[str]) -> None:
     origin = data["siteOrigin"].rstrip("/")
-    for route, _ in public_routes(data):
+    for route, _, _ in public_routes(data):
         path = route_to_file(route)
         if not path.exists():
             fail(errors, f"missing canonical page: {route}")
