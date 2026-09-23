@@ -195,16 +195,21 @@ test('media redirects are revalidated before the backend follows them', async ()
   }
 });
 
-test('trusted media URL allowlist rejects foreign hosts and credential tricks', () => {
+test('trusted media URL allowlist accepts CloudFront distributions but rejects foreign hosts and credential tricks', () => {
   assert.equal(isTrustedMediaUrl('https://d2lwuy8qc234o3.cloudfront.net/1/clip/a.m4a'), true);
+  assert.equal(isTrustedMediaUrl('https://d123.cloudfront.net/audio.m4a'), true);
+  assert.equal(isTrustedMediaUrl('https://media.cloudfront.net/audio.m4a'), true);
   assert.equal(isTrustedMediaUrl('https://cdn2.suno.ai/image.jpeg'), true);
-  assert.equal(isTrustedMediaUrl('https://media.cloudfront.net/audio.m4a'), false);
-  assert.equal(isTrustedMediaUrl('https://d123.cloudfront.net/audio.m4a'), false);
-  assert.equal(isTrustedMediaUrl('https://studio-api.prod.suno.com/media/a'), false);
 
+  assert.equal(isTrustedMediaUrl('https://cloudfront.net/audio.m4a'), false);
+  assert.equal(isTrustedMediaUrl('https://cloudfront.net.evil.example/audio.m4a'), false);
+  assert.equal(isTrustedMediaUrl('https://evilcloudfront.net/audio.m4a'), false);
+  assert.equal(isTrustedMediaUrl('https://studio-api.prod.suno.com/media/a'), false);
   assert.equal(isTrustedMediaUrl('https://evil.example/audio.m4a'), false);
   assert.equal(isTrustedMediaUrl('https://suno.ai.evil.example/audio.m4a'), false);
   assert.equal(isTrustedMediaUrl('https://127.0.0.1/audio.m4a'), false);
+  assert.equal(isTrustedMediaUrl('https://user@d123.cloudfront.net/audio.m4a'), false);
+  assert.equal(isTrustedMediaUrl('https://d123.cloudfront.net:444/audio.m4a'), false);
   assert.equal(isTrustedMediaUrl('https://user@suno.ai/audio.m4a'), false);
   assert.equal(isTrustedMediaUrl('https://suno.ai:444/audio.m4a'), false);
 });
