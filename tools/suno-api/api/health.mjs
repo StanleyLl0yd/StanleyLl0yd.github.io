@@ -10,5 +10,10 @@ export default function handler(req, res) {
   applyApiHeaders(res);
   res.statusCode = 200;
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify({ ok: true, service: 'suno-saver-api', version: 2 }));
+  res.end(JSON.stringify({
+    ok: true,
+    service: 'suno-saver-api',
+    version: 3,
+    commit: process.env.VERCEL_GIT_COMMIT_SHA || null,
+  }));
 }
