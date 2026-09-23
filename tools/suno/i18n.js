@@ -3,6 +3,7 @@
 
   const translations = {
     en: {
+      skip: 'Skip to content',
       pageTitle: 'Suno Saver — download your public Suno track',
       pageDescription: 'Paste a public Suno song link, inspect the available audio and save it as original audio, MP3 or WAV in your browser.',
       back: '← All products',
@@ -79,6 +80,7 @@
       errorUnknown: 'Unknown error.'
     },
     ru: {
+      skip: 'К содержимому',
       pageTitle: 'Suno Saver — скачивание публичных треков Suno',
       pageDescription: 'Вставьте публичную ссылку Suno, проверьте доступное аудио и сохраните его в исходном формате, MP3 или WAV прямо в браузере.',
       back: '← Все продукты',
