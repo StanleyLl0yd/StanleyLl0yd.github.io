@@ -7,7 +7,6 @@ export const MAX_AUDIO_BYTES = 80 * 1024 * 1024;
 const SUNO_HOSTS = new Set(['suno.com', 'www.suno.com']);
 const CLIP_API = 'https://studio-api.prod.suno.com/api/clip';
 const RIGHTS_API = 'https://studio-api.prod.suno.com/api/mango/rights';
-const SUNO_AUDIO_CLOUDFRONT_HOST = 'd2lwuy8qc234o3.cloudfront.net';
 
 const SHARE_PATH_RE = /^\/s\/[A-Za-z0-9_-]{6,64}\/?$/;
 const SONG_PATH_RE = /^\/song\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/?$/i;
@@ -159,7 +158,7 @@ export function isTrustedMediaUrl(value) {
   const host = url.hostname.toLowerCase();
   return (
     hostMatches(host, 'suno.ai') ||
-    host === SUNO_AUDIO_CLOUDFRONT_HOST
+    host.endsWith('.cloudfront.net')
   );
 }
 
