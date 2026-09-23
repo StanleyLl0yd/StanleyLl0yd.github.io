@@ -41,6 +41,35 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Diagnose current Suno media origin
+        if: github.event_name == 'pull_request'
+        run: |
+          node --input-type=module <<'NODE'
+          const id = '0891f613-c72e-4b16-856c-92d4b9311f68';
+          const response = await fetch('https://studio-api.prod.suno.com/api/clip/' + id, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0',
+              'Accept': 'application/json, text/plain, */*',
+              'Origin': 'https://suno.com',
+              'Referer': 'https://suno.com/song/' + id,
+            },
+          });
+          console.log('clip status', response.status);
+          const clip = await response.json();
+          const summarize = (item) => {
+            let host = '';
+            try { host = new URL(item?.url || '').hostname; } catch {}
+            return {
+              host,
+              content_type: item?.content_type || '',
+              delivery: item?.delivery || '',
+              encoding: item?.encoding || '',
+            };
+          };
+          console.log('media_urls', JSON.stringify((clip.media_urls || []).map(summarize)));
+          console.log('audio_url', summarize({ url: clip.audio_url, content_type: 'legacy' }));
+          NODE
+
       - name: Verify vendored lamejs
         run: |
           set -euo pipefail
