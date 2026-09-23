@@ -34,14 +34,15 @@ jobs:
           set -euo pipefail
           for attempt in $(seq 1 30); do
             if curl --fail --silent --show-error "$BASE/api/health" -o /tmp/health.json &&
-               jq -e '.ok == true and .service == "suno-saver-api" and .version >= 2' /tmp/health.json >/dev/null; then
+               jq -e --arg sha "$GITHUB_SHA" '.ok == true and .service == "suno-saver-api" and .version >= 3 and .commit == $sha' /tmp/health.json >/dev/null; then
               cat /tmp/health.json
               exit 0
             fi
             echo "waiting for production deployment ($attempt/30)"
             sleep 5
           done
-          echo "production backend did not become ready" >&2
+          echo "production backend did not reach exact commit $GITHUB_SHA" >&2
+          cat /tmp/health.json 2>/dev/null || true
           exit 1
 
       - name: Verify direct API hotlink is rejected
