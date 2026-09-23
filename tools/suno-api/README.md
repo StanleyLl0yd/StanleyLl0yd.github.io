@@ -23,7 +23,8 @@ The browser cannot reliably call Suno's clip and Mango-rights endpoints directly
   - enforces an 80 MiB maximum stream size and does not persist the audio.
 
 - `GET /api/health`
-  - unauthenticated health check for deployment monitoring.
+  - unauthenticated health check for deployment monitoring;
+  - reports the deployed Git commit so post-main smoke tests wait for the exact Vercel deployment rather than a still-active previous release.
 
 No Suno account password, cookie, session token or user API token is accepted or forwarded.
 
@@ -59,4 +60,4 @@ CORS/origin checks reduce browser hotlinking and accidental third-party use; the
 
 `Suno API CI` runs syntax checks and unit tests under pinned Node 22 for both backend and frontend JavaScript.
 
-`Suno Live Smoke` runs weekly (and can be run manually) against production to verify health, origin enforcement, public metadata resolution and a decrypted playable audio signature.
+`Suno Live Smoke` runs after relevant main changes, weekly and manually. On main pushes it first waits until Vercel reports the exact Git commit under test, then verifies origin enforcement, public metadata resolution and a decrypted playable audio signature.
