@@ -1,20 +1,51 @@
-import { Readable } from 'node:stream';
+import { Readable, Transform } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+
 import {
+  MAX_AUDIO_BYTES,
   UUID_RE,
+  applyApiHeaders,
   applyCors,
+  contentDisposition,
   deriveContentCipher,
   fetchClip,
-  fetchEncryptedAudio,
+  fetchMediaStream,
   fetchRights,
+  mediaDescriptor,
   pickProgressiveAudio,
+  publicErrorCode,
   rejectMethod,
-  safeFilename,
+  requireFrontendOrigin,
+  statusForError,
 } from '../lib/suno.mjs';
+
+function createByteLimiter(limit) {
+  let total = 0;
+
+  return new Transform({
+    transform(chunk, _encoding, callback) {
+      total += chunk.length;
+      if (total > limit) {
+        callback(new Error('media_too_large'));
+        return;
+      }
+      callback(null, chunk);
+    },
+  });
+}
+
+function isExpectedClientDisconnect(error) {
+  return (
+    error?.code === 'ERR_STREAM_PREMATURE_CLOSE' ||
+    error?.code === 'ECONNRESET'
+  );
+}
 
 export default async function handler(req, res) {
   if (rejectMethod(req, res)) return;
   applyCors(req, res);
-  res.setHeader('Cache-Control', 'private, no-store');
+  applyApiHeaders(res);
+  if (!requireFrontendOrigin(req, res)) return;
 
   const id = String(req.query?.id || '').toLowerCase();
   if (!UUID_RE.test(id)) {
@@ -27,57 +58,47 @@ export default async function handler(req, res) {
   try {
     const clip = await fetchClip(id);
     const media = pickProgressiveAudio(clip);
-    const rights = await fetchRights(id);
-    const upstream = await fetchEncryptedAudio(media, id);
-    const decipher = deriveContentCipher(id, rights);
+    const descriptor = mediaDescriptor(media);
+    const decryptor = descriptor.encrypted
+      ? deriveContentCipher(id, await fetchRights(id))
+      : null;
+    const upstream = await fetchMediaStream(media, id);
+    const transforms = [Readable.fromWeb(upstream.body), createByteLimiter(MAX_AUDIO_BYTES)];
 
-    const title = safeFilename(clip.title || `suno-${id}`);
-    const contentType = String(media.content_type || '').toLowerCase().includes('mp3')
-      ? 'audio/mpeg'
-      : 'audio/mp4';
+    if (decryptor) {
+      transforms.push(decryptor);
+    }
 
     res.statusCode = 200;
-    res.setHeader('Content-Type', contentType);
-    res.setHeader('Content-Disposition', `inline; filename="${title}.${contentType === 'audio/mpeg' ? 'mp3' : 'm4a'}"`);
-    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Type', descriptor.mime);
+    res.setHeader('Content-Disposition', contentDisposition(clip.title || 'suno-' + id, descriptor.extension));
 
     const contentLength = upstream.headers.get('content-length');
-    if (contentLength && /^\d+$/.test(contentLength)) {
+    if (
+      contentLength &&
+      /^\d+$/.test(contentLength) &&
+      Number(contentLength) <= MAX_AUDIO_BYTES &&
+      !upstream.headers.get('content-encoding')
+    ) {
       res.setHeader('Content-Length', contentLength);
     }
 
-    const source = Readable.fromWeb(upstream.body);
-    source.on('error', (error) => {
-      console.error('upstream_audio_error', error);
-      if (!res.headersSent) {
-        res.statusCode = 502;
-        res.end();
-      } else {
-        res.destroy(error);
-      }
-    });
-
-    decipher.on('error', (error) => {
-      console.error('audio_decrypt_error', error);
-      res.destroy(error);
-    });
-
-    source.pipe(decipher).pipe(res);
+    transforms.push(res);
+    await pipeline(...transforms);
   } catch (error) {
-    console.error('audio_handler_error', error);
+    if (isExpectedClientDisconnect(error)) return;
+
     if (res.headersSent) {
+      console.error('audio_stream_error', error);
       res.destroy(error instanceof Error ? error : undefined);
       return;
     }
 
-    const message = error instanceof Error ? error.message : 'unknown_error';
-    res.statusCode =
-      message === 'invalid_id' ? 400 :
-      message === 'audio_unavailable' ? 404 :
-      message.startsWith('clip_http_') ||
-      message.startsWith('rights_http_') ||
-      message.startsWith('media_http_') ? 502 : 500;
+    const code = publicErrorCode(error);
+    const status = statusForError(code);
+    if (status >= 500) console.error('audio_handler_error', error);
+    res.statusCode = status;
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.end(JSON.stringify({ error: message }));
+    res.end(JSON.stringify({ error: code }));
   }
 }

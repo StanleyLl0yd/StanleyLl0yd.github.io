@@ -1,0 +1,88 @@
+name: Suno Live Smoke
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "tools/suno/**"
+      - "tools/suno-api/**"
+      - ".github/workflows/suno-live-smoke.yml"
+  schedule:
+    - cron: "17 5 * * 1"
+
+concurrency:
+  group: suno-live-smoke
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  production-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
+      ORIGIN: https://stanleyll0yd.github.io
+      TRACK: https://suno.com/s/UUyrtzrieCxYXMXl
+
+    steps:
+      - name: Wait for production backend
+        run: |
+          set -euo pipefail
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error "$BASE/api/health" -o /tmp/health.json &&
+               jq -e '.ok == true and .service == "suno-saver-api" and .version >= 2' /tmp/health.json >/dev/null; then
+              cat /tmp/health.json
+              exit 0
+            fi
+            echo "waiting for production deployment ($attempt/30)"
+            sleep 5
+          done
+          echo "production backend did not become ready" >&2
+          exit 1
+
+      - name: Verify direct API hotlink is rejected
+        run: |
+          set -euo pipefail
+          STATUS="$(curl --silent --show-error --get             --output /tmp/blocked.json             --write-out '%{http_code}'             --data-urlencode "url=$TRACK"             "$BASE/api/resolve")"
+          cat /tmp/blocked.json
+          test "$STATUS" = "403"
+          jq -e '.error == "untrusted_origin"' /tmp/blocked.json
+
+      - name: Resolve public track from frontend origin
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --get             --header "Origin: $ORIGIN"             --data-urlencode "url=$TRACK"             "$BASE/api/resolve" | tee /tmp/track.json
+          jq -e '
+            (.id | type == "string" and length == 36) and
+            (.title | type == "string" and length > 0) and
+            (.artist | type == "string" and length > 0) and
+            (.duration | type == "number" and . > 0) and
+            (.media.contentType | type == "string" and length > 0)
+          ' /tmp/track.json
+
+      - name: Download and validate decrypted audio
+        run: |
+          set -euo pipefail
+          ID="$(jq -r '.id' /tmp/track.json)"
+          curl --fail --silent --show-error             --header "Origin: $ORIGIN"             --max-time 90             -o /tmp/audio.bin             "$BASE/api/audio?id=$ID"
+          test "$(stat -c %s /tmp/audio.bin)" -gt 100000
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path("/tmp/audio.bin")
+          b = p.read_bytes()[:64]
+          ok = (
+              b[:3] == b"ID3"
+              or (len(b) >= 12 and b[4:8] == b"ftyp")
+              or b[:4] == b"OggS"
+              or (len(b) >= 12 and b[:4] == b"RIFF" and b[8:12] == b"WAVE")
+              or (len(b) >= 4 and b[:4] == bytes([0x1A, 0x45, 0xDF, 0xA3]))
+              or (len(b) >= 2 and b[0] == 0xFF and (b[1] & 0xE0) == 0xE0)
+          )
+          if not ok:
+              raise SystemExit(f"unknown audio signature: {b[:16].hex()}")
+          print("audio signature ok:", b[:16].hex(), "bytes=", p.stat().st_size)
+          PY

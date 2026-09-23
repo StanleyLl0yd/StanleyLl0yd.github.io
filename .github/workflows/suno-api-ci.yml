@@ -3,14 +3,20 @@ name: Suno API CI
 on:
   pull_request:
     paths:
+      - "tools/suno/**"
       - "tools/suno-api/**"
       - ".github/workflows/suno-api-ci.yml"
   push:
     branches:
       - main
     paths:
+      - "tools/suno/**"
       - "tools/suno-api/**"
       - ".github/workflows/suno-api-ci.yml"
+
+concurrency:
+  group: suno-api-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -30,8 +36,16 @@ jobs:
           fetch-depth: 1
           persist-credentials: false
 
-      - name: Show Node version
-        run: node --version
+      - name: Set up Node 22
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "22"
+
+      - name: Verify vendored lamejs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object ../suno/vendor/lame.min.js)" = "8dc6b0726388ff75bec69ac55ac5a6cc49e61093"
+          test "$(git hash-object ../suno/vendor/LICENSE.lamejs)" = "e456b65d30e5df56ba66cef91716bdc35085463e"
 
       - name: Syntax check
         run: npm run check

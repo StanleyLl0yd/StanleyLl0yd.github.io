@@ -2,6 +2,11 @@
   'use strict';
 
   const SUNO_HOSTS = new Set(['suno.com', 'www.suno.com']);
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const SHARE_PATH_RE = /^\/(?:s)\/[A-Za-z0-9_-]{6,64}\/?$/;
+  const SONG_PATH_RE = /^\/song\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/?$/i;
+  const HOOK_PATH_RE = /^\/hook\/(?:[A-Za-z0-9_-]{6,64}|[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})\/?$/i;
+  const MAX_INPUT_URL_LENGTH = 2048;
   const MAX_AUDIO_BYTES = 80 * 1024 * 1024;
   const apiMeta = document.querySelector('meta[name="suno-saver-api"]');
   const API_BASE = String(apiMeta?.content || '').replace(/\/$/, '');
@@ -49,22 +54,24 @@
 
   downloadButton.addEventListener('click', async () => {
     if (!currentClip) return;
+    const clip = currentClip;
     const format = document.querySelector('input[name="format"]:checked')?.value || 'original';
-    downloadButton.disabled = true;
+    setDownloadBusy(true);
     progressWrap.hidden = false;
+    setStatus('Получаю аудио…');
     setProgress('Получаю оригинальный поток…', 0);
 
     try {
       ensureApiConfigured();
       const audio = await fetchAudio(
-        `${API_BASE}/api/audio?id=${encodeURIComponent(currentClip.id)}`
+        `${API_BASE}/api/audio?id=${encodeURIComponent(clip.id)}`
       );
       const kind = detectAudioKind(audio.bytes);
       if (!kind.playable) {
         throw new Error('Backend вернул неподдерживаемый аудиопоток.');
       }
 
-      const baseName = safeFilename(currentClip.title || `suno-${currentClip.id}`);
+      const baseName = safeFilename(clip.title || `suno-${clip.id}`);
       if (format === 'original') {
         setProgress('Сохраняю оригинал…', 92);
         saveBlob(new Blob([audio.bytes], { type: kind.mime }), `${baseName}.${kind.ext}`);
@@ -73,6 +80,7 @@
           setProgress('Сохраняю MP3 без перекодирования…', 92);
           saveBlob(new Blob([audio.bytes], { type: 'audio/mpeg' }), `${baseName}.mp3`);
           setProgress('Готово', 100);
+          setStatus('Готово. Файл передан браузеру.');
           return;
         }
 
@@ -92,16 +100,33 @@
         }
       }
       setProgress('Готово', 100);
+      setStatus('Готово. Файл передан браузеру.');
     } catch (error) {
       setStatus(humanError(error), true);
       progressWrap.hidden = true;
     } finally {
-      downloadButton.disabled = false;
+      setDownloadBusy(false);
     }
   });
 
   function ensureApiConfigured() {
-    if (!/^https:\/\/[-a-z0-9.]+$/i.test(API_BASE)) {
+    let url;
+    try {
+      url = new URL(API_BASE);
+    } catch {
+      throw new Error('Backend Suno Saver ещё не настроен.');
+    }
+
+    if (
+      url.protocol !== 'https:' ||
+      url.username ||
+      url.password ||
+      url.port ||
+      url.pathname !== '/' ||
+      url.search ||
+      url.hash ||
+      url.origin !== API_BASE
+    ) {
       throw new Error('Backend Suno Saver ещё не настроен.');
     }
   }
@@ -109,6 +134,7 @@
   function normalizeSunoUrl(raw) {
     let value = String(raw || '').trim();
     if (!value) throw new Error('Вставьте ссылку Suno.');
+    if (value.length > MAX_INPUT_URL_LENGTH) throw new Error('Ссылка слишком длинная.');
     if (!/^https?:\/\//i.test(value)) value = `https://${value}`;
 
     let url;
@@ -118,11 +144,22 @@
       throw new Error('Некорректная ссылка.');
     }
 
-    if (url.protocol !== 'https:' || !SUNO_HOSTS.has(url.hostname.toLowerCase())) {
-      throw new Error('Нужна HTTPS-ссылка именно с suno.com.');
+    if (
+      url.protocol !== 'https:' ||
+      !SUNO_HOSTS.has(url.hostname.toLowerCase()) ||
+      url.username ||
+      url.password ||
+      url.port
+    ) {
+      throw new Error('Нужна обычная HTTPS-ссылка именно с suno.com.');
     }
-    if (!/^\/(?:s|song|hook)\//i.test(url.pathname)) {
-      throw new Error('Поддерживаются ссылки /s/…, /song/… и /hook/….');
+
+    if (
+      !SHARE_PATH_RE.test(url.pathname) &&
+      !SONG_PATH_RE.test(url.pathname) &&
+      !HOOK_PATH_RE.test(url.pathname)
+    ) {
+      throw new Error('Поддерживаются ссылки /s/<код>, /song/<uuid> и /hook/<id>.');
     }
 
     url.hash = '';
@@ -139,7 +176,8 @@
           credentials: 'omit',
           cache: 'no-store',
           headers: { Accept: 'application/json' },
-          referrerPolicy: 'no-referrer'
+          referrerPolicy: 'no-referrer',
+          signal: requestSignal(25_000)
         }
       );
     } catch {
@@ -158,29 +196,87 @@
       throw new Error(apiErrorMessage(data?.error, response.status));
     }
 
-    if (
-      !data ||
-      typeof data !== 'object' ||
-      !/^[0-9a-f-]{36}$/i.test(String(data.id || '')) ||
-      typeof data.title !== 'string'
-    ) {
+    if (!isResolvedTrack(data)) {
       throw new Error('Backend вернул некорректные данные трека.');
     }
 
     return data;
   }
 
+  function isResolvedTrack(data) {
+    if (!data || typeof data !== 'object') return false;
+    if (!UUID_RE.test(String(data.id || ''))) return false;
+    if (typeof data.title !== 'string' || data.title.length > 200) return false;
+    if (typeof data.artist !== 'string' || data.artist.length > 200) return false;
+    if (data.tags != null && (typeof data.tags !== 'string' || data.tags.length > 2000)) return false;
+    if (data.model != null && (typeof data.model !== 'string' || data.model.length > 100)) return false;
+    if (
+      data.duration != null &&
+      (!Number.isFinite(data.duration) || data.duration <= 0 || data.duration > 24 * 60 * 60)
+    ) {
+      return false;
+    }
+    if (data.image && !isTrustedImageUrl(data.image)) return false;
+
+    const media = data.media;
+    if (!media || typeof media !== 'object') return false;
+    if (
+      typeof media.contentType !== 'string' ||
+      media.contentType.length < 1 ||
+      media.contentType.length > 100
+    ) {
+      return false;
+    }
+    if (
+      typeof media.delivery !== 'string' ||
+      media.delivery.length < 1 ||
+      media.delivery.length > 50
+    ) {
+      return false;
+    }
+    if (
+      typeof media.originalExtension !== 'string' ||
+      !/^(?:m4a|mp3|aac|ogg|webm)$/i.test(media.originalExtension)
+    ) {
+      return false;
+    }
+
+    return true;
+  }
+
   function apiErrorMessage(code, status) {
     const value = String(code || '');
-    if (value === 'track_id_not_found') return 'Не удалось определить трек по этой ссылке. Убедитесь, что она открывается без входа в Suno, или вставьте ссылку вида /song/<uuid>.';
+    if (value === 'track_id_not_found') {
+      return 'Не удалось определить трек по этой ссылке. Убедитесь, что она открывается без входа в Suno, или вставьте ссылку вида /song/<uuid>.';
+    }
     if (value === 'unsupported_url' || value === 'invalid_url' || value === 'missing_url') {
       return 'Некорректная или неподдерживаемая ссылка Suno.';
     }
+    if (value === 'untrusted_origin') return 'Backend принимает запросы только с опубликованной страницы Suno Saver.';
     if (value === 'audio_unavailable') return 'Для этого трека нет доступного аудиопотока.';
+    if (value === 'media_too_large') return 'Аудиофайл превышает допустимый размер.';
+    if (
+      value === 'rights_invalid' ||
+      value === 'wrapped_value_invalid' ||
+      value === 'content_cipher_invalid'
+    ) {
+      return 'Suno изменил формат прав или шифрования потока. Требуется обновление Suno Saver.';
+    }
+    if (
+      value === 'media_untrusted' ||
+      value === 'media_redirect_invalid' ||
+      value === 'media_redirect_untrusted' ||
+      value === 'media_too_many_redirects'
+    ) {
+      return 'Suno вернул неподдерживаемый адрес аудиопотока.';
+    }
+    if (value.endsWith('_timeout')) return 'Suno слишком долго не отвечает. Повторите попытку.';
+    if (value.endsWith('_network')) return 'Не удалось связаться с Suno. Повторите попытку.';
     if (value.startsWith('share_http_')) return 'Suno не разрешил открыть короткую ссылку.';
-    if (value.startsWith('clip_http_')) return 'Suno не вернул публичные данные трека.';
+    if (value.startsWith('clip_http_') || value === 'clip_invalid') return 'Suno не вернул корректные публичные данные трека.';
     if (value.startsWith('rights_http_')) return 'Suno не выдал права на воспроизведение этого трека.';
     if (value.startsWith('media_http_')) return 'Suno не отдал аудиопоток.';
+    if (value === 'internal_error') return 'Внутренняя ошибка Suno Saver. Повторите попытку позже.';
     return `Ошибка backend${status ? ` (HTTP ${status})` : ''}.`;
   }
 
@@ -195,7 +291,7 @@
     ].filter(Boolean).join(' · ');
     tagsEl.textContent = clip.tags || '';
 
-    if (clip.image && isHttpsUrl(clip.image)) {
+    if (clip.image && isTrustedImageUrl(clip.image)) {
       coverEl.src = clip.image;
       coverEl.alt = `Обложка: ${clip.title || 'Suno track'}`;
       coverEl.hidden = false;
@@ -211,12 +307,18 @@
   }
 
   async function fetchAudio(url) {
-    const response = await fetch(url, {
-      method: 'GET',
-      credentials: 'omit',
-      cache: 'no-store',
-      referrerPolicy: 'no-referrer'
-    });
+    let response;
+    try {
+      response = await fetch(url, {
+        method: 'GET',
+        credentials: 'omit',
+        cache: 'no-store',
+        referrerPolicy: 'no-referrer',
+        signal: requestSignal(70_000)
+      });
+    } catch {
+      throw new Error('Не удалось получить аудио от backend Suno Saver.');
+    }
 
     if (!response.ok) {
       let detail = null;
@@ -242,23 +344,50 @@
       return { bytes };
     }
 
-    const chunks = [];
+    const knownLength =
+      Number.isInteger(declared) &&
+      declared > 0 &&
+      declared <= MAX_AUDIO_BYTES
+        ? declared
+        : 0;
+    const preallocated = knownLength ? new Uint8Array(knownLength) : null;
+    const chunks = preallocated ? null : [];
     let received = 0;
+
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
-      received += value.byteLength;
 
-      if (received > MAX_AUDIO_BYTES) {
+      const nextReceived = received + value.byteLength;
+      if (nextReceived > MAX_AUDIO_BYTES) {
         reader.cancel();
         throw new Error('Аудиофайл слишком большой для обработки в браузере.');
       }
+      if (preallocated && nextReceived > preallocated.length) {
+        reader.cancel();
+        throw new Error('Backend вернул некорректную длину аудиопотока.');
+      }
 
-      chunks.push(value);
-      const pct = declared > 0
-        ? Math.min(50, Math.round((received / declared) * 50))
+      if (preallocated) {
+        preallocated.set(value, received);
+      } else {
+        chunks.push(value);
+      }
+      received = nextReceived;
+
+      const pct = knownLength > 0
+        ? Math.min(50, Math.round((received / knownLength) * 50))
         : Math.min(45, Math.round(received / 300000));
       setProgress('Получаю оригинальный поток…', pct);
+    }
+
+    if (preallocated) {
+      return {
+        bytes:
+          received === preallocated.length
+            ? preallocated.buffer
+            : preallocated.slice(0, received).buffer
+      };
     }
 
     const merged = new Uint8Array(received);
@@ -314,6 +443,9 @@
     const frames = audioBuffer.length;
     const bytesPerSample = 2;
     const dataSize = frames * channels * bytesPerSample;
+    if (dataSize > 0xffffffff - 44) {
+      throw new Error('Трек слишком длинный для WAV 16-bit PCM.');
+    }
     const out = new ArrayBuffer(44 + dataSize);
     const view = new DataView(out);
 
@@ -419,9 +551,32 @@
     return `${min}:${sec}`;
   }
 
-  function isHttpsUrl(value) {
+  function requestSignal(timeoutMs) {
+    return typeof globalThis.AbortSignal?.timeout === 'function'
+      ? globalThis.AbortSignal.timeout(timeoutMs)
+      : undefined;
+  }
+
+  function isTrustedImageUrl(value) {
     try {
-      return new URL(value).protocol === 'https:';
+      const url = new URL(value);
+      if (
+        url.protocol !== 'https:' ||
+        url.username ||
+        url.password ||
+        url.port
+      ) {
+        return false;
+      }
+
+      const host = url.hostname.toLowerCase();
+      return (
+        host === 'suno.ai' ||
+        host.endsWith('.suno.ai') ||
+        host === 'suno.com' ||
+        host.endsWith('.suno.com') ||
+        host === 'media.cloudfront.net'
+      );
     } catch {
       return false;
     }
@@ -429,7 +584,17 @@
 
   function setBusy(value) {
     lookupButton.disabled = value;
+    urlInput.disabled = value;
     lookupButton.textContent = value ? 'Проверяю…' : 'Открыть';
+  }
+
+  function setDownloadBusy(value) {
+    downloadButton.disabled = value;
+    lookupButton.disabled = value;
+    urlInput.disabled = value;
+    for (const input of document.querySelectorAll('input[name="format"]')) {
+      input.disabled = value;
+    }
   }
 
   function setStatus(message, error = false) {

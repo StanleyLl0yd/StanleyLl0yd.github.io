@@ -1,44 +1,62 @@
 # Suno Saver API
 
-Small serverless companion for the static GitHub Pages UI in `../suno/`.
+Serverless companion for the static GitHub Pages frontend in `../suno/`.
 
-## Why it exists
+## Production flow
 
-The browser cannot reliably access Suno's public clip and Mango-rights endpoints from a GitHub Pages origin because of CORS. Current Suno playback also no longer uses the old `cdn1.suno.ai/<uuid>.mp3` path: progressive media can be encrypted and the web player obtains anonymous Mango rights before playback.
-
-This service keeps GitHub Pages as the UI and performs only the cross-origin server-side steps:
+The browser cannot reliably call Suno's clip and Mango-rights endpoints directly because of CORS. Current Suno progressive audio can also be encrypted, so the backend performs only the cross-origin/server-side work that GitHub Pages cannot:
 
 - `GET /api/resolve?url=<public-suno-url>`
-  - validates the Suno URL;
-  - follows a public share redirect;
-  - fetches the public clip object;
-  - returns title, artist, duration, cover, model/tags and the current source container type.
+  - accepts requests only from the production Suno Saver origin;
+  - validates a canonical public Suno `/s/`, `/song/` or `/hook/` URL;
+  - resolves short links without following untrusted redirects;
+  - fetches the public clip object with bounded response size/time;
+  - returns bounded title, artist, duration, tags/model, trusted cover URL and source media metadata.
 
 - `GET /api/audio?id=<clip-uuid>`
-  - re-fetches the public clip;
-  - selects the best progressive audio media entry;
-  - requests anonymous Mango rights for that clip;
-  - unwraps the content key/CTR counter;
-  - streams decrypted audio to the browser without buffering the full song in the function.
+  - accepts requests only from the production Suno Saver origin;
+  - validates the clip UUID;
+  - selects only supported progressive media on trusted Suno/CloudFront hosts;
+  - re-validates every media redirect;
+  - obtains anonymous Mango rights when the current source requires decryption;
+  - unwraps the content key/counter and streams AES-CTR-decrypted audio;
+  - enforces an 80 MiB maximum stream size and does not persist the audio.
 
 - `GET /api/health`
-  - simple deployment health check.
+  - unauthenticated health check for deployment monitoring.
 
-No Suno account cookie, password, session or user token is accepted or forwarded.
+No Suno account password, cookie, session token or user API token is accepted or forwarded.
 
-## Deploy
+## Deployment
 
-Deploy this directory as the Vercel project root. The frontend origin allowed by CORS is fixed to:
+Vercel project root:
+
+`tools/suno-api`
+
+Production origin:
+
+`https://stanleyll0yd-suno-saver-api-2026092.vercel.app`
+
+The frontend production origin allowed by the API is fixed to:
 
 `https://stanleyll0yd.github.io`
 
-After deployment, set the resulting API origin in `../suno/app.js` and remove the temporary OpenSuno fallback.
+CORS/origin checks reduce browser hotlinking and accidental third-party use; they are not authentication against a client deliberately forging HTTP headers.
 
-## Security notes
+## Security and resilience
 
-- only HTTPS `suno.com` / `www.suno.com` input URLs are accepted;
-- only UUID clip IDs reach media/rights endpoints;
-- no arbitrary upstream URL is accepted from the browser;
-- media URLs are selected only from Suno's clip response;
-- decrypted audio is streamed and not persisted;
-- responses are `no-store`.
+- HTTPS Suno input hosts only; credentials/custom ports are rejected.
+- Canonical route shapes are validated before any upstream request.
+- Media hosts are allowlisted to Suno/CloudFront domains.
+- Media redirects are followed manually and revalidated.
+- Clip/rights/share responses are size-bounded and time-bounded.
+- Audio streaming is size-bounded and server-side files are never persisted.
+- Unexpected internal errors are logged server-side but returned as `internal_error`.
+- Unicode filenames use an ASCII fallback plus RFC 5987 `filename*`.
+- API responses use `no-store`, `nosniff` and `no-referrer` headers.
+
+## Verification
+
+`Suno API CI` runs syntax checks and unit tests under pinned Node 22 for both backend and frontend JavaScript.
+
+`Suno Live Smoke` runs weekly (and can be run manually) against production to verify health, origin enforcement, public metadata resolution and a decrypted playable audio signature.
