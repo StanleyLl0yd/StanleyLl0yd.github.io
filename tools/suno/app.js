@@ -574,8 +574,7 @@
         host === 'suno.ai' ||
         host.endsWith('.suno.ai') ||
         host === 'suno.com' ||
-        host.endsWith('.suno.com') ||
-        host === 'media.cloudfront.net'
+        host.endsWith('.suno.com')
       );
     } catch {
       return false;
