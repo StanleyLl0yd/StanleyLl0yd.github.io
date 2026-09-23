@@ -182,7 +182,7 @@ test('media redirects are revalidated before the backend follows them', async ()
     await assert.rejects(
       () => fetchMediaStream(
         {
-          url: 'https://media.cloudfront.net/1/clip/example.m4a',
+          url: 'https://d2lwuy8qc234o3.cloudfront.net/1/clip/example.m4a',
           content_type: 'm4a-opus',
         },
         CLIP_ID,
@@ -196,8 +196,9 @@ test('media redirects are revalidated before the backend follows them', async ()
 });
 
 test('trusted media URL allowlist rejects foreign hosts and credential tricks', () => {
-  assert.equal(isTrustedMediaUrl('https://media.cloudfront.net/1/clip/a.m4a'), true);
+  assert.equal(isTrustedMediaUrl('https://d2lwuy8qc234o3.cloudfront.net/1/clip/a.m4a'), true);
   assert.equal(isTrustedMediaUrl('https://cdn2.suno.ai/image.jpeg'), true);
+  assert.equal(isTrustedMediaUrl('https://media.cloudfront.net/audio.m4a'), false);
   assert.equal(isTrustedMediaUrl('https://d123.cloudfront.net/audio.m4a'), false);
   assert.equal(isTrustedMediaUrl('https://studio-api.prod.suno.com/media/a'), false);
 
@@ -219,7 +220,7 @@ test('pickProgressiveAudio prefers supported trusted current media', () => {
         encoding: '1.0.0',
       },
       {
-        url: 'https://media.cloudfront.net/1/clip/audio.m4a',
+        url: 'https://d2lwuy8qc234o3.cloudfront.net/1/clip/audio.m4a',
         content_type: 'm4a-opus',
         delivery: 'progressive',
         encoding: '1.0.0',
@@ -232,7 +233,7 @@ test('pickProgressiveAudio prefers supported trusted current media', () => {
     ],
   });
 
-  assert.equal(media.url, 'https://media.cloudfront.net/1/clip/audio.m4a');
+  assert.equal(media.url, 'https://d2lwuy8qc234o3.cloudfront.net/1/clip/audio.m4a');
 });
 
 test('mediaDescriptor only decrypts the protected current container', () => {
@@ -258,7 +259,7 @@ test('publicClipMetadata bounds text and rejects foreign cover hosts', () => {
       tags: 'x'.repeat(2500),
     },
     media_urls: [{
-      url: 'https://media.cloudfront.net/1/clip/audio.m4a',
+      url: 'https://d2lwuy8qc234o3.cloudfront.net/1/clip/audio.m4a',
       content_type: 'm4a-opus',
       delivery: 'progressive',
       encoding: '1.0.0',
@@ -337,7 +338,7 @@ test('resolve handler returns bounded canonical metadata to the frontend origin'
       major_model_version: 'v5.5',
       metadata: { duration: 178.8, tags: 'ambient' },
       media_urls: [{
-        url: 'https://media.cloudfront.net/1/clip/example.m4a',
+        url: 'https://d2lwuy8qc234o3.cloudfront.net/1/clip/example.m4a',
         content_type: 'm4a-opus',
         delivery: 'progressive',
         encoding: '1.0.0',
