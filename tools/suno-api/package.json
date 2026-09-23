@@ -7,7 +7,7 @@
     "node": "22.x"
   },
   "scripts": {
-    "check": "node --check lib/suno.mjs && node --check api/resolve.mjs && node --check api/audio.mjs && node --check api/health.mjs && node --check ../suno/app.js",
+    "check": "node --check lib/suno.mjs && node --check api/resolve.mjs && node --check api/audio.mjs && node --check api/health.mjs && node --check ../suno/i18n.js && node --check ../suno/app.js",
     "test": "node --test"
   }
 }

@@ -1,39 +1,54 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#080b12">
   <meta name="suno-saver-api" content="https://stanleyll0yd-suno-saver-api-2026092.vercel.app">
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'; script-src 'self'; script-src-attr 'none'; style-src 'self'; style-src-elem 'self'; style-src-attr 'none'; img-src 'self' https://suno.ai https://*.suno.ai https://suno.com https://*.suno.com; font-src 'self'; connect-src 'self' https://stanleyll0yd-suno-saver-api-2026092.vercel.app; child-src 'none'; frame-src 'none'; media-src 'none'; manifest-src 'none'; worker-src 'none'; upgrade-insecure-requests; trusted-types 'none'; require-trusted-types-for 'script'">
   <title>Suno Saver — download your public Suno track</title>
   <meta name="description" content="Paste a public Suno song link, inspect the available audio and save it as original audio, MP3 or WAV in your browser.">
-  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Suno Saver — download your public Suno track">
+  <meta property="og:description" content="Paste a public Suno song link and save the available audio as original audio, MP3 or WAV.">
+  <meta property="og:url" content="https://stanleyll0yd.github.io/tools/suno/">
   <link rel="canonical" href="https://stanleyll0yd.github.io/tools/suno/">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./styles.css">
+  <script src="./i18n.js?v=20260923-1" defer></script>
   <script src="./vendor/lame.min.js" defer></script>
-  <script src="./app.js?v=20260923-2" defer></script>
+  <script src="./app.js?v=20260923-3" defer></script>
 </head>
 <body>
-  <main class="shell">
+  <a class="skip-link" href="#main" data-i18n="skip">Skip to content</a>
+
+  <main class="shell" id="main">
     <header class="hero">
-      <a class="back" href="/">← Stanley Lloyd</a>
-      <p class="eyebrow">BROWSER TOOL</p>
+      <div class="tool-nav">
+        <a class="back" href="/" data-i18n="back">← All products</a>
+        <button class="language-toggle" id="lang-toggle" type="button" aria-label="Switch to Russian">RU</button>
+      </div>
+      <p class="eyebrow" data-i18n="toolEyebrow">BROWSER TOOL</p>
       <h1>Suno Saver</h1>
-      <p class="lead">Вставьте публичную ссылку на композицию Suno, проверьте трек и сохраните доступное аудио. Конвертация MP3/WAV выполняется локально в вашем браузере.</p>
+      <p class="lead" data-i18n="lead">Paste a public Suno track link, verify the track and save the available audio. MP3/WAV conversion runs locally in your browser.</p>
     </header>
 
     <section class="panel" aria-labelledby="download-heading">
-      <h2 id="download-heading">Ссылка на трек</h2>
+      <h2 id="download-heading" data-i18n="linkHeading">Track link</h2>
       <form id="lookup-form" novalidate>
-        <label class="sr-only" for="suno-url">Suno URL</label>
+        <label class="sr-only" for="suno-url" data-i18n="urlLabel">Suno URL</label>
         <div class="input-row">
-          <input id="suno-url" name="url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://suno.com/s/... или https://suno.com/song/..." required>
-          <button class="primary" type="submit" id="lookup-button">Открыть</button>
+          <input id="suno-url" name="url" type="url" inputmode="url" autocomplete="off" spellcheck="false" placeholder="https://suno.com/s/... or https://suno.com/song/..." data-i18n-placeholder="urlPlaceholder" required>
+          <button class="primary" type="submit" id="lookup-button" data-i18n="open">Open</button>
         </div>
       </form>
-      <p class="hint">Поддерживаются публичные ссылки <code>suno.com/s/…</code>, <code>/song/…</code> и <code>/hook/…</code>. Приватные треки не запрашиваются.</p>
+      <p class="hint">
+        <span data-i18n="hintIntro">Supported public links:</span>
+        <code>suno.com/s/…</code>, <code>/song/…</code> and <code>/hook/…</code>.
+        <span data-i18n="hintPrivacy">Private tracks are not requested.</span>
+      </p>
       <div id="status" class="status" role="status" aria-live="polite" hidden></div>
     </section>
 
@@ -41,31 +56,31 @@
       <div class="track-main">
         <img id="cover" class="cover" alt="" width="180" height="180" hidden>
         <div class="track-copy">
-          <p class="eyebrow">PUBLIC TRACK</p>
-          <h2 id="track-title">Трек</h2>
+          <p class="eyebrow" data-i18n="publicTrack">PUBLIC TRACK</p>
+          <h2 id="track-title" data-i18n="defaultTrack">Track</h2>
           <p id="track-meta" class="muted"></p>
           <p id="track-tags" class="tags"></p>
         </div>
       </div>
 
-      <div class="format-grid" role="radiogroup" aria-label="Формат аудио">
+      <div class="format-grid" role="radiogroup" aria-label="Audio format" data-i18n-aria-label="formatAria">
         <label class="format-option">
           <input type="radio" name="format" value="original" checked>
-          <span><strong>Original</strong><small>Без перекодирования, самый быстрый вариант</small></span>
+          <span><strong>Original</strong><small data-i18n="originalDescription">No re-encoding, fastest option</small></span>
         </label>
         <label class="format-option">
           <input type="radio" name="format" value="mp3">
-          <span><strong>MP3</strong><small>192 kbps, создаётся локально в браузере</small></span>
+          <span><strong>MP3</strong><small data-i18n="mp3Description">192 kbps, created locally in your browser</small></span>
         </label>
         <label class="format-option">
           <input type="radio" name="format" value="wav">
-          <span><strong>WAV</strong><small>16-bit PCM, создаётся локально</small></span>
+          <span><strong>WAV</strong><small data-i18n="wavDescription">16-bit PCM, created locally</small></span>
         </label>
       </div>
 
-      <button class="primary download" type="button" id="download-button">Скачать</button>
+      <button class="primary download" type="button" id="download-button" data-i18n="download">Download</button>
       <div id="progress-wrap" class="progress-wrap" hidden>
-        <div class="progress-line"><span id="progress-label">Подготовка…</span><span id="progress-value"></span></div>
+        <div class="progress-line"><span id="progress-label" data-i18n="preparing">Preparing…</span><span id="progress-value"></span></div>
         <progress id="progress" max="100" value="0"></progress>
       </div>
       <p id="media-note" class="hint"></p>
@@ -73,16 +88,16 @@
 
     <section class="notes">
       <article>
-        <h2>Что делает сайт</h2>
-        <p>Страница отправляет только введённую публичную Suno-ссылку нашему serverless backend. Backend получает публичные metadata и текущий поток Suno, расшифровывает его во время передачи и ничего не сохраняет. Пароли, cookies и токены аккаунта не запрашиваются.</p>
+        <h2 data-i18n="noteWhatTitle">What this site does</h2>
+        <p data-i18n="noteWhatText">The page sends only the public Suno link you enter to our serverless backend. The backend fetches public metadata and the current Suno stream, decrypts it while transferring it, and stores nothing. Passwords, cookies and account tokens are never requested.</p>
       </article>
       <article>
-        <h2>Ограничения</h2>
-        <p>Suno может менять формат публичного API и Mango-потока. Если текущая схема изменится, сайт остановится с ошибкой вместо сохранения повреждённого файла.</p>
+        <h2 data-i18n="noteLimitsTitle">Limitations</h2>
+        <p data-i18n="noteLimitsText">Suno may change its public API or Mango stream format. If the current scheme changes, the site stops with an error instead of saving a damaged file.</p>
       </article>
       <article>
-        <h2>Права</h2>
-        <p>Скачивайте собственные композиции или материалы, на использование которых у вас есть разрешение. Этот инструмент не меняет лицензию или коммерческие права на трек.</p>
+        <h2 data-i18n="noteRightsTitle">Rights</h2>
+        <p data-i18n="noteRightsText">Download your own compositions or material you are allowed to use. This tool does not change the track license or its commercial-use rights.</p>
       </article>
     </section>
   </main>

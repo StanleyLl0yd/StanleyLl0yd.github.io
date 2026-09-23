@@ -4,6 +4,7 @@ Static frontend for the Suno Saver serverless API.
 
 ## Behavior
 
+- provides English and Russian UI, choosing the initial language from the shared `site-language` preference or the browser locale, with a manual language toggle;
 - accepts canonical public `suno.com/s/...`, `/song/<uuid>` and `/hook/...` links;
 - validates the URL locally before contacting the backend;
 - sends only the public Suno URL to the configured Suno Saver API;
@@ -22,7 +23,7 @@ Backend source: `../suno-api/`
 
 Production API origin is configured in the `suno-saver-api` meta element in `index.html`.
 
-The page uses a strict CSP and does not load remote executable JavaScript.
+The page uses a strict CSP and does not load remote executable JavaScript. The language preference uses the same `site-language` localStorage key as the rest of the portfolio.
 
 ## Third-party code
 
