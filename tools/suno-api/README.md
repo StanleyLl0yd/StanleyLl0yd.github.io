@@ -47,7 +47,7 @@ CORS/origin checks reduce browser hotlinking and accidental third-party use; the
 
 - HTTPS Suno input hosts only; credentials/custom ports are rejected.
 - Canonical route shapes are validated before any upstream request.
-- Media hosts are allowlisted to Suno/CloudFront domains.
+- Audio media hosts are allowlisted to Suno CDN plus the exact current Suno CloudFront distribution; cover images are restricted to Suno-owned hosts.
 - Media redirects are followed manually and revalidated.
 - Clip/rights/share responses are size-bounded and time-bounded.
 - Audio streaming is size-bounded and server-side files are never persisted.
