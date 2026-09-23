@@ -41,6 +41,12 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Verify vendored lamejs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object ../suno/vendor/lame.min.js)" = "8dc6b0726388ff75bec69ac55ac5a6cc49e61093"
+          test "$(git hash-object ../suno/vendor/LICENSE.lamejs)" = "e456b65d30e5df56ba66cef91716bdc35085463e"
+
       - name: Syntax check
         run: npm run check
 
