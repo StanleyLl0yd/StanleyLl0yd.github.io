@@ -26,7 +26,7 @@ jobs:
     env:
       BASE: https://stanleyll0yd-suno-saver-api-2026092.vercel.app
       ORIGIN: https://stanleyll0yd.github.io
-      TRACK: https://suno.com/s/UUyrtzrieCxYXMXl
+      TRACK: https://suno.com/song/0891f613-c72e-4b16-856c-92d4b9311f68
 
     steps:
       - name: Wait for production backend
@@ -55,7 +55,7 @@ jobs:
       - name: Resolve public track from frontend origin
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --get             --header "Origin: $ORIGIN"             --data-urlencode "url=$TRACK"             "$BASE/api/resolve" | tee /tmp/track.json
+          curl --fail-with-body --silent --show-error --get             --header "Origin: $ORIGIN"             --data-urlencode "url=$TRACK"             "$BASE/api/resolve" | tee /tmp/track.json
           jq -e '
             (.id | type == "string" and length == 36) and
             (.title | type == "string" and length > 0) and
