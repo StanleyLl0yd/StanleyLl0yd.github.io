@@ -70,7 +70,7 @@ test('Suno Saver chooses Russian from browser locale when no preference exists',
   assert.equal(page.api.getLanguage(), 'ru');
   assert.equal(page.document.documentElement.lang, 'ru');
   assert.equal(page.toggle.textContent, 'EN');
-  assert.match(page.document.title, /скачивание/);
+  assert.match(page.document.title, /скачать/i);
 });
 
 test('stored portfolio language overrides browser locale', () => {
@@ -78,7 +78,7 @@ test('stored portfolio language overrides browser locale', () => {
   assert.equal(page.api.getLanguage(), 'en');
   assert.equal(page.document.documentElement.lang, 'en');
   assert.equal(page.toggle.textContent, 'RU');
-  assert.match(page.description.content, /public Suno song link/i);
+  assert.match(page.description.content, /download public Suno songs/i);
 });
 
 test('manual language toggle persists the shared site-language preference', () => {
