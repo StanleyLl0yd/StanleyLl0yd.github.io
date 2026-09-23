@@ -10,6 +10,9 @@
   const MAX_AUDIO_BYTES = 80 * 1024 * 1024;
   const apiMeta = document.querySelector('meta[name="suno-saver-api"]');
   const API_BASE = String(apiMeta?.content || '').replace(/\/$/, '');
+  const i18n = globalThis.SunoSaverI18n;
+  if (!i18n) throw new Error('Suno Saver localization failed to load.');
+  const t = (key, params = {}) => i18n.t(key, params);
 
   const form = document.querySelector('#lookup-form');
   const urlInput = document.querySelector('#suno-url');
@@ -28,25 +31,29 @@
   const progressValue = document.querySelector('#progress-value');
 
   let currentClip = null;
+  let lookupBusy = false;
+  let statusState = null;
+  let progressState = null;
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     setBusy(true);
+    currentClip = null;
     trackCard.hidden = true;
     progressWrap.hidden = true;
-    setStatus('Проверяю ссылку…');
+    setStatusKey('statusCheckingLink');
 
     try {
       ensureApiConfigured();
       const normalized = normalizeSunoUrl(urlInput.value);
       urlInput.value = normalized.href;
-      setStatus('Получаю данные трека…');
+      setStatusKey('statusLoadingTrack');
       currentClip = await resolveTrack(normalized.href);
       renderClip(currentClip);
-      setStatus('Готово. Выберите формат и скачайте файл.');
+      setStatusKey('statusReady');
     } catch (error) {
       currentClip = null;
-      setStatus(humanError(error), true);
+      setStatusError(error);
     } finally {
       setBusy(false);
     }
@@ -58,8 +65,8 @@
     const format = document.querySelector('input[name="format"]:checked')?.value || 'original';
     setDownloadBusy(true);
     progressWrap.hidden = false;
-    setStatus('Получаю аудио…');
-    setProgress('Получаю оригинальный поток…', 0);
+    setStatusKey('statusLoadingAudio');
+    setProgressKey('progressLoadingOriginal', 0);
 
     try {
       ensureApiConfigured();
@@ -68,41 +75,41 @@
       );
       const kind = detectAudioKind(audio.bytes);
       if (!kind.playable) {
-        throw new Error('Backend вернул неподдерживаемый аудиопоток.');
+        throw localizedError('errorUnsupportedAudio');
       }
 
       const baseName = safeFilename(clip.title || `suno-${clip.id}`);
       if (format === 'original') {
-        setProgress('Сохраняю оригинал…', 92);
+        setProgressKey('progressSavingOriginal', 92);
         saveBlob(new Blob([audio.bytes], { type: kind.mime }), `${baseName}.${kind.ext}`);
       } else {
         if (format === 'mp3' && kind.ext === 'mp3') {
-          setProgress('Сохраняю MP3 без перекодирования…', 92);
+          setProgressKey('progressSavingMp3Original', 92);
           saveBlob(new Blob([audio.bytes], { type: 'audio/mpeg' }), `${baseName}.mp3`);
-          setProgress('Готово', 100);
-          setStatus('Готово. Файл передан браузеру.');
+          setProgressKey('progressDone', 100);
+          setStatusKey('statusFileHanded');
           return;
         }
 
         const decoded = await decodeAudio(audio.bytes);
         if (format === 'wav') {
-          setProgress('Создаю WAV…', 75);
+          setProgressKey('progressCreatingWav', 75);
           saveBlob(encodeWav(decoded), `${baseName}.wav`);
         } else if (format === 'mp3') {
           if (!globalThis.lamejs?.Mp3Encoder) {
-            throw new Error('MP3-кодек не загрузился. Обновите страницу и повторите попытку.');
+            throw localizedError('errorMp3Codec');
           }
           const mp3 = encodeMp3(
             decoded,
-            (pct) => setProgress('Создаю MP3…', 55 + Math.round(pct * 0.4))
+            (pct) => setProgressKey('progressCreatingMp3', 55 + Math.round(pct * 0.4))
           );
           saveBlob(mp3, `${baseName}.mp3`);
         }
       }
-      setProgress('Готово', 100);
-      setStatus('Готово. Файл передан браузеру.');
+      setProgressKey('progressDone', 100);
+      setStatusKey('statusFileHanded');
     } catch (error) {
-      setStatus(humanError(error), true);
+      setStatusError(error);
       progressWrap.hidden = true;
     } finally {
       setDownloadBusy(false);
@@ -114,7 +121,7 @@
     try {
       url = new URL(API_BASE);
     } catch {
-      throw new Error('Backend Suno Saver ещё не настроен.');
+      throw localizedError('errorBackendNotConfigured');
     }
 
     if (
@@ -127,21 +134,21 @@
       url.hash ||
       url.origin !== API_BASE
     ) {
-      throw new Error('Backend Suno Saver ещё не настроен.');
+      throw localizedError('errorBackendNotConfigured');
     }
   }
 
   function normalizeSunoUrl(raw) {
     let value = String(raw || '').trim();
-    if (!value) throw new Error('Вставьте ссылку Suno.');
-    if (value.length > MAX_INPUT_URL_LENGTH) throw new Error('Ссылка слишком длинная.');
+    if (!value) throw localizedError('errorEnterLink');
+    if (value.length > MAX_INPUT_URL_LENGTH) throw localizedError('errorLinkTooLong');
     if (!/^https?:\/\//i.test(value)) value = `https://${value}`;
 
     let url;
     try {
       url = new URL(value);
     } catch {
-      throw new Error('Некорректная ссылка.');
+      throw localizedError('errorInvalidLink');
     }
 
     if (
@@ -151,7 +158,7 @@
       url.password ||
       url.port
     ) {
-      throw new Error('Нужна обычная HTTPS-ссылка именно с suno.com.');
+      throw localizedError('errorNeedSunoHttps');
     }
 
     if (
@@ -159,7 +166,7 @@
       !SONG_PATH_RE.test(url.pathname) &&
       !HOOK_PATH_RE.test(url.pathname)
     ) {
-      throw new Error('Поддерживаются ссылки /s/<код>, /song/<uuid> и /hook/<id>.');
+      throw localizedError('errorSupportedRoutes');
     }
 
     url.hash = '';
@@ -181,23 +188,23 @@
         }
       );
     } catch {
-      throw new Error('Не удалось связаться с backend Suno Saver.');
+      throw localizedError('errorBackendUnreachable');
     }
 
     let data = null;
     try {
       data = await response.json();
     } catch {
-      if (!response.ok) throw new Error(`Backend вернул HTTP ${response.status}.`);
-      throw new Error('Backend вернул некорректный ответ.');
+      if (!response.ok) throw localizedError('errorBackendHttp', { status: response.status });
+      throw localizedError('errorBackendInvalidResponse');
     }
 
     if (!response.ok) {
-      throw new Error(apiErrorMessage(data?.error, response.status));
+      throw apiError(data?.error, response.status);
     }
 
     if (!isResolvedTrack(data)) {
-      throw new Error('Backend вернул некорректные данные трека.');
+      throw localizedError('errorBackendInvalidTrack');
     }
 
     return data;
@@ -244,23 +251,21 @@
     return true;
   }
 
-  function apiErrorMessage(code, status) {
+  function apiError(code, status) {
     const value = String(code || '');
-    if (value === 'track_id_not_found') {
-      return 'Не удалось определить трек по этой ссылке. Убедитесь, что она открывается без входа в Suno, или вставьте ссылку вида /song/<uuid>.';
-    }
+    if (value === 'track_id_not_found') return localizedError('errorTrackNotFound');
     if (value === 'unsupported_url' || value === 'invalid_url' || value === 'missing_url') {
-      return 'Некорректная или неподдерживаемая ссылка Suno.';
+      return localizedError('errorUnsupportedUrl');
     }
-    if (value === 'untrusted_origin') return 'Backend принимает запросы только с опубликованной страницы Suno Saver.';
-    if (value === 'audio_unavailable') return 'Для этого трека нет доступного аудиопотока.';
-    if (value === 'media_too_large') return 'Аудиофайл превышает допустимый размер.';
+    if (value === 'untrusted_origin') return localizedError('errorUntrustedOrigin');
+    if (value === 'audio_unavailable') return localizedError('errorAudioUnavailable');
+    if (value === 'media_too_large') return localizedError('errorMediaTooLarge');
     if (
       value === 'rights_invalid' ||
       value === 'wrapped_value_invalid' ||
       value === 'content_cipher_invalid'
     ) {
-      return 'Suno изменил формат прав или шифрования потока. Требуется обновление Suno Saver.';
+      return localizedError('errorRightsChanged');
     }
     if (
       value === 'media_untrusted' ||
@@ -268,22 +273,26 @@
       value === 'media_redirect_untrusted' ||
       value === 'media_too_many_redirects'
     ) {
-      return 'Suno вернул неподдерживаемый адрес аудиопотока.';
+      return localizedError('errorMediaUntrusted');
     }
-    if (value.endsWith('_timeout')) return 'Suno слишком долго не отвечает. Повторите попытку.';
-    if (value.endsWith('_network')) return 'Не удалось связаться с Suno. Повторите попытку.';
-    if (value.startsWith('share_http_')) return 'Suno не разрешил открыть короткую ссылку.';
-    if (value.startsWith('clip_http_') || value === 'clip_invalid') return 'Suno не вернул корректные публичные данные трека.';
-    if (value.startsWith('rights_http_')) return 'Suno не выдал права на воспроизведение этого трека.';
-    if (value.startsWith('media_http_')) return 'Suno не отдал аудиопоток.';
-    if (value === 'internal_error') return 'Внутренняя ошибка Suno Saver. Повторите попытку позже.';
-    return `Ошибка backend${status ? ` (HTTP ${status})` : ''}.`;
+    if (value.endsWith('_timeout')) return localizedError('errorSunoTimeout');
+    if (value.endsWith('_network')) return localizedError('errorSunoNetwork');
+    if (value.startsWith('share_http_')) return localizedError('errorShareHttp');
+    if (value.startsWith('clip_http_') || value === 'clip_invalid') {
+      return localizedError('errorClipInvalid');
+    }
+    if (value.startsWith('rights_http_')) return localizedError('errorRightsHttp');
+    if (value.startsWith('media_http_')) return localizedError('errorMediaHttp');
+    if (value === 'internal_error') return localizedError('errorInternal');
+    return localizedError('errorBackendGeneric', {
+      status: status ? ` (HTTP ${status})` : ''
+    });
   }
 
   function renderClip(clip) {
     const duration = Number(clip.duration);
     const author = clip.artist || 'Suno';
-    titleEl.textContent = clip.title || 'Untitled';
+    titleEl.textContent = clip.title || t('defaultTrack');
     metaEl.textContent = [
       author,
       Number.isFinite(duration) && duration > 0 ? formatDuration(duration) : null,
@@ -293,7 +302,7 @@
 
     if (clip.image && isTrustedImageUrl(clip.image)) {
       coverEl.src = clip.image;
-      coverEl.alt = `Обложка: ${clip.title || 'Suno track'}`;
+      coverEl.alt = t('coverAlt', { title: clip.title || t('defaultTrack') });
       coverEl.hidden = false;
     } else {
       coverEl.removeAttribute('src');
@@ -301,8 +310,7 @@
     }
 
     const sourceType = clip.media?.contentType || 'm4a-opus';
-    mediaNote.textContent =
-      `Источник: ${sourceType} · Suno Mango · расшифровка потока выполняется backend без сохранения файла.`;
+    mediaNote.textContent = t('sourceNote', { type: sourceType });
     trackCard.hidden = false;
   }
 
@@ -317,7 +325,7 @@
         signal: requestSignal(70_000)
       });
     } catch {
-      throw new Error('Не удалось получить аудио от backend Suno Saver.');
+      throw localizedError('errorAudioFetch');
     }
 
     if (!response.ok) {
@@ -327,19 +335,19 @@
       } catch {
         // Binary/error responses do not need JSON.
       }
-      throw new Error(apiErrorMessage(detail?.error, response.status));
+      throw apiError(detail?.error, response.status);
     }
 
     const declared = Number(response.headers.get('content-length'));
     if (Number.isFinite(declared) && declared > MAX_AUDIO_BYTES) {
-      throw new Error('Аудиофайл слишком большой для обработки в браузере.');
+      throw localizedError('errorAudioTooLargeBrowser');
     }
 
     const reader = response.body?.getReader();
     if (!reader) {
       const bytes = await response.arrayBuffer();
       if (bytes.byteLength > MAX_AUDIO_BYTES) {
-        throw new Error('Аудиофайл слишком большой для обработки в браузере.');
+        throw localizedError('errorAudioTooLargeBrowser');
       }
       return { bytes };
     }
@@ -361,11 +369,11 @@
       const nextReceived = received + value.byteLength;
       if (nextReceived > MAX_AUDIO_BYTES) {
         reader.cancel();
-        throw new Error('Аудиофайл слишком большой для обработки в браузере.');
+        throw localizedError('errorAudioTooLargeBrowser');
       }
       if (preallocated && nextReceived > preallocated.length) {
         reader.cancel();
-        throw new Error('Backend вернул некорректную длину аудиопотока.');
+        throw localizedError('errorAudioLength');
       }
 
       if (preallocated) {
@@ -378,7 +386,7 @@
       const pct = knownLength > 0
         ? Math.min(50, Math.round((received / knownLength) * 50))
         : Math.min(45, Math.round(received / 300000));
-      setProgress('Получаю оригинальный поток…', pct);
+      setProgressKey('progressLoadingOriginal', pct);
     }
 
     if (preallocated) {
@@ -423,15 +431,15 @@
   }
 
   async function decodeAudio(arrayBuffer) {
-    setProgress('Декодирую аудио…', 55);
+    setProgressKey('progressDecoding', 55);
     const AudioCtx = globalThis.AudioContext || globalThis.webkitAudioContext;
-    if (!AudioCtx) throw new Error('Этот браузер не поддерживает декодирование аудио.');
+    if (!AudioCtx) throw localizedError('errorDecodeUnsupported');
 
     const ctx = new AudioCtx();
     try {
       return await ctx.decodeAudioData(arrayBuffer.slice(0));
     } catch {
-      throw new Error('Браузер не смог декодировать исходный аудиопоток.');
+      throw localizedError('errorDecodeFailed');
     } finally {
       await ctx.close().catch(() => {});
     }
@@ -444,7 +452,7 @@
     const bytesPerSample = 2;
     const dataSize = frames * channels * bytesPerSample;
     if (dataSize > 0xffffffff - 44) {
-      throw new Error('Трек слишком длинный для WAV 16-bit PCM.');
+      throw localizedError('errorWavTooLong');
     }
     const out = new ArrayBuffer(44 + dataSize);
     const view = new DataView(out);
@@ -581,10 +589,22 @@
     }
   }
 
+  function localizedError(key, params = {}) {
+    const error = new Error(key);
+    error.uiKey = key;
+    error.uiParams = params;
+    return error;
+  }
+
   function setBusy(value) {
+    lookupBusy = value;
     lookupButton.disabled = value;
     urlInput.disabled = value;
-    lookupButton.textContent = value ? 'Проверяю…' : 'Открыть';
+    updateLookupButton();
+  }
+
+  function updateLookupButton() {
+    lookupButton.textContent = t(lookupBusy ? 'checkingButton' : 'open');
   }
 
   function setDownloadBusy(value) {
@@ -596,22 +616,52 @@
     }
   }
 
-  function setStatus(message, error = false) {
-    statusBox.hidden = false;
-    statusBox.textContent = message;
-    statusBox.classList.toggle('error', error);
+  function setStatusKey(key, params = {}, error = false) {
+    statusState = { kind: 'key', key, params, error };
+    renderStatus();
   }
 
-  function setProgress(label, value) {
-    progressLabel.textContent = label;
-    progressEl.value = Math.max(0, Math.min(100, value));
+  function setStatusError(error) {
+    statusState = { kind: 'error', value: error, error: true };
+    renderStatus();
+  }
+
+  function renderStatus() {
+    if (!statusState) return;
+    statusBox.hidden = false;
+    statusBox.textContent =
+      statusState.kind === 'key'
+        ? t(statusState.key, statusState.params)
+        : humanError(statusState.value);
+    statusBox.classList.toggle('error', Boolean(statusState.error));
+  }
+
+  function setProgressKey(key, value, params = {}) {
+    progressState = { key, params, value };
+    renderProgress();
+  }
+
+  function renderProgress() {
+    if (!progressState) return;
+    progressLabel.textContent = t(progressState.key, progressState.params);
+    progressEl.value = Math.max(0, Math.min(100, progressState.value));
     progressValue.textContent = `${Math.round(progressEl.value)}%`;
   }
 
   function humanError(error) {
+    if (error?.uiKey) return t(error.uiKey, error.uiParams || {});
     const message = error instanceof Error ? error.message : String(error);
-    return message || 'Неизвестная ошибка.';
+    return message || t('errorUnknown');
   }
+
+  i18n.subscribe(() => {
+    updateLookupButton();
+    if (currentClip) renderClip(currentClip);
+    if (statusState) renderStatus();
+    if (progressState) renderProgress();
+  });
+
+  updateLookupButton();
 
   const qs = new URLSearchParams(location.search);
   const prefill = qs.get('url');
