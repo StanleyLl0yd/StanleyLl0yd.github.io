@@ -68,6 +68,14 @@ jobs:
           };
           console.log('media_urls', JSON.stringify((clip.media_urls || []).map(summarize)));
           console.log('audio_url', summarize({ url: clip.audio_url, content_type: 'legacy' }));
+          for (const [name, value] of Object.entries({
+            image_url: clip.image_url,
+            image_large_url: clip.image_large_url,
+          })) {
+            let host = '';
+            try { host = new URL(value || '').hostname; } catch {}
+            console.log(name, host);
+          }
           NODE
 
       - name: Verify vendored lamejs
