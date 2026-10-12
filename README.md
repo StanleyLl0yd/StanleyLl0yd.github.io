@@ -37,10 +37,11 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | | Project | Platform | Status |
 |---|---|---|---|
 | <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | R1 pre-alpha |
-| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | 0.2.0-alpha.1 published · M3 complete · M4 verification engine in progress |
-| **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Compose | M4.5 release gate active · signed 0.0.1 draft prepared · publication-race fix merged · publication/device acceptance pending · M5 blocked |
+| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M4 complete · Android-only, no proprietary backend · signed 0.3.0-alpha.1 published · extended device observation pending |
+| **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Go | M4.5 accepted on two devices · signed 0.0.4 published · M5 Voice Core active; calls not yet a released feature |
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Active development |
-| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | R6 resilience/optimization in progress · R6.1–R6.6 complete · R6.7 measurement complete, exit verification pending · unsigned 0.1.0-alpha.1 prerelease |
+| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **[DiskUsage](https://github.com/StanleyLl0yd/disk-usage)** | macOS / SwiftUI | R1–R7 complete · unsigned 0.1.0-alpha.1 still the latest public build · 1.0.0/signing/notarization not selected |
+| **WT** | **[Window Tidy](https://github.com/StanleyLl0yd/WindowTidy)** | Windows 10/11 / C++20 / Win32 | M0 implemented and CI green · interactive GUI acceptance pending · no public release yet |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Prototype |
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | MVP development |
 

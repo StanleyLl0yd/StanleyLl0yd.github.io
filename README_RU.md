@@ -37,10 +37,11 @@
 | | Проект | Платформа | Статус |
 |---|---|---|---|
 | <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | R1 · пре-альфа |
-| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | 0.2.0-alpha.1 опубликован · M3 завершён · M4 Verification Engine в работе |
-| **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Compose | M4.5 · релизный этап активен · подписанный черновик 0.0.1 подготовлен · исправление гонки публикации в main · публикация и приёмка на устройствах впереди · M5 заблокирован |
+| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M4 завершён · полностью автономное Android-приложение без собственного сервера · подписанная 0.3.0-alpha.1 опубликована · продолжительная проверка на устройстве впереди |
+| **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Go | M4.5 принят на двух устройствах · подписанная 0.0.4 опубликована · M5 Voice Core в работе, звонки пока не готовы к релизу |
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Активная разработка |
-| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **DiskUsage** | macOS / SwiftUI | R6 · устойчивость и измеряемая оптимизация в работе · R6.1–R6.6 завершены · измерения R6.7 завершены, ожидается финальная проверка · опубликована неподписанная пре-альфа 0.1.0-alpha.1 |
+| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **[DiskUsage](https://github.com/StanleyLl0yd/disk-usage)** | macOS / SwiftUI | R1–R7 завершены · 0.1.0-alpha.1 остаётся последней публичной неподписанной сборкой · решение о 1.0.0/подписании/нотаризации не принято |
+| **WT** | **[Window Tidy](https://github.com/StanleyLl0yd/WindowTidy)** | Windows 10/11 / C++20 / Win32 | M0 реализован, CI зелёный · ожидается проверка GUI на реальном ПК · публичного релиза ещё нет |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Прототип |
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | Разработка MVP |
 
