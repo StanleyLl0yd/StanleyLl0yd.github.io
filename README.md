@@ -37,11 +37,11 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | | Project | Platform | Status |
 |---|---|---|---|
 | <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | R1 pre-alpha |
-| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M4 complete · Android-only, no proprietary backend · signed 0.3.0-alpha.1 published · extended device observation pending |
+| <img src="./assets/icons/meteoone.webp" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M1–M4 complete · standalone Android, no proprietary backend · signed numeric-only 0.4.0 GitHub test build released · extended device acceptance pending |
 | **kenato** | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Go | M4.5 accepted on two devices · signed 0.0.4 published · M5 Voice Core active; calls not yet a released feature |
 | <img src="./assets/icons/autobook.svg" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Active development |
-| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **[DiskUsage](https://github.com/StanleyLl0yd/disk-usage)** | macOS / SwiftUI | R1–R7 complete · unsigned 0.1.0-alpha.1 still the latest public build · 1.0.0/signing/notarization not selected |
-| **WT** | **[Window Tidy](https://github.com/StanleyLl0yd/WindowTidy)** | Windows 10/11 / C++20 / Win32 | M0 implemented and CI green · interactive GUI acceptance pending · no public release yet |
+| <img src="./assets/icons/disk-usage.svg" width="42" height="42" alt="DiskUsage"> | **[DiskUsage](https://github.com/StanleyLl0yd/disk-usage)** | macOS / SwiftUI | R1–R7 complete · unsigned numeric-only 0.2.0 test release prepared, not published yet · latest public release 0.1.0-alpha.1 · real-Mac acceptance pending |
+| <img src="./assets/icons/windowtidy.ico" width="42" height="42" alt="Window Tidy"> | **[Window Tidy](https://github.com/StanleyLl0yd/WindowTidy)** | Windows 10/11 / C++20 / Win32 | [0.1.1 released](https://github.com/StanleyLl0yd/WindowTidy/releases/tag/v0.1.1) · portable unsigned EXE · native RU/EN interface · core actions verified, full Windows 10/11 acceptance pending |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Prototype |
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | MVP development |
 
