@@ -31,6 +31,7 @@
 | <img src="./assets/icons/my-cycle.svg" width="42" height="42" alt="My Cycle"> | **[My Cycle](https://stanleyll0yd.github.io/apps/my-cycle/)** | Android | Приватный локальный дневник цикла с объяснимыми оценками и локальными отчётами |
 | <img src="./assets/icons/biorhythms.png" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Классические биоритмы, интерактивный график и виджет |
 | <img src="./assets/icons/everon.webp" width="42" height="42" alt="Everon"> | **[Everon](https://stanleyll0yd.github.io/apps/everon/)** | Windows x64 | Лёгкая утилита в системном трее для предотвращения автоматического сна |
+| <img src="./assets/icons/refresh-all-tabs-symbol.svg" width="42" height="42" alt="Символ обновления"> | **[Refresh All Tabs](https://stanleyll0yd.github.io/apps/refresh-all-tabs/)** | Chrome / Edge / Chromium | Готовое расширение v1.9 с четырьмя режимами, таймером и исключениями сайтов; [официальный ZIP на GitHub](https://github.com/StanleyLl0yd/RefreshAllTabs/releases/tag/v1.9), установка через режим разработчика |
 
 ## В разработке
 
@@ -44,7 +45,6 @@
 | <img src="./assets/icons/windowtidy.ico" width="42" height="42" alt="Window Tidy"> | **[Window Tidy](https://github.com/StanleyLl0yd/WindowTidy)** | Windows 10/11 / C++20 / Win32 | [Версия 0.1.1 опубликована](https://github.com/StanleyLl0yd/WindowTidy/releases/tag/v0.1.1) · переносимый неподписанный EXE · интерфейс RU/EN · основные функции проверены, полная приёмка Windows 10/11 продолжается |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Прототип |
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | Разработка MVP |
-| **↻** | **[Refresh All Tabs](https://github.com/StanleyLl0yd/RefreshAllTabs)** | Chrome / Edge / Chromium | [ZIP-релиз 1.9 на GitHub](https://github.com/StanleyLl0yd/RefreshAllTabs/releases/tag/v1.9) · Manifest V3, четыре режима, исключения сайтов · установка распакованного расширения через режим разработчика · приёмка в Comet впереди |
 
 ## Принципы продуктов
 
