@@ -194,6 +194,31 @@
         {"src": "/assets/screenshots/everon/02-tray-menu.png", "label": "Tray menu"},
         {"src": "/assets/screenshots/everon/03-about.png", "label": "About"}
       ]
+    },
+    {
+      "id": "refresh-all-tabs",
+      "name": "Refresh All Tabs",
+      "localizedName": {"en": "Refresh All Tabs", "ru": "Refresh All Tabs"},
+      "type": "app",
+      "currentVersion": "1.9",
+      "platform": "Chromium-based browsers",
+      "minimumOs": null,
+      "productPath": "/apps/refresh-all-tabs/",
+      "packageId": null,
+      "rustoreUrl": null,
+      "repoUrl": "https://github.com/StanleyLl0yd/RefreshAllTabs",
+      "releaseUrl": "https://github.com/StanleyLl0yd/RefreshAllTabs/releases/tag/v1.9",
+      "downloads": ["https://github.com/StanleyLl0yd/RefreshAllTabs/releases/download/v1.9/RefreshAllTabs.1.9.zip"],
+      "icon": "/assets/icons/refresh-all-tabs-symbol.svg",
+      "socialImage": null,
+      "privacyPath": null,
+      "status": "released",
+      "screenshots": [],
+      "plannedScreenshots": [
+        "Real extension options showing refresh modes and timer",
+        "Real domain-exclusion list and validation feedback",
+        "Real installed extension toolbar or context-menu behavior"
+      ]
     }
   ]
 }
