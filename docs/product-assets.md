@@ -77,6 +77,18 @@ The product repository already contains a deterministic real-UI screenshot workf
 3. `03-power-settings`.
 4. `04-language`.
 
+### Refresh All Tabs
+
+The extension has no approved launcher icon in its source repository. The site's refresh symbol is a neutral, explicitly non-official navigation mark and must not be represented as shipped product artwork. Replace it only when the project provides an approved icon.
+
+Capture real installed-extension UI after manual browser verification, without fabricating a screenshot:
+
+1. `01-options`: actual extension options, selected mode and timer.
+2. `02-exclusions`: real website-exclusion editor and its validation feedback.
+3. `03-browser-use`: installed extension toolbar or context menu.
+
+Do not imply browser-store publication; version 1.9 is an unpacked GitHub ZIP release.
+
 ## Social cards
 
 Do not use product screenshots as an improvised 1200×630 card. Prepare deliberate local artwork with product icon, name, one short value statement and a calm brand background.
