@@ -198,6 +198,7 @@
     {
       "id": "refresh-all-tabs",
       "name": "Refresh All Tabs",
+      "lastmod": "2026-10-14",
       "localizedName": {"en": "Refresh All Tabs", "ru": "Refresh All Tabs"},
       "type": "app",
       "currentVersion": "1.9",
