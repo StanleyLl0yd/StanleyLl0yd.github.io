@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title id="title">Neutral refresh symbol for Refresh All Tabs, not an official extension icon</title>
+  <rect width="96" height="96" rx="22" fill="#152a40"/>
+  <path d="M71 35a26 26 0 0 0-43-8l-5 6m0-12v12h12M25 61a26 26 0 0 0 43 8l5-6m0 12V63H61" fill="none" stroke="#b7e4ff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

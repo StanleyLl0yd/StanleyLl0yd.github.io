@@ -91,7 +91,7 @@ def public_routes(data: dict) -> list[tuple[str, str, str]]:
     default_lastmod = data["lastReviewed"]
     routes: list[tuple[str, str, str]] = [("/", "1.0", data.get("homepageLastmod", default_lastmod))]
     for product in data["released"]:
-        routes.append((product["productPath"], "0.9", default_lastmod))
+        routes.append((product["productPath"], "0.9", product.get("lastmod", default_lastmod)))
         if product.get("privacyPath"):
             routes.append((product["privacyPath"], "0.6", default_lastmod))
     for indexed in data.get("indexedRoutes", []):

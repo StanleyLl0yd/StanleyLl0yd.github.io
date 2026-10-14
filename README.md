@@ -31,6 +31,7 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | <img src="./assets/icons/my-cycle.svg" width="42" height="42" alt="My Cycle"> | **[My Cycle](https://stanleyll0yd.github.io/apps/my-cycle/)** | Android | Private local-first cycle diary with explainable estimates and local reporting |
 | <img src="./assets/icons/biorhythms.png" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Classic cycles, interactive chart and widget |
 | <img src="./assets/icons/everon.webp" width="42" height="42" alt="Everon"> | **[Everon](https://stanleyll0yd.github.io/apps/everon/)** | Windows x64 | Lightweight keep-awake tray utility |
+| <img src="./assets/icons/refresh-all-tabs-symbol.svg" width="42" height="42" alt="Neutral refresh symbol"> | **[Refresh All Tabs](https://stanleyll0yd.github.io/apps/refresh-all-tabs/)** | Chrome / Edge / Chromium | Released v1.9 browser extension with four refresh modes, timers and website exclusions; [official GitHub ZIP](https://github.com/StanleyLl0yd/RefreshAllTabs/releases/tag/v1.9), installed via Developer mode |
 
 ## In development
 
@@ -44,7 +45,6 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | <img src="./assets/icons/windowtidy.ico" width="42" height="42" alt="Window Tidy"> | **[Window Tidy](https://github.com/StanleyLl0yd/WindowTidy)** | Windows 10/11 / C++20 / Win32 | [0.1.1 released](https://github.com/StanleyLl0yd/WindowTidy/releases/tag/v0.1.1) · portable unsigned EXE · native RU/EN interface · core actions verified, full Windows 10/11 acceptance pending |
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Prototype |
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | MVP development |
-| **↻** | **[Refresh All Tabs](https://github.com/StanleyLl0yd/RefreshAllTabs)** | Chrome / Edge / Chromium | [1.9 GitHub ZIP release](https://github.com/StanleyLl0yd/RefreshAllTabs/releases/tag/v1.9) · Manifest V3, four refresh modes, website exclusions · unpacked developer-mode install · Comet device acceptance pending |
 
 ## Product principles
 
