@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "siteOrigin": "https://stanleyll0yd.github.io",
-  "lastReviewed": "2026-09-18",
-  "homepageLastmod": "2026-10-14",
+  "lastReviewed": "2026-10-22",
+  "homepageLastmod": "2026-10-22",
   "indexedRoutes": [
     {
       "path": "/tools/suno/",
@@ -96,18 +96,18 @@
       "name": "Password Generator",
       "localizedName": {"en": "Password Generator", "ru": "Генератор паролей"},
       "type": "app",
-      "currentVersion": "1.6.1",
+      "currentVersion": "1.6.2",
       "platform": "Android / Windows / macOS",
       "minimumOs": "Android 8+ / Windows 10+ / macOS 13+",
       "productPath": "/apps/password-generator/",
       "packageId": "com.sl.passwordgenerator",
       "rustoreUrl": "https://www.rustore.ru/catalog/app/com.sl.passwordgenerator",
       "repoUrl": "https://github.com/StanleyLl0yd/password-generator",
-      "releaseUrl": "https://github.com/StanleyLl0yd/password-generator/releases/tag/v1.6.1",
+      "releaseUrl": "https://github.com/StanleyLl0yd/password-generator/releases/tag/v1.6.2",
       "downloads": [
-        "https://github.com/StanleyLl0yd/password-generator/releases/download/v1.6.1/password-generator-1.6.1-android.apk",
-        "https://github.com/StanleyLl0yd/password-generator/releases/download/v1.6.1/password-generator-1.6.1-windows-x64.exe",
-        "https://github.com/StanleyLl0yd/password-generator/releases/download/v1.6.1/password-generator-1.6.1-macos-universal.dmg"
+        "https://github.com/StanleyLl0yd/password-generator/releases/download/v1.6.2/password-generator-1.6.2-android.apk",
+        "https://github.com/StanleyLl0yd/password-generator/releases/download/v1.6.2/password-generator-1.6.2-windows-x64.exe",
+        "https://github.com/StanleyLl0yd/password-generator/releases/download/v1.6.2/password-generator-1.6.2-macos-universal.dmg"
       ],
       "icon": "/assets/icons/password-generator.webp",
       "socialImage": null,
