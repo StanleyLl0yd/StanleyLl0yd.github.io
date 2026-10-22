@@ -40,11 +40,28 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | <img src="./assets/icons/reruna.png" width="42" height="42" alt="RERUNA"> | **[RERUNA](https://github.com/StanleyLl0yd/reruna)** | Android / Kotlin / Compose | R1 pre-alpha |
 | <img src="./assets/icons/meteoone.png" width="42" height="42" alt="MeteoOne"> | **[MeteoOne](https://github.com/StanleyLl0yd/meteoone)** | Android / Kotlin / Compose | M1–M4 complete · [signed 0.4.1 diagnostic GitHub test release](https://github.com/StanleyLl0yd/meteoone/releases/tag/v0.4.1) · manual, privacy-safe on-device reporting · independent physical ARM64 device acceptance pending · no proprietary backend |
 | <img src="./assets/icons/kenato.png" width="42" height="42" alt="Kenato"> | **[Kenato](https://github.com/StanleyLl0yd/kenato)** | Android / Kotlin / Go | M4.5 accepted on two devices · signed 0.0.4 published · M5 Voice Core active; calls not yet a released feature |
-| <img src="./assets/icons/autobook.png" width="42" height="42" alt="AutoBook"> | **AutoBook** | Android / Flutter | Active development |
-| <img src="./assets/icons/disk-usage.png" width="42" height="42" alt="DiskUsage"> | **[DiskUsage](https://github.com/StanleyLl0yd/disk-usage)** | macOS / SwiftUI | R1–R7 complete · [unsigned 0.2.0 GitHub test release](https://github.com/StanleyLl0yd/disk-usage/releases/tag/v0.2.0) published (universal ZIP + DMG, macOS 14+) · real-Mac acceptance and notarization pending |
+| <img src="./assets/icons/autobook.png" width="42" height="42" alt="AutoBook"> | **[AutoBook](https://github.com/StanleyLl0yd/autobook)** | Android / Flutter | Active development |
+| <img src="./assets/icons/disk-usage.png" width="42" height="42" alt="DiskUsage"> | **[DiskUsage](https://github.com/StanleyLl0yd/disk-usage)** | macOS / SwiftUI | R1–R7 complete · [unsigned 0.2.1 GitHub test release](https://github.com/StanleyLl0yd/disk-usage/releases/tag/v0.2.1) published (universal ZIP + DMG, macOS 14+) · real-Mac acceptance and notarization pending |
 | <img src="./assets/icons/windowtidy.ico" width="42" height="42" alt="Window Tidy"> | **[Window Tidy](https://github.com/StanleyLl0yd/WindowTidy)** | Windows 10/11 / C++20 / Win32 | [0.1.1 released](https://github.com/StanleyLl0yd/WindowTidy/releases/tag/v0.1.1) · portable unsigned EXE · native RU/EN interface · core actions verified, full Windows 10/11 acceptance pending |
-| <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **What Fits?** | Android | Prototype |
+| <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **[What Fits?](https://github.com/StanleyLl0yd/what-fits)** | Android | Prototype |
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | MVP development |
+
+| BE | **[BestShot](https://github.com/StanleyLl0yd/bestshot)** | macOS / Android | Native offline photo-series selector; experimental prototypes, hardware acceptance pending |
+| CO | **[CopyFix](https://github.com/StanleyLl0yd/copyfix)** | Windows / C++20 / Win32 | Portable offline clipboard cleanup; 0.1.0 prototype, interactive Windows acceptance pending |
+| FA | **[FairPrice](https://github.com/StanleyLl0yd/fairprice)** | Android / Kotlin / OCR | Signed 0.1.0-beta.1 GitHub test build; real-label OCR acceptance pending |
+| FO | **[FootballForecast](https://github.com/StanleyLl0yd/FootballForecast)** | Web / Next.js / Python | M0 public preview; site online, historical data and trained forecasts not yet published |
+| PA | **[ParkNote](https://github.com/StanleyLl0yd/parknote)** | Android / Kotlin / Compose | Offline parking-location notes; emulator tests passed, physical-device checks pending |
+| PR | **[Project 77](https://github.com/StanleyLl0yd/project-77)** | Android / Unity / C# | P2 vertical-slice development; playable narrative puzzle adventure under test |
+| RA | **[Rarog](https://github.com/StanleyLl0yd/rarog)** | Rust / Windows-first | Experimental independent Web engine; not yet production browser-compatible |
+| ZO | **[Zorya](https://github.com/StanleyLl0yd/zorya)** | Rust / Windows-first | Experimental desktop browser built on Rarog; not ready for everyday use |
+
+## Research and tooling
+
+| | Project | Area | Status |
+|---|---|---|---|
+| TC | **[Tredecadia](https://github.com/StanleyLl0yd/tredecadia)** | Open calendar standard | Stable v1.0.0 specification, not a calendar app |
+| MK | **[MORPH-KEM](https://github.com/StanleyLl0yd/morph-kem)** | Cryptographic research | Research only, no secure KEM accepted; do not use to protect data |
+| PS | **[PS Toolbox](https://github.com/StanleyLl0yd/ps-toolbox)** | PowerShell | Public collection of practical admin scripts |
 
 ## Product principles
 
