@@ -49,3 +49,7 @@
 @media (max-width:960px){.app-showcase-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.development-grid{grid-template-columns:1fr}}
 @media (max-width:680px){.refresh-app{grid-column:auto;display:flex;min-height:380px}.refresh-app .app-showcase-visual{height:170px;min-height:170px;border-right:0;border-bottom:1px solid color-mix(in srgb,var(--line) 72%,transparent)}.refresh-app .app-showcase-body{padding:25px 26px 26px}.app-showcase-grid{grid-template-columns:1fr}.app-showcase-card{min-height:380px}.app-showcase-visual{height:170px}.app-icon-frame{width:92px;height:92px;border-radius:22px}.app-icon-frame img{width:92px;height:92px;border-radius:22px}.development-intro{align-items:flex-start;flex-direction:column;gap:12px}.development-section{padding:64px 0}.development-card{grid-template-columns:64px minmax(0,1fr) auto;padding:18px;gap:15px}.development-card img{width:64px;height:64px;border-radius:16px}}
 @media (prefers-reduced-motion:reduce){.app-showcase-card,.app-showcase-link b,.app-icon-frame img,.development-card{transition:none!important}}
+
+/* Monogram fallback for projects without a published portfolio icon. */
+.development-mark{display:flex;align-items:center;justify-content:center;width:76px;height:76px;border-radius:18px;background:var(--accent-soft);color:var(--accent);font-size:24px;font-weight:800;letter-spacing:-.04em;border:1px solid var(--line)}
+@media(max-width:640px){.development-mark{width:64px;height:64px;border-radius:16px;font-size:20px}}
