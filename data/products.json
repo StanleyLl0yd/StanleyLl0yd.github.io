@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "siteOrigin": "https://stanleyll0yd.github.io",
-  "lastReviewed": "2026-10-22",
+  "lastReviewed": "2026-09-18",
   "homepageLastmod": "2026-10-22",
   "indexedRoutes": [
     {
@@ -93,6 +93,7 @@
     },
     {
       "id": "password-generator",
+      "lastmod": "2026-10-22",
       "name": "Password Generator",
       "localizedName": {"en": "Password Generator", "ru": "Генератор паролей"},
       "type": "app",
