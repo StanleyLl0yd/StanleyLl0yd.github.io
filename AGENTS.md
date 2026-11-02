@@ -207,6 +207,10 @@ Do not silently redirect visitors through tracking or intermediary services.
 
 When practical, prefer stable product or release pages over fragile temporary asset URLs.
 
+## Owner-controlled portfolio visibility
+
+Do not add FootballForecast, FootClubSim, or OHA to the public portfolio (homepage, product pages, public catalog, or English/Russian READMEs) without a separate, explicit owner instruction authorizing that project. Repository visibility, a working deployment, or a newer release is not authorization. This restriction only concerns their appearance on this portfolio, not the projects themselves.
+
 ## Product-information integrity
 
 Public product information must be truthful and traceable to authoritative project information.
