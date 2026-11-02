@@ -49,7 +49,6 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | BE | **[BestShot](https://github.com/StanleyLl0yd/bestshot)** | macOS / Android | Native offline photo-series selector; experimental prototypes, hardware acceptance pending |
 | CO | **[CopyFix](https://github.com/StanleyLl0yd/copyfix)** | Windows / C++20 / Win32 | Portable offline clipboard cleanup; 0.1.0 prototype, interactive Windows acceptance pending |
 | FA | **[FairPrice](https://github.com/StanleyLl0yd/fairprice)** | Android / Kotlin / OCR | Signed 0.1.0-beta.1 GitHub test build; real-label OCR acceptance pending |
-| FO | **[FootballForecast](https://github.com/StanleyLl0yd/FootballForecast)** | Web / Next.js / Python | M0 public preview; site online, historical data and trained forecasts not yet published |
 | PA | **[ParkNote](https://github.com/StanleyLl0yd/parknote)** | Android / Kotlin / Compose | Offline parking-location notes; emulator tests passed, physical-device checks pending |
 | PR | **[Project 77](https://github.com/StanleyLl0yd/project-77)** | Android / Unity / C# | P2 vertical-slice development; playable narrative puzzle adventure under test |
 | RA | **[Rarog](https://github.com/StanleyLl0yd/rarog)** | Rust / Windows-first | Experimental independent Web engine; not yet production browser-compatible |
