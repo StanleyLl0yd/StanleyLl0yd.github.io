@@ -27,6 +27,7 @@
 | <img src="./assets/icons/impulse.png" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Авторская игра о цепной реакции, управляемая одним касанием |
 | <img src="./assets/icons/infinite-five.webp" width="42" height="42" alt="Infinite Five"> | **[Infinite Five](https://stanleyll0yd.github.io/apps/infinite-five/)** | Web / Native | Пять в ряд на практически бесконечном поле |
 | <img src="./assets/icons/dots.png" width="42" height="42" alt="Точки"> | **[Точки](https://stanleyll0yd.github.io/apps/dots/)** | Web / Native | Стабильная кроссплатформенная версия классической игры с общим Rust-ядром |
+| <img src="./assets/icons/seabattle.svg" width="42" height="42" alt="Иконка SeaBattle"> | **[Морской бой / SeaBattle](https://stanleyll0yd.github.io/apps/sea-battle/)** | Web / PWA | [v1.2.0](https://github.com/StanleyLl0yd/SeaBattle/releases/tag/v1.2.0) · 19 рангов ИИ · ежедневные испытания · серии из трёх боёв · офлайн после загрузки PWA |
 | <img src="./assets/icons/password-generator.webp" width="42" height="42" alt="Password Generator"> | **[Password Generator](https://stanleyll0yd.github.io/apps/password-generator/)** | Android / Windows / macOS | Нативная офлайн-генерация паролей и оценка их стойкости |
 | <img src="./assets/icons/my-cycle.svg" width="42" height="42" alt="My Cycle"> | **[My Cycle](https://stanleyll0yd.github.io/apps/my-cycle/)** | Android | Приватный локальный дневник цикла с объяснимыми оценками и локальными отчётами |
 | <img src="./assets/icons/biorhythms.png" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Классические биоритмы, интерактивный график и виджет |
@@ -47,18 +48,18 @@
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | Разработка MVP |
 
 | BE | **[BestShot](https://github.com/StanleyLl0yd/bestshot)** | macOS / Android | Нативный офлайн-выбор кадров; экспериментальные прототипы, приёмка на устройствах впереди |
-| CO | **[CopyFix](https://github.com/StanleyLl0yd/copyfix)** | Windows / C++20 / Win32 | Портативная офлайн-очистка текста из буфера; прототип 0.1.0, приёмка интерфейса впереди |
+| CO | **[CopyFix](https://github.com/StanleyLl0yd/copyfix)** | Windows / C++20 / Win32 | Портативная офлайн-очистка текста; прототип 0.1.0, ручная приёмка 15/15 PASS; впереди чистые Windows 10/11 и релиз 1.0 |
 | FA | **[FairPrice](https://github.com/StanleyLl0yd/fairprice)** | Android / Kotlin / OCR | Подписанная тестовая бета 0.1.0-beta.1 на GitHub; качество OCR реальных ценников ещё проверяется |
 | PA | **[ParkNote](https://github.com/StanleyLl0yd/parknote)** | Android / Kotlin / Compose | Офлайн-заметки о парковке; тесты эмулятора пройдены, приёмка на устройствах впереди |
 | PR | **[Project 77](https://github.com/StanleyLl0yd/project-77)** | Android / Unity / C# | Разработка вертикального среза P2 сюжетной игры с головоломками |
-| RA | **[Rarog](https://github.com/StanleyLl0yd/rarog)** | Rust / Windows | Экспериментальный независимый веб-движок; не готов для повседневного веба |
-| ZO | **[Zorya](https://github.com/StanleyLl0yd/zorya)** | Rust / Windows | Экспериментальный браузер на базе Rarog; не готов для повседневного использования |
+| RA | **[Rarog](https://github.com/StanleyLl0yd/rarog)** | Rust / Windows | R0–R5 завершены, R6 проверяет совместимость; экспериментальный веб-движок, не готов к повседневному использованию |
+| ZO | **[Zorya](https://github.com/StanleyLl0yd/zorya)** | Rust / Windows | Z0–Z3 завершены; доступна неподписанная тестовая версия v0.1.0, не готов для повседневной работы |
 
 ## Исследования и инструменты
 
 | | Проект | Область | Состояние |
 |---|---|---|---|
-| TC | **[Tredecadia](https://github.com/StanleyLl0yd/tredecadia)** | Открытый календарный стандарт | Стабильная спецификация v1.0.0, а не приложение |
+| TC | **[Tredecadia](https://github.com/StanleyLl0yd/tredecadia)** | Открытый календарный стандарт | Стабильная спецификация v1.0.0, опубликована предварительная v1.1.0-rc.1; не приложение-календарь |
 | MK | **[MORPH-KEM](https://github.com/StanleyLl0yd/morph-kem)** | Исследования криптографии | Только исследование, безопасный KEM не подтверждён; не использовать для защиты данных |
 | PS | **[PS Toolbox](https://github.com/StanleyLl0yd/ps-toolbox)** | PowerShell | Публичная коллекция скриптов для администрирования |
 
