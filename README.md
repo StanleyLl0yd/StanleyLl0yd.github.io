@@ -48,7 +48,7 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | MVP development |
 
 | BE | **[BestShot](https://github.com/StanleyLl0yd/bestshot)** | macOS / Android | Native offline photo-series selector; experimental prototypes, hardware acceptance pending |
-| <img src="./assets/icons/copyfix.ico" width="42" height="42" alt="CopyFix official icon"> | **[CopyFix](https://github.com/StanleyLl0yd/copyfix)** | Windows / C++20 / Win32 | Portable offline clipboard cleanup; 0.1.0 prototype, 15/15 reported functional/UX acceptance checks passed; Windows 10/11 clean-system verification and 1.0 release pending |
+| <img src="./assets/icons/copyfix.ico" width="42" height="42" alt="CopyFix official icon"> | **[CopyFix](https://stanleyll0yd.github.io/apps/copyfix/)** | Windows / C++20 / Win32 | Portable offline clipboard cleanup, 3 profiles and reviewable preview; 0.1.0 prototype with 15/15 owner-reported checks PASS, Windows 1.0 release pending |
 | FA | **[FairPrice](https://github.com/StanleyLl0yd/fairprice)** | Android / Kotlin / OCR | Signed 0.1.0-beta.1 GitHub test build; real-label OCR acceptance pending |
 | PA | **[ParkNote](https://github.com/StanleyLl0yd/parknote)** | Android / Kotlin / Compose | Offline parking-location notes; emulator tests passed, physical-device checks pending |
 | PR | **[Project 77](https://github.com/StanleyLl0yd/project-77)** | Android / Unity / C# | P2 vertical-slice development; playable narrative puzzle adventure under test |

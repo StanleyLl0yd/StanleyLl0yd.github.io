@@ -48,7 +48,7 @@
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | Разработка MVP |
 
 | BE | **[BestShot](https://github.com/StanleyLl0yd/bestshot)** | macOS / Android | Нативный офлайн-выбор кадров; экспериментальные прототипы, приёмка на устройствах впереди |
-| <img src="./assets/icons/copyfix.ico" width="42" height="42" alt="Официальная иконка CopyFix"> | **[CopyFix](https://github.com/StanleyLl0yd/copyfix)** | Windows / C++20 / Win32 | Портативная офлайн-очистка текста; прототип 0.1.0, ручная приёмка 15/15 PASS; впереди чистые Windows 10/11 и релиз 1.0 |
+| <img src="./assets/icons/copyfix.ico" width="42" height="42" alt="Официальная иконка CopyFix"> | **[CopyFix](https://stanleyll0yd.github.io/apps/copyfix/)** | Windows / C++20 / Win32 | Портативная офлайн-очистка текста, 3 режима и предпросмотр; прототип 0.1.0, ручная приёмка 15/15 PASS, официальный релиз Windows 1.0 ожидается |
 | FA | **[FairPrice](https://github.com/StanleyLl0yd/fairprice)** | Android / Kotlin / OCR | Подписанная тестовая бета 0.1.0-beta.1 на GitHub; качество OCR реальных ценников ещё проверяется |
 | PA | **[ParkNote](https://github.com/StanleyLl0yd/parknote)** | Android / Kotlin / Compose | Офлайн-заметки о парковке; тесты эмулятора пройдены, приёмка на устройствах впереди |
 | PR | **[Project 77](https://github.com/StanleyLl0yd/project-77)** | Android / Unity / C# | Разработка вертикального среза P2 сюжетной игры с головоломками |
