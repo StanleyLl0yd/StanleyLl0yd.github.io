@@ -27,6 +27,7 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | <img src="./assets/icons/impulse.png" width="42" height="42" alt="IMPULSE"> | **[IMPULSE](https://stanleyll0yd.github.io/apps/impulse/)** | Android | Original one-tap chain-reaction game |
 | <img src="./assets/icons/infinite-five.webp" width="42" height="42" alt="Infinite Five"> | **[Infinite Five](https://stanleyll0yd.github.io/apps/infinite-five/)** | Web / Native | Five in a row on an effectively infinite board |
 | <img src="./assets/icons/dots.png" width="42" height="42" alt="Dots"> | **[Dots](https://stanleyll0yd.github.io/apps/dots/)** | Web / Native | Stable cross-platform classic territory game with a shared Rust core |
+| <img src="./assets/icons/seabattle.svg" width="42" height="42" alt="SeaBattle official icon"> | **[SeaBattle](https://stanleyll0yd.github.io/apps/sea-battle/)** | Web / PWA | [v1.2.0](https://github.com/StanleyLl0yd/SeaBattle/releases/tag/v1.2.0) · classic naval game · 19 AI ranks · daily challenge · three-battle series · offline after PWA cache |
 | <img src="./assets/icons/password-generator.webp" width="42" height="42" alt="Password Generator"> | **[Password Generator](https://stanleyll0yd.github.io/apps/password-generator/)** | Android / Windows / macOS | Offline native password generation and strength analysis |
 | <img src="./assets/icons/my-cycle.svg" width="42" height="42" alt="My Cycle"> | **[My Cycle](https://stanleyll0yd.github.io/apps/my-cycle/)** | Android | Private local-first cycle diary with explainable estimates and local reporting |
 | <img src="./assets/icons/biorhythms.png" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Classic cycles, interactive chart and widget |
@@ -47,18 +48,18 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | <img src="./assets/icons/watchrelay.svg" width="42" height="42" alt="WatchRelay"> | **WatchRelay** | Android / Android TV | MVP development |
 
 | BE | **[BestShot](https://github.com/StanleyLl0yd/bestshot)** | macOS / Android | Native offline photo-series selector; experimental prototypes, hardware acceptance pending |
-| CO | **[CopyFix](https://github.com/StanleyLl0yd/copyfix)** | Windows / C++20 / Win32 | Portable offline clipboard cleanup; 0.1.0 prototype, interactive Windows acceptance pending |
+| CO | **[CopyFix](https://github.com/StanleyLl0yd/copyfix)** | Windows / C++20 / Win32 | Portable offline clipboard cleanup; 0.1.0 prototype, 15/15 reported functional/UX acceptance checks passed; Windows 10/11 clean-system verification and 1.0 release pending |
 | FA | **[FairPrice](https://github.com/StanleyLl0yd/fairprice)** | Android / Kotlin / OCR | Signed 0.1.0-beta.1 GitHub test build; real-label OCR acceptance pending |
 | PA | **[ParkNote](https://github.com/StanleyLl0yd/parknote)** | Android / Kotlin / Compose | Offline parking-location notes; emulator tests passed, physical-device checks pending |
 | PR | **[Project 77](https://github.com/StanleyLl0yd/project-77)** | Android / Unity / C# | P2 vertical-slice development; playable narrative puzzle adventure under test |
-| RA | **[Rarog](https://github.com/StanleyLl0yd/rarog)** | Rust / Windows-first | Experimental independent Web engine; not yet production browser-compatible |
-| ZO | **[Zorya](https://github.com/StanleyLl0yd/zorya)** | Rust / Windows-first | Experimental desktop browser built on Rarog; not ready for everyday use |
+| RA | **[Rarog](https://github.com/StanleyLl0yd/rarog)** | Rust / Windows-first | R0–R5 completed; R6 compatibility evidence in progress. Experimental independent Web engine, not ready for production browsing |
+| ZO | **[Zorya](https://github.com/StanleyLl0yd/zorya)** | Rust / Windows-first | Z0–Z3 completed; unsigned v0.1.0 Technical Preview available, not ready for everyday browsing |
 
 ## Research and tooling
 
 | | Project | Area | Status |
 |---|---|---|---|
-| TC | **[Tredecadia](https://github.com/StanleyLl0yd/tredecadia)** | Open calendar standard | Stable v1.0.0 specification, not a calendar app |
+| TC | **[Tredecadia](https://github.com/StanleyLl0yd/tredecadia)** | Open calendar standard | Stable v1.0.0 specification; v1.1.0-rc.1 prerelease published, not a calendar app |
 | MK | **[MORPH-KEM](https://github.com/StanleyLl0yd/morph-kem)** | Cryptographic research | Research only, no secure KEM accepted; do not use to protect data |
 | PS | **[PS Toolbox](https://github.com/StanleyLl0yd/ps-toolbox)** | PowerShell | Public collection of practical admin scripts |
 
