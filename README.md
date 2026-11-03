@@ -33,7 +33,6 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | <img src="./assets/icons/biorhythms.png" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Classic cycles, interactive chart and widget |
 | <img src="./assets/icons/everon.webp" width="42" height="42" alt="Everon"> | **[Everon](https://stanleyll0yd.github.io/apps/everon/)** | Windows x64 | Lightweight keep-awake tray utility |
 | <img src="./assets/icons/refresh-all-tabs-symbol.svg" width="42" height="42" alt="Neutral refresh symbol"> | **[Refresh All Tabs](https://stanleyll0yd.github.io/apps/refresh-all-tabs/)** | Chrome / Edge / Chromium | Released v1.9 browser extension with four refresh modes, timers and website exclusions; [official GitHub ZIP](https://github.com/StanleyLl0yd/RefreshAllTabs/releases/tag/v1.9), installed via Developer mode |
-
 | <img src="./assets/icons/copyfix.ico" width="42" height="42" alt="CopyFix official icon"> | **[CopyFix](https://stanleyll0yd.github.io/apps/copyfix/)** | Windows 10/11 x64 / C++20 / Win32 | [Official v1.0.0 release](https://github.com/StanleyLl0yd/copyfix/releases/tag/v1.0.0) · offline portable unsigned EXE · 3 profiles · reviewable preview · manual Windows acceptance PASS · exact-main CI 9/9 Windows and 3/3 Clang PASS |
 
 ## In development
