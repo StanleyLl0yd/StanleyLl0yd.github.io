@@ -43,3 +43,9 @@ a.related-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .game-art.sea-battle-art{background:radial-gradient(circle at 50% 45%,rgba(64,223,232,.2),transparent 52%),repeating-linear-gradient(0deg,transparent 0 35px,rgba(90,177,199,.12) 35px 36px),repeating-linear-gradient(90deg,transparent 0 35px,rgba(90,177,199,.12) 35px 36px),#082c45;border-color:rgba(120,218,233,.2)}
 .game-art.sea-battle-art::before{content:none}
 @media (max-width:720px){.showcase-grid .showcase-card{grid-column:1/-1}}
+
+/* CopyFix product page: approved native icon, no fabricated product screenshots. */
+.game-art.copyfix-art{background:radial-gradient(circle at 50% 42%,rgba(87,219,148,.25),transparent 39%),radial-gradient(circle at 24% 24%,rgba(46,177,255,.2),transparent 38%),linear-gradient(145deg,#051e45,#0b4da8);border-color:rgba(35,151,243,.34)}
+.copyfix-art .art-center::before{content:"";position:absolute;width:270px;height:270px;border:1px solid rgba(145,214,255,.22);border-radius:50%;box-shadow:0 0 0 45px rgba(56,189,248,.05),0 0 0 90px rgba(37,211,132,.035)}
+.copyfix-art .art-center img{width:144px;height:144px;border-radius:31px;object-fit:cover}
+.copyfix-release-note{max-width:730px;margin:16px 0 0;padding:12px 15px;border-left:3px solid var(--accent);border-radius:0 12px 12px 0;background:var(--accent-soft);font-size:13px;line-height:1.55;color:var(--muted)}
