@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "siteOrigin": "https://stanleyll0yd.github.io",
   "lastReviewed": "2026-09-18",
-  "homepageLastmod": "2026-11-02",
+  "homepageLastmod": "2026-11-03",
   "indexedRoutes": [
     {
       "path": "/tools/suno/",
@@ -89,6 +89,32 @@
         {"src": "/assets/screenshots/dots/game-capture.webp", "label": "Gameplay and capture"},
         {"src": "/assets/screenshots/dots/vs-computer.webp", "label": "Vs computer"},
         {"src": "/assets/screenshots/dots/local-play.webp", "label": "Local play"}
+      ]
+    },
+    {
+      "id": "sea-battle",
+      "lastmod": "2026-11-03",
+      "name": "SeaBattle",
+      "localizedName": {"en": "SeaBattle", "ru": "Морской бой"},
+      "type": "game",
+      "currentVersion": "1.2.0",
+      "platform": "Web / PWA",
+      "minimumOs": null,
+      "productPath": "/apps/sea-battle/",
+      "packageId": null,
+      "rustoreUrl": null,
+      "repoUrl": "https://github.com/StanleyLl0yd/SeaBattle",
+      "releaseUrl": "https://github.com/StanleyLl0yd/SeaBattle/releases/tag/v1.2.0",
+      "downloads": [],
+      "icon": "/assets/icons/seabattle.svg",
+      "socialImage": null,
+      "privacyPath": null,
+      "status": "released",
+      "screenshots": [],
+      "plannedScreenshots": [
+        "Real naval battle in progress with ships and shot markers",
+        "Real daily challenge result showing first-attempt and practice scores",
+        "Real personal statistics and three-battle series results"
       ]
     },
     {
