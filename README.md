@@ -34,6 +34,8 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | <img src="./assets/icons/everon.webp" width="42" height="42" alt="Everon"> | **[Everon](https://stanleyll0yd.github.io/apps/everon/)** | Windows x64 | Lightweight keep-awake tray utility |
 | <img src="./assets/icons/refresh-all-tabs-symbol.svg" width="42" height="42" alt="Neutral refresh symbol"> | **[Refresh All Tabs](https://stanleyll0yd.github.io/apps/refresh-all-tabs/)** | Chrome / Edge / Chromium | Released v1.9 browser extension with four refresh modes, timers and website exclusions; [official GitHub ZIP](https://github.com/StanleyLl0yd/RefreshAllTabs/releases/tag/v1.9), installed via Developer mode |
 
+| <img src="./assets/icons/copyfix.ico" width="42" height="42" alt="CopyFix official icon"> | **[CopyFix](https://stanleyll0yd.github.io/apps/copyfix/)** | Windows 10/11 x64 / C++20 / Win32 | [Official v1.0.0 release](https://github.com/StanleyLl0yd/copyfix/releases/tag/v1.0.0) · offline portable unsigned EXE · 3 profiles · reviewable preview · manual Windows acceptance PASS · exact-main CI 9/9 Windows and 3/3 Clang PASS |
+
 ## In development
 
 | | Project | Platform | Status |
@@ -47,7 +49,6 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **[What Fits?](https://github.com/StanleyLl0yd/what-fits)** | Android | Prototype |
 
 | BE | **[BestShot](https://github.com/StanleyLl0yd/bestshot)** | macOS / Android | Native offline photo-series selector; experimental prototypes, hardware acceptance pending |
-| <img src="./assets/icons/copyfix.ico" width="42" height="42" alt="CopyFix official icon"> | **[CopyFix](https://stanleyll0yd.github.io/apps/copyfix/)** | Windows / C++20 / Win32 | Portable offline clipboard cleanup, 3 profiles and reviewable preview; 0.1.0 prototype with 15/15 owner-reported checks PASS, Windows 1.0 release pending |
 | FA | **[FairPrice](https://github.com/StanleyLl0yd/fairprice)** | Android / Kotlin / OCR | Signed 0.1.0-beta.1 GitHub test build; real-label OCR acceptance pending |
 | PA | **[ParkNote](https://github.com/StanleyLl0yd/parknote)** | Android / Kotlin / Compose | Offline parking-location notes; emulator tests passed, physical-device checks pending |
 | PR | **[Project 77](https://github.com/StanleyLl0yd/project-77)** | Android / Unity / C# | P2 vertical-slice development; playable narrative puzzle adventure under test |
