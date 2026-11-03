@@ -33,6 +33,7 @@
 | <img src="./assets/icons/biorhythms.png" width="42" height="42" alt="Biorhythms"> | **[Biorhythms](https://stanleyll0yd.github.io/apps/biorhythms/)** | Android | Классические биоритмы, интерактивный график и виджет |
 | <img src="./assets/icons/everon.webp" width="42" height="42" alt="Everon"> | **[Everon](https://stanleyll0yd.github.io/apps/everon/)** | Windows x64 | Лёгкая утилита в системном трее для предотвращения автоматического сна |
 | <img src="./assets/icons/refresh-all-tabs-symbol.svg" width="42" height="42" alt="Символ обновления"> | **[Refresh All Tabs](https://stanleyll0yd.github.io/apps/refresh-all-tabs/)** | Chrome / Edge / Chromium | Готовое расширение v1.9 с четырьмя режимами, таймером и исключениями сайтов; [официальный ZIP на GitHub](https://github.com/StanleyLl0yd/RefreshAllTabs/releases/tag/v1.9), установка через режим разработчика |
+| <img src="./assets/icons/copyfix.ico" width="42" height="42" alt="Официальная иконка CopyFix"> | **[CopyFix](https://stanleyll0yd.github.io/apps/copyfix/)** | Windows 10/11 x64 / C++20 / Win32 | [Официальный релиз v1.0.0](https://github.com/StanleyLl0yd/copyfix/releases/tag/v1.0.0) · портативный неподписанный EXE · 3 режима очистки · предпросмотр и отмена · ручная приёмка PASS · 9/9 Windows и 3/3 Clang CI PASS |
 
 ## В разработке
 
@@ -47,7 +48,6 @@
 | <img src="./assets/icons/what-fits.svg" width="42" height="42" alt="What Fits?"> | **[What Fits?](https://github.com/StanleyLl0yd/what-fits)** | Android | Прототип |
 
 | BE | **[BestShot](https://github.com/StanleyLl0yd/bestshot)** | macOS / Android | Нативный офлайн-выбор кадров; экспериментальные прототипы, приёмка на устройствах впереди |
-| <img src="./assets/icons/copyfix.ico" width="42" height="42" alt="Официальная иконка CopyFix"> | **[CopyFix](https://stanleyll0yd.github.io/apps/copyfix/)** | Windows / C++20 / Win32 | Портативная офлайн-очистка текста, 3 режима и предпросмотр; прототип 0.1.0, ручная приёмка 15/15 PASS, официальный релиз Windows 1.0 ожидается |
 | FA | **[FairPrice](https://github.com/StanleyLl0yd/fairprice)** | Android / Kotlin / OCR | Подписанная тестовая бета 0.1.0-beta.1 на GitHub; качество OCR реальных ценников ещё проверяется |
 | PA | **[ParkNote](https://github.com/StanleyLl0yd/parknote)** | Android / Kotlin / Compose | Офлайн-заметки о парковке; тесты эмулятора пройдены, приёмка на устройствах впереди |
 | PR | **[Project 77](https://github.com/StanleyLl0yd/project-77)** | Android / Unity / C# | Разработка вертикального среза P2 сюжетной игры с головоломками |
