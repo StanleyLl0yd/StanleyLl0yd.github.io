@@ -267,7 +267,12 @@
       "socialImage": null,
       "privacyPath": null,
       "status": "released",
-      "screenshots": []
+      "screenshots": [],
+      "plannedScreenshots": [
+        "Real Windows 10/11 tray menu showing the active cleaning profile and hotkey",
+        "Real two-column RichEdit preview with an ambiguous PDF text join highlighted",
+        "Real CopyFix About and options dialogs displaying version 1.0.0 and registry-backed settings"
+      ]
     }
   ]
 }
