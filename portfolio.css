@@ -1,4 +1,4 @@
-@import url("/portfolio-base.css");
+@import url("/portfolio-base.css?v=20261103-gridfix");
 
 /* Dots showcase underlay */
 .showcase-card.dots-card{background:#07112a;color:#f8fafc;border-color:rgba(255,255,255,.09)}
@@ -37,8 +37,7 @@ a.related-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){a.related-card:hover{transform:none}}
 
 /* Four released games use the same responsive geometry and visual alignment. */
-.showcase-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.showcase-grid>.showcase-card{grid-column:auto;min-width:0;min-height:480px}
+.showcase-grid>.showcase-card{min-width:0;min-height:480px}
 .showcase-grid>.showcase-card .showcase-visual{height:218px;min-height:218px;flex:0 0 218px}
 .showcase-grid>.showcase-card .showcase-body{display:flex;flex:1;flex-direction:column;margin-top:0}
 .showcase-grid>.showcase-card .showcase-foot{margin-top:auto;padding-top:18px}
@@ -46,7 +45,7 @@ a.related-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 .sea-grid-art{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,rgba(64,223,232,.15),transparent 56%),repeating-linear-gradient(0deg,transparent 0 31px,rgba(90,177,199,.12) 31px 32px),repeating-linear-gradient(90deg,transparent 0 31px,rgba(90,177,199,.12) 31px 32px)}
 .game-art.sea-battle-art{background:radial-gradient(circle at 50% 45%,rgba(64,223,232,.2),transparent 52%),repeating-linear-gradient(0deg,transparent 0 35px,rgba(90,177,199,.12) 35px 36px),repeating-linear-gradient(90deg,transparent 0 35px,rgba(90,177,199,.12) 35px 36px),#082c45;border-color:rgba(120,218,233,.2)}
 .game-art.sea-battle-art::before{content:none}
-@media (max-width:720px){.showcase-grid{grid-template-columns:minmax(0,1fr)}.showcase-grid>.showcase-card{min-height:380px}.showcase-grid>.showcase-card .showcase-visual{height:190px;min-height:190px;flex-basis:190px}}
+@media (max-width:720px){.showcase-grid>.showcase-card{min-height:380px}.showcase-grid>.showcase-card .showcase-visual{height:190px;min-height:190px;flex-basis:190px}}
 
 /* CopyFix product page: approved native icon, no fabricated product screenshots. */
 .game-art.copyfix-art{background:radial-gradient(circle at 50% 42%,rgba(87,219,148,.25),transparent 39%),radial-gradient(circle at 24% 24%,rgba(46,177,255,.2),transparent 38%),linear-gradient(145deg,#051e45,#0b4da8);border-color:rgba(35,151,243,.34)}

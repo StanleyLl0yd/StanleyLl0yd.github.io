@@ -21,12 +21,6 @@ html[lang="ru"] #games .collection-head .eyebrow::after{content:"Игры"}
   text-transform:uppercase;
 }
 
-.showcase-card.impulse-card,
-.showcase-card.infinite-card,
-.showcase-card.dots-card{
-  grid-column:span 4;
-  min-height:470px;
-}
 .showcase-visual{
   min-height:220px;
   height:220px;
@@ -38,11 +32,3 @@ html[lang="ru"] #games .collection-head .eyebrow::after{content:"Игры"}
   object-fit:cover;
 }
 
-@media (max-width:960px){
-  .showcase-card.impulse-card,
-  .showcase-card.infinite-card,
-  .showcase-card.dots-card{
-    grid-column:1/-1;
-    min-height:380px;
-  }
-}
