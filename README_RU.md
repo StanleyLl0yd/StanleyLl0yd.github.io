@@ -58,7 +58,7 @@
 
 | | Проект | Область | Состояние |
 |---|---|---|---|
-| TC | **[Tredecadia](https://github.com/StanleyLl0yd/tredecadia)** | Открытый календарный стандарт | Стабильная спецификация v1.0.0, опубликована предварительная v1.1.0-rc.1; не приложение-календарь |
+| TC | **[Tredecadia](https://github.com/StanleyLl0yd/tredecadia)** | Открытый календарный стандарт | [Стабильная v1.1.0](https://github.com/StanleyLl0yd/tredecadia/releases/tag/v1.1.0): девять стабильных профилей отображения месяцев, правила календаря v1 неизменны; это стандарт, не приложение |
 | MK | **[MORPH-KEM](https://github.com/StanleyLl0yd/morph-kem)** | Исследования криптографии | Только исследование, безопасный KEM не подтверждён; не использовать для защиты данных |
 | PS | **[PS Toolbox](https://github.com/StanleyLl0yd/ps-toolbox)** | PowerShell | Публичная коллекция скриптов для администрирования |
 
