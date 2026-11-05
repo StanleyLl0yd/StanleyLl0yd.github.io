@@ -250,19 +250,19 @@
     },
     {
       "id": "copyfix",
-      "lastmod": "2026-11-03",
+      "lastmod": "2026-11-05",
       "name": "CopyFix",
       "localizedName": {"en": "CopyFix", "ru": "CopyFix"},
       "type": "app",
-      "currentVersion": "1.0.0",
+      "currentVersion": "1.1.0",
       "platform": "Windows 10/11 x64",
       "minimumOs": "Windows 10 / 11",
       "productPath": "/apps/copyfix/",
       "packageId": null,
       "rustoreUrl": null,
       "repoUrl": "https://github.com/StanleyLl0yd/copyfix",
-      "releaseUrl": "https://github.com/StanleyLl0yd/copyfix/releases/tag/v1.0.0",
-      "downloads": ["https://github.com/StanleyLl0yd/copyfix/releases/download/v1.0.0/CopyFix.exe"],
+      "releaseUrl": "https://github.com/StanleyLl0yd/copyfix/releases/tag/v1.1.0",
+      "downloads": ["https://github.com/StanleyLl0yd/copyfix/releases/download/v1.1.0/CopyFix.exe"],
       "icon": "/assets/icons/copyfix.ico",
       "socialImage": null,
       "privacyPath": null,
@@ -271,7 +271,7 @@
       "plannedScreenshots": [
         "Real Windows 10/11 tray menu showing the active cleaning profile and hotkey",
         "Real two-column RichEdit preview with an ambiguous PDF text join highlighted",
-        "Real CopyFix About and options dialogs displaying version 1.0.0 and registry-backed settings"
+        "Real CopyFix About and Settings dialogs displaying version 1.1.0, configurable global shortcuts and conflict warnings"
       ]
     }
   ]
