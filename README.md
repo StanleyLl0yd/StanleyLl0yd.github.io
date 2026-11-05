@@ -58,7 +58,7 @@ I build compact products with clear interfaces, deliberate mechanics and as litt
 
 | | Project | Area | Status |
 |---|---|---|---|
-| TC | **[Tredecadia](https://github.com/StanleyLl0yd/tredecadia)** | Open calendar standard | Stable v1.0.0 specification; v1.1.0-rc.1 prerelease published, not a calendar app |
+| TC | **[Tredecadia](https://github.com/StanleyLl0yd/tredecadia)** | Open calendar standard | [Stable v1.1.0](https://github.com/StanleyLl0yd/tredecadia/releases/tag/v1.1.0): nine stable month-display localization profiles, unchanged v1 calendar identity; a standard, not an app |
 | MK | **[MORPH-KEM](https://github.com/StanleyLl0yd/morph-kem)** | Cryptographic research | Research only, no secure KEM accepted; do not use to protect data |
 | PS | **[PS Toolbox](https://github.com/StanleyLl0yd/ps-toolbox)** | PowerShell | Public collection of practical admin scripts |
 
