@@ -186,6 +186,7 @@ def audit_workflows() -> list[tuple[Path, str]]:
     if not workflow_dir.exists():
         return errors
     sha_ref = re.compile(r"^[0-9a-f]{40}(?:\s*#.*)?$")
+    codeql_refs: set[str] = set()
     for path in sorted(workflow_dir.glob("*.y*ml")):
         text = path.read_text(encoding="utf-8")
         relative = path.relative_to(ROOT).as_posix()
@@ -209,6 +210,10 @@ def audit_workflows() -> list[tuple[Path, str]]:
                 ref = value.rsplit("@", 1)[1]
                 if not sha_ref.match(ref):
                     errors.append((path, "action must be pinned to a full commit SHA"))
+                if value.startswith("github/codeql-action/"):
+                    codeql_refs.add(ref.split("#", 1)[0].strip())
+    if len(codeql_refs) > 1:
+        errors.append((workflow_dir / "codeql.yml", "CodeQL action steps must share one pinned SHA"))
     return errors
 
 
